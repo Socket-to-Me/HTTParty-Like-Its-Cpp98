@@ -34,3 +34,13 @@ HTTP supports several authentication mechanisms, including Basic, Digest, and To
 Authentication can be requested by servers using the WWW-Authenticate header, and provided by clients using the Authorization header.
 HTTP supports both stateful and stateless authentication, depending on the mechanism used.
 Servers can use access control lists (ACLs) to restrict access to resources based on authentication status.
+
+---
+
+An ETag (Entity Tag) is an HTTP header that is used to identify a specific version of a resource. It is a string of characters that is assigned by a web server to a particular version of a resource, such as a web page or an image.
+
+When a client requests a resource from a server, the server includes the ETag in the response header. The client can then include the ETag in subsequent requests for the same resource. If the ETag in the subsequent request matches the ETag for the version of the resource on the server, the server can respond with a 304 Not Modified status code instead of sending the entire resource again. This can reduce bandwidth usage and improve performance.
+
+ETags are also used to resolve conflicts in version control systems, where they can be used to track changes to a file and ensure that multiple users are not editing the same version of a file simultaneously.
+
+---
