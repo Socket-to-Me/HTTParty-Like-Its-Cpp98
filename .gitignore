@@ -1,32 +1,25 @@
-# Prerequisites
-*.d
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# ignore executables
+webserv
 
-# Precompiled Headers
-*.gch
-*.pch
+# ignore build directory
+_bld/
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# ignore all .a files recursively
+**/*.a
 
-# Fortran module files
-*.mod
-*.smod
+# ignore all .dylib files recursively
+**/*.dylib
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# ignore .dSYM debug files
+webserv.dSYM/
 
-# Executables
-*.exe
-*.out
-*.app
+# ignore all compile_commands.json files recursively
+**/compile_commands.json
+
+# ignore all .cache files recursively
+**/.cache
+
+# ignore all .DS_Store files recursively
+**/.DS_Store
+
