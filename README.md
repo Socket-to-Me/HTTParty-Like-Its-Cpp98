@@ -18,6 +18,7 @@ HTTP supports conditional requests, which allow clients to request a resource on
 The If-Modified-Since and If-Unmodified-Since headers allow clients to specify a date/time range for the requested resource.
 The If-Match and If-None-Match headers allow clients to specify an ETag value for the requested resource.
 Servers can use the Last-Modified and ETag headers to indicate the date/time and entity tag for a resource, respectively.
+
 RFC 7233 - HTTP/1.1 Range Requests:
 HTTP supports range requests, which allow clients to request only a portion of a resource, rather than the entire resource.
 The Range header allows clients to specify the byte range they want to retrieve, while the Content-Range header indicates the byte range returned by the server.
