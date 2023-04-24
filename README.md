@@ -44,3 +44,9 @@ When a client requests a resource from a server, the server includes the ETag in
 ETags are also used to resolve conflicts in version control systems, where they can be used to track changes to a file and ensure that multiple users are not editing the same version of a file simultaneously.
 
 ---
+
+https://forest-jewel-9bb.notion.site/e9f16f9ef91047548f6db42d67d12979?v=e2f094d0026d40cca977898b48e2c1aa&p=735724447e214ef38b677f2cfc62ab7b&pm=s
+
+https://medium.com/from-the-scratch/http-server-what-do-you-need-to-know-to-build-a-simple-http-server-from-scratch-d1ef8945e4fa
+
+https://aosabook.org/en/v2/nginx.html
