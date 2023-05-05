@@ -2,6 +2,7 @@
 
 #include "main.hpp"
 #include "server.hpp"
+#include "socket.hpp"
 
 int main(void) {
 
@@ -18,6 +19,10 @@ int main(void) {
 	server.restart();
 
 	server.stop();
+
+	IRC::Socket socket;
+
+	socket.create(AF_INET, SOCK_STREAM, 0);
 
 	return EXIT_SUCCESS;
 }
