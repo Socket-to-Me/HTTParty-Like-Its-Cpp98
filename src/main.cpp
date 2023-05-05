@@ -1,10 +1,23 @@
-#include "Main.hpp"
 #include <iostream>
+
+#include "main.hpp"
+#include "server.hpp"
 
 int main(void) {
 
-	std::cout << "Hello World!" << std::endl;
-	std::cout << "Welcome to the webserv " << WEBSERV_VERSION << std::endl;
+	IRC::Server& server = IRC::Server::instance();
+
+	server.start();
+
+	server.subscribe(IRC::Client());
+
+	server.unsubscribe(IRC::Client());
+
+	server.broadcast("Hello World!");
+
+	server.restart();
+
+	server.stop();
 
 	return EXIT_SUCCESS;
 }
