@@ -11,7 +11,7 @@
 # -- V E R S I O N  C H E C K -------------------------------------------------
 
 # minimal version required
-MINIMAL_VERSION := 4.2
+MINIMAL_VERSION := 3.0
 
 # compare version
 ifneq ($(MINIMAL_VERSION), $(firstword $(sort $(MAKE_VERSION) $(MINIMAL_VERSION))))
@@ -87,7 +87,7 @@ override JSNDIR := $(BLDDIR)/_json
 # -- S O U R C E S ------------------------------------------------------------
 
 # list all source files
-override FILES_NAME := Main Sockets
+override FILES_NAME := main sockets server
 
 ifeq ($(FILES_NAME),)
  $(error $(shell echo "No \033[1;32msource\033[0m files found"))
@@ -241,7 +241,6 @@ re: fclean all
 
 
 # -- D E B U G  T A R G E T S -------------------------------------------------
-
 
 leaks: all
 	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(TARGET)
