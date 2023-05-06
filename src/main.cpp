@@ -6,6 +6,8 @@
 
 int main(void) {
 
+	// server class test
+
 	IRC::Server& server = IRC::Server::instance();
 
 	server.start();
@@ -20,9 +22,15 @@ int main(void) {
 
 	server.stop();
 
+
+	// socket class test
+
 	IRC::Socket socket;
 
-	socket.create(AF_INET, SOCK_STREAM, 0);
+	socket.create<IRC::Inet6, IRC::Stream>();
+
+
+	// end of program
 
 	return EXIT_SUCCESS;
 }
