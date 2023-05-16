@@ -80,6 +80,12 @@ bool IRC::Socket::operator!=(const Socket& socket) const {
 	return (_descriptor != socket._descriptor);
 }
 
+/* dereference operator */
+IRC::Socket::Descriptor IRC::Socket::operator*(void) const {
+	// return descriptor
+	return _descriptor;
+}
+
 
 // -- P U B L I C  M E T H O D S ----------------------------------------------
 

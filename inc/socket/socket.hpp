@@ -149,6 +149,9 @@ namespace IRC {
 			/* inequality operator */
 			bool operator!=(const Socket &socket) const;
 
+			/* dereference operator */
+			Descriptor operator*(void) const;
+
 
 
 			// -- P U B L I C  M E T H O D S ----------------------------------
