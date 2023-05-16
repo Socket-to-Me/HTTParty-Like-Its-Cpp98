@@ -1,3 +1,79 @@
+# BanterBot-3000
+
+--- S T E P S ---
+
+Define the IRC Protocol: Start by understanding and defining the IRC protocol specifications. Determine the format of IRC messages, commands, and their parameters. This will serve as the foundation for implementing the server and handling client interactions.
+
+Implement the Connection Class: Create the Connection class to represent individual client connections. This class should handle the low-level socket communication with clients, such as sending and receiving messages.
+
+Implement the Server Class: Develop the Server class, responsible for managing client connections and handling events. This class should create and manage Connection objects, handle new client connections, and process incoming messages from clients.
+
+Implement User and Channel Management: Design and implement the classes or data structures to manage users and channels. This includes storing information about connected clients, their nicknames, and the channels they have joined. Implement methods for joining, leaving, and managing channels.
+
+Implement Authentication: Add authentication functionality to your server. Clients should be required to provide a password to connect to the server, and you should validate the password before allowing access. Consider securely storing and comparing passwords.
+
+Implement IRC Message Parsing: Create functions or classes to parse incoming IRC messages. These functions should take a raw message as input and extract relevant information, such as the prefix, command, and parameters. Store the parsed information in an appropriate data structure or object.
+
+Implement Command Validation: Develop a mechanism to validate IRC commands received from clients. Verify if the command is supported and if the provided parameters are valid. Handle errors gracefully and respond to clients with appropriate error messages.
+
+Implement Response Generation: Based on the parsed IRC message and validated commands, generate appropriate responses to be sent back to clients. These responses can include success messages, error messages, or data requested by clients.
+
+Implement Event Loop: Use the poll() (or equivalent) function to create an event loop for handling I/O operations. This loop should efficiently manage incoming connections, client messages, and other events from the server side.
+
+Handle Operator Commands: Implement the specific commands that are available only to operators. These commands might include actions like kicking users, banning users, or managing server settings. Ensure that the appropriate authorization and validation checks are in place.
+
+--- F U N C T I O N S ---
+
+Define the IRC Protocol:
+
+- No specific functions are directly related to this step. It involves understanding and defining the structure and rules of IRC messages and commands.
+
+Implement the Connection Class:
+
+- socket: Create a socket to establish communication with clients.
+- close: Close the socket when the connection is terminated.
+- send and recv: Use these functions to send and receive messages through the socket.
+
+Implement the Server Class:
+
+- socket: Create a socket to listen for incoming connections.
+- bind: Bind the socket to a specific IP address and port number.
+- listen: Mark the socket as passive to accept incoming connections.
+- accept: Accept incoming connections on the listening socket, creating new sockets for communication with clients.
+- getsockname: Retrieve the local address to which the socket is bound.
+
+Implement User and Channel Management:
+
+- Use appropriate data structures and classes to store information about connected clients, their nicknames, and the channels they have joined.
+
+Implement Authentication:
+
+- Compare the password provided by the client with the stored password using appropriate comparison functions.
+
+Implement IRC Message Parsing:
+
+- Develop functions or classes to parse incoming IRC messages, extracting relevant information such as the prefix, command, and parameters.
+
+Implement Command Validation:
+
+- Validate the parsed IRC commands, checking if they are supported and if the provided parameters are valid.
+
+Implement Response Generation:
+
+- Based on the parsed and validated IRC commands, generate appropriate responses to be sent back to clients using the send function.
+
+Implement Event Loop:
+
+- Use the poll function to create an event loop that waits for events on the sockets and handles I/O operations efficiently. This loop should manage incoming connections, client messages, and other server-side events.
+
+Handle Operator Commands:
+
+- Implement the specific operator commands, checking for authorization and performing the desired actions based on the received commands.
+
+
+
+----------------------
+
 # HTTParty-Like-Its-Cpp98
 Write a HTTP server in C++ 98
 
