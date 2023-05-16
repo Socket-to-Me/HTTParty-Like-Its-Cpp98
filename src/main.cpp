@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "sockaddr.hpp"
 #include "main.hpp"
 #include "server.hpp"
 #include "socket.hpp"
@@ -27,10 +28,14 @@ int main(void) {
 
 	IRC::Socket socket;
 
-	socket.create<IRC::Inet6, IRC::Stream>();
+	socket.create<IRC::Inet, IRC::Stream>();
+
+	IRC::SockAddr addr(AF_INET, 6667);
 
 
-	// end of program
+
+	IRC::bind(socket, addr);
+
 
 	return EXIT_SUCCESS;
 }
