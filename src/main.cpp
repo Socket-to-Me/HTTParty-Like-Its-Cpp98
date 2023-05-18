@@ -1,42 +1,46 @@
 #include <iostream>
 
-#include "sockaddr.hpp"
+// #include "sockaddr.hpp"
 #include "main.hpp"
 #include "server.hpp"
 #include "socket.hpp"
+#include "connection.hpp"
 
-int main(void) {
+int main(int ac, char** av) {
 
-	// server class test
+	// // server class test
 
-	IRC::Server& server = IRC::Server::instance();
+	// IRC::Server& server = IRC::Server::instance();
 
-	server.start();
+	// server.start();
 
-	server.subscribe(IRC::Client());
+	// server.subscribe(IRC::Client());
 
-	server.unsubscribe(IRC::Client());
+	// server.unsubscribe(IRC::Client());
 
-	server.broadcast("Hello World!");
+	// server.broadcast("Hello World!");
 
-	server.restart();
+	// server.restart();
 
-	server.stop();
+	// server.stop();
 
-	// OK laisse moi la main 2 minute 
-	// je taime bb ! ahah
-	// socket class test
+	// IRC::Socket socket;
 
-	IRC::Socket socket;
+	// socket.create<IRC::Inet, IRC::Stream>();
 
-	socket.create<IRC::Inet, IRC::Stream>();
-
-	IRC::SockAddr addr(AF_INET, 6667);
+	// IRC::SockAddr addr(AF_INET, 6667);
 
 
 
-	IRC::bind(socket, addr);
+	// IRC::bind(socket, addr);
 
+
+	// ------------------------------------------------
+
+	IRC::Server server;
+
+	server.start("0.0.0.0", 5000);
+	server.acceptConnections();
 
 	return EXIT_SUCCESS;
 }

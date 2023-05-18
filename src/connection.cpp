@@ -1,31 +1,37 @@
-#include "Connection.hpp"
+#include "connection.hpp"
 
-Connection::Connection(int sd)
+IRC::Connection::Connection(int sd)
 : _sd(sd) {
 
 	return;
 }
 
-void Connection::send_message(const std::string& msg) {
+void IRC::Connection::send_message(const std::string& msg) {
 
 	send(_sd, msg.c_str(), msg.length(), 0);
+	return;
 }
 
-std::string Connection::receive_message(const int buffer_size) {
+std::string IRC::Connection::receive_message(const int buffer_size) {
 
-	char	buffer[buffer_size];
-	int 	bytesReceived;
-
-	memset(buffer, 0, buffer_size);
-	bytesReceived = recv(_sd, buffer, buffer_size - 1, 0);
+	std::vector<char>	buffer(buffer_size, 0);
+	int 				bytesReceived;
+	
+	bytesReceived = recv(_sd, buffer.data(), buffer_size - 1, 0);
 	if (bytesReceived == -1) {
 		std::cerr << "Error in receiving message.\n";
 		return "";
 	}
-	return std::string(buffer);
+	return std::string(buffer.data());
 }
 
-void Connection::close() {
+void IRC::Connection::close() {
 
 	::close(_sd);
+	return;
+}
+
+int IRC::Connection::get_sd(void) {
+
+	return _sd;
 }

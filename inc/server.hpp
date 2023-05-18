@@ -1,79 +1,26 @@
 #ifndef SERVER_HEADER
 #define SERVER_HEADER
 
-#include <vector>
-#include <string>
-
-
-
-// -- N A M E S P A C E  I R C ------------------------------------------------
+#include "connection.hpp"
 
 namespace IRC {
 
-class Client {public:};
+    class Server {
 
-	// -- S E R V E R  C L A S S ----------------------------------------------
+    private:
 
-	class Server {
+        int serverSocket;
+        std::vector<IRC::Connection> connections;
 
-		public:
+    public:
 
-			// -- P U B L I C  M E T H O D S ----------------------------------
+        Server();
+        bool start(const std::string& ipAddress, int port);
+        void acceptConnections();
+        void handleNewConnection(IRC::Connection& connection);
+        void stop();
 
-			/* start server */
-			void start(void);
-
-			/* stop server */
-			void stop(void);
-
-			/* restart server */
-			void restart(void);
-
-			/* subscribe client */
-			void subscribe(const Client& client);
-
-			/* unsubscribe client */
-			void unsubscribe(const Client& client);
-
-			/* send message to all clients */
-			void broadcast(const std::string& message);
-
-
-			// -- P U B L I C  S T A T I C  M E T H O D S ---------------------
-
-			/* get singleton instance */
-			static Server& instance(void);
-
-
-		private:
-
-			// -- P R I V A T E  C O N S T R U C T O R S ----------------------
-
-			/* default constructor */
-			Server(void);
-
-			/* copy constructor */
-			Server(const Server&);
-
-			/* destructor */
-			~Server(void);
-
-
-			// -- P R I V A T E  S T A T I C  M E M B E R S -------------------
-
-			/* singleton instance */
-			static Server _instance;
-
-
-			// -- P R I V A T E  M E M B E R S --------------------------------
-
-			/* server clients */
-			std::vector<Client> _client;
-
-
-
-	};
-
+    };
 }
 
 #endif

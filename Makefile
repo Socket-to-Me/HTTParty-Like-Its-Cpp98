@@ -87,7 +87,8 @@ override JSNDIR := $(BLDDIR)/_json
 # -- S O U R C E S ------------------------------------------------------------
 
 # list all source files
-override FILES_NAME := main socket server sockaddr
+# override FILES_NAME := main socket server sockaddr connection
+override FILES_NAME := main socket server connection
 
 ifeq ($(FILES_NAME),)
  $(error $(shell echo "No \033[1;32msource\033[0m files found"))
