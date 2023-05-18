@@ -2,6 +2,7 @@
 #define SERVER_HEADER
 
 #include <vector>
+#include <string>
 
 
 

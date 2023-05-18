@@ -133,12 +133,11 @@ MKDIR := mkdir -p
 # remove recursively force
 RM := rm -rf
 
-
 # -- C O M P I L E R  S E T T I N G S -----------------------------------------
 
 CXX := $(shell which c++)
 
-STD := -std=c++98
+STD := -std=c++17
 
 OPT := -O0
 

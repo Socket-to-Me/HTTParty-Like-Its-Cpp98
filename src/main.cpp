@@ -23,7 +23,8 @@ int main(void) {
 
 	server.stop();
 
-
+	// OK laisse moi la main 2 minute 
+	// je taime bb ! ahah
 	// socket class test
 
 	IRC::Socket socket;
