@@ -1,79 +1,83 @@
 #include "server.hpp"
-#include "connection.hpp"
 
-IRC::Server::Server()
-: serverSocket(-1) {
-    return;
+
+// -- S I N G L E T O N  I N S T A N C E --------------------------------------
+
+/* singleton instance */
+IRC::Server IRC::Server::_instance = IRC::Server();
+
+/* get singleton instance */
+IRC::Server& IRC::Server::instance(void) {
+	// return singleton instance
+	return _instance;
 }
 
-bool IRC::Server::start(const std::string& ipAddress, int port) {
 
-    serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (serverSocket == -1) {
-        std::cout << "Failed to create socket.\n";
-        return false;
-    }
+// -- P R I V A T E  C O N S T R U C T O R S ----------------------------------
 
-    sockaddr_in hint{};
-    hint.sin_family = AF_INET;
-    hint.sin_port = htons(port);
-    inet_pton(AF_INET, ipAddress.c_str(), &(hint.sin_addr));
-
-    if (bind(serverSocket, (sockaddr*)&hint, sizeof(hint)) == -1) {
-        std::cout << "Failed to bind to IP/Port.\n";
-        return false;
-    }
-
-    if (listen(serverSocket, SOMAXCONN) == -1) {
-        std::cout << "Failed to listen.\n";
-        return false;
-    }
-
-    return true;
+/* default constructor */
+IRC::Server::Server(void) {
+	// TODO
 }
 
-void IRC::Server::acceptConnections() {
-
-    while (true) {
-
-        sockaddr_in client{};
-        socklen_t clientSize = sizeof(client);
-        int clientSocket = accept(serverSocket, (sockaddr*)&client, &clientSize);
-        if (clientSocket == -1) {
-            std::cout << "Failed to accept client connection.\n";
-            continue;
-        }
-
-        IRC::Connection connection(clientSocket);
-        connections.push_back(connection);
-
-        // Handle the new client connection
-        handleNewConnection(connection);
-}
+/* copy constructor */
+IRC::Server::Server(const Server& server) {
+	// TODO
 }
 
-void IRC::Server::handleNewConnection(IRC::Connection& connection) {
-
-    // Implement your logic to handle the new client connection
-    std::cout << "New client connected. Socket: " << connection.get_sd() << "\n";
-
-    // Example: Send a welcome message to the client
-    connection.send_message("Welcome to the server!");
-
-    // Example: Receive and process incoming messages from the client
-    std::string message = connection.receive_message(1024);
-    std::cout << "Received message: " << message << "\n";
+/* destructor */
+IRC::Server::~Server(void) {
+	// TODO
 }
 
-void IRC::Server::stop() {
 
-    for (auto& connection : connections) {
-        connection.close();
-    }
-    connections.clear();
+// -- P U B L I C  M E T H O D S ----------------------------------------------
 
-    if (serverSocket != -1) {
-        ::close(serverSocket);
-        serverSocket = -1;
-    }
+/* start server */
+void IRC::Server::start(void) {
+	// TODO
 }
+
+/* stop server */
+void IRC::Server::stop(void) {
+	// TODO
+}
+
+/* restart server */
+void IRC::Server::restart(void) {
+	// TODO
+}
+
+/* subscribe client */
+void IRC::Server::subscribe(const Client& client) {
+	// TODO
+}
+
+/* unsubscribe client */
+void IRC::Server::unsubscribe(const Client& client) {
+	// TODO
+}
+
+/* send message to all clients */
+void IRC::Server::broadcast(const std::string& message) {
+	// TODO
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
