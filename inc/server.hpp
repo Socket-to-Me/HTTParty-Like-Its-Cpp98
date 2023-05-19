@@ -4,7 +4,8 @@
 #include <vector>
 #include <string>
 
-
+#include "connection.hpp"
+#include "socket.hpp"
 
 // -- N A M E S P A C E  I R C ------------------------------------------------
 
@@ -21,7 +22,10 @@ class Client {public:};
 			// -- P U B L I C  M E T H O D S ----------------------------------
 
 			/* start server */
-			void start(void);
+			bool	start(const std::string& ip, int port);
+
+			/* accept connections */
+			void	acceptConnections(void);
 
 			/* stop server */
 			void stop(void);
@@ -68,8 +72,16 @@ class Client {public:};
 			// -- P R I V A T E  M E M B E R S --------------------------------
 
 			/* server clients */
-			std::vector<Client> _client;
+			// std::vector<Client> _client;
+			std::vector<IRC::Connection> _conns;
 
+			/* server socket */
+			// TODO = change to socket object
+			int	_socket;
+
+			// -- P R I V A T E  M E T H O D S ----------------------------------
+
+			void	handleNewConnection(IRC::Connection& connection);
 
 
 	};

@@ -1,6 +1,6 @@
 #include <iostream>
 
-// #include "sockaddr.hpp"
+#include "sockaddr.hpp"
 #include "main.hpp"
 #include "server.hpp"
 #include "socket.hpp"
@@ -37,10 +37,13 @@ int main(int ac, char** av) {
 
 	// ------------------------------------------------
 
-	IRC::Server server;
+	IRC::Server& server = IRC::Server::instance();
 
 	server.start("0.0.0.0", 5000);
 	server.acceptConnections();
+
+	//  use irssi in terminal to connect to server
+	// type -> /connect 0.0.0.0 5000
 
 	return EXIT_SUCCESS;
 }
