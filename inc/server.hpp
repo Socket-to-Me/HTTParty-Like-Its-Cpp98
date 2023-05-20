@@ -11,8 +11,6 @@
 
 namespace IRC {
 
-class Client {public:};
-
 	// -- S E R V E R  C L A S S ----------------------------------------------
 
 	class Server {
@@ -28,25 +26,25 @@ class Client {public:};
 			void	acceptConnections(void);
 
 			/* stop server */
-			void stop(void);
+			void	stop(void);
 
 			/* restart server */
-			void restart(void);
+			void	restart(void);
 
 			/* subscribe client */
-			void subscribe(const Client& client);
+			void	subscribe(const IRC::Connection& conn);
 
 			/* unsubscribe client */
-			void unsubscribe(const Client& client);
+			void	unsubscribe(const IRC::Connection& conn);
 
 			/* send message to all clients */
-			void broadcast(const std::string& message);
+			void	broadcast(const std::string& msg);
 
 
 			// -- P U B L I C  S T A T I C  M E T H O D S ---------------------
 
 			/* get singleton instance */
-			static Server& instance(void);
+			static Server&	instance(void);
 
 
 		private:
@@ -66,7 +64,7 @@ class Client {public:};
 			// -- P R I V A T E  S T A T I C  M E M B E R S -------------------
 
 			/* singleton instance */
-			static Server _instance;
+			static Server	_instance;
 
 
 			// -- P R I V A T E  M E M B E R S --------------------------------

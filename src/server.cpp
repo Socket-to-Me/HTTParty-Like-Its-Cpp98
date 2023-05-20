@@ -63,8 +63,8 @@ bool IRC::Server::start(const std::string& ip, int port) {
 /* stop server */
 void IRC::Server::stop(void) {
 
-    for (auto& connection : _conns) {
-        connection.close();
+    for (IRC::Connection& conn : _conns) {
+        conn.close();
     }
     _conns.clear();
 
@@ -81,13 +81,19 @@ void IRC::Server::restart(void) {
 }
 
 /* subscribe client */
-void IRC::Server::subscribe(const Client& client) {
+void IRC::Server::subscribe(IRC::Connection& conn) {
 	// TODO
 }
 
 /* unsubscribe client */
-void IRC::Server::unsubscribe(const Client& client) {
+void IRC::Server::unsubscribe(IRC::Connection& conn) {
 	// TODO
+}
+
+/* send message to one client */
+void IRC::Server::send(IRC::Connection& conn, const std::string& message) {
+
+    
 }
 
 /* send message to all clients */
