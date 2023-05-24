@@ -6,6 +6,13 @@
 #include "socket.hpp"
 #include "connection.hpp"
 
+
+//#if define(__linux__)
+#define PORT 5000
+///else
+//#//define port 4243
+//#endif
+
 int main(int ac, char** av) {
 
 	// // server class test
@@ -37,15 +44,15 @@ int main(int ac, char** av) {
 
 	// ------------------------------------------------
 
-	//IRC::Server& server = IRC::Server::instance();
+	IRC::Server& server = IRC::Server::instance();
 
-	//server.start("0.0.0.0", 5000);
-
+	server.start("0.0.0.0", 5000);
+return 0;
 	IRC::Socket socket;
 
 	socket.create<IRC::Inet, IRC::Stream>();
 
-	IRC::SockAddr addr(PF_INET, 5000, "localhost");
+	IRC::SockAddr addr(PF_INET, PORT, "localhost");
 
 	int err = IRC::bind(socket, addr);
 
