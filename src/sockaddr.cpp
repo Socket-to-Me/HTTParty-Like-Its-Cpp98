@@ -113,6 +113,7 @@ int IRC::bind(const Socket& socket, const SockAddr& addr) {
 	if (socket) {
 		// convert SockAddr to SockAddrIn structure
 		const IRC::SockAddr::SockAddrIn addr_in = addr.to_sockaddr_in();
+		std::cout << "trying to bind to: " << inet_ntoa(addr_in.sin_addr) << std::endl;
 		// bind socket to addr
 		return ::bind(*socket,
 				reinterpret_cast<const struct sockaddr*>(&addr_in),

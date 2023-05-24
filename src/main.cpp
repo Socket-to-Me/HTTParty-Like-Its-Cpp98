@@ -37,9 +37,24 @@ int main(int ac, char** av) {
 
 	// ------------------------------------------------
 
-	IRC::Server& server = IRC::Server::instance();
+	//IRC::Server& server = IRC::Server::instance();
 
-	server.start("0.0.0.0", 5000);
+	//server.start("0.0.0.0", 5000);
+
+	IRC::Socket socket;
+
+	socket.create<IRC::Inet, IRC::Stream>();
+
+	IRC::SockAddr addr(PF_INET, 5000, "localhost");
+
+	int err = IRC::bind(socket, addr);
+
+	if (err == -1) {
+		std::cout << "Failed to bind to IP/Port. " << err << std::endl;
+		return EXIT_FAILURE;
+	}
+
+
 
 	//  use irssi in terminal to connect to server
 	// type -> /connect 0.0.0.0 5000
