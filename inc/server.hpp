@@ -22,9 +22,6 @@ namespace IRC {
 			/* start server */
 			bool	start(const std::string& ip, int port);
 
-			/* accept connections */
-			void	acceptConnections(void);
-
 			/* stop server */
 			void	stop(void);
 
@@ -79,6 +76,10 @@ namespace IRC {
 
 			// -- P R I V A T E  M E T H O D S ----------------------------------
 
+			/* accept connections */
+			void	acceptConnections(void);
+
+			/* handle new connection */
 			void	handleNewConnection(IRC::Connection& connection);
 
 

@@ -40,7 +40,6 @@ int main(int ac, char** av) {
 	IRC::Server& server = IRC::Server::instance();
 
 	server.start("0.0.0.0", 5000);
-	server.acceptConnections();
 
 	//  use irssi in terminal to connect to server
 	// type -> /connect 0.0.0.0 5000

@@ -57,6 +57,8 @@ bool IRC::Server::start(const std::string& ip, int port) {
         return false;
     }
 
+    acceptConnections();
+
     return true;
 }
 
