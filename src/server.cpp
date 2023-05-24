@@ -83,12 +83,12 @@ void IRC::Server::restart(void) {
 }
 
 /* subscribe client */
-void IRC::Server::subscribe(IRC::Connection& conn) {
+void IRC::Server::subscribe(const IRC::Connection& conn) {
 	// TODO
 }
 
 /* unsubscribe client */
-void IRC::Server::unsubscribe(IRC::Connection& conn) {
+void IRC::Server::unsubscribe(const IRC::Connection& conn) {
 	// TODO
 }
 

@@ -38,6 +38,8 @@ namespace IRC {
 			void	broadcast(const std::string& msg);
 
 
+			void send(IRC::Connection& conn, const std::string& message);
+
 			// -- P U B L I C  S T A T I C  M E T H O D S ---------------------
 
 			/* get singleton instance */
