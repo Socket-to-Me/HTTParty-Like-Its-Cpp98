@@ -1,75 +1,90 @@
 #include "lexer.hpp"
 
 IRC::Lexer::Lexer(const std::string& text)
-: text(text), pos(0) {
+: _text(text), _pos(0) {
 
 	return ;
 }
 
-void IRC::Lexer::advance(void) {
-	
-	pos++;
-	return ;
-}
+IRC::Token	IRC::Lexer::getNextToken(void) {
 
-char IRC::Lexer::peek(void) {
+	while (_pos < _text.size()) {
 
-	if (pos < text.size()) {
-		return text[pos];
-	}
-	return '\0'; // End of text
-}
+		std::string	str;
+		bool		err = false;
 
-Token IRC::Lexer::getNextToken(void) {
+		if (isalpha(_text[_pos])) {
 
-	while (pos < text.size()) {
-		char currentChar = text[pos];
+			bool		caps = true;
 
-		if (currentChar == '/') {
+			while (isalpha(_text[_pos])) {
 
-			std::string command;
-			advance();
-
-			while (isalpha(peek())) {
-				command += peek();
-				advance();
+				if (islower(_text[_pos]))
+					caps = false;
+		
+				str += _text[_pos];
+				++_pos;
 			}
-			return { COMMAND, command };
+
+			if (caps)
+				return { COMMAND, str };
+
+			return { PARAMETER, str };
 		}
 
-		if (currentChar == ':') {
+		if (_text[_pos] == ':') {
 
-			advance();
-			return { COLON, ":" };
+			str += _text[_pos++];
+
+			while (_text[_pos] != '\r' && _text[_pos] != '\n' && _text[_pos] != '\0') {
+
+				if (_text[_pos] == ':') 
+					err = true;
+				
+				str += _text[_pos];
+				++_pos;
+			}
+
+			if (err)
+				return { ERROR, str };
+			return { TRAILING, str };
+
 		}
 
-		if (currentChar == ' ') {
+		if (_text[_pos] == ' ') {
 
-			advance();
-			return { SPACE, " " };
+			str += _text[_pos];
+			++_pos;
+			return { SPACE, str };
 		}
 
-		if (currentChar == '\r' && peek() == '\n') {
+		if (_text[_pos] == '\n') {
 
-			advance();
-			advance();
+			str += _text[_pos];
+			++_pos;
+			return { NEWLINE, str };
+		}
+	
+		if (_text[_pos] == '\r' && _text[_pos+1] == '\n') {
+
+			++_pos;
+			++_pos;
 			return { EOF_TOKEN, "" };
 		}
 
-		if (currentChar == '\n') {
+		while (_text[_pos] && _text[_pos] != '\r' && _text[_pos] != '\n') {
 
-			advance();
-			return { EOF_TOKEN, "" };
+			if (_text[_pos] == ':') 
+				err = true;
+	
+			str += _text[_pos];
+			++_pos;
 		}
 
-		std::string parameter;
-		while (peek() != ' ' && peek() != '\r' && peek() != '\n' && peek() != '\0') {
+		if (err)
+			return { ERROR, str };
+		return { TRAILING, str };
 
-			parameter += peek();
-			advance();
-		}
-
-		return { PARAMETER, parameter };
 	}
 
 	return { EOF_TOKEN, "" };

@@ -1,4 +1,5 @@
 #include "server.hpp"
+#include "parser.hpp"
 
 
 // -- S I N G L E T O N  I N S T A N C E --------------------------------------
@@ -135,8 +136,13 @@ void IRC::Server::handleNewConnection(IRC::Connection& connection) {
 
     // Example: Receive and process incoming messages from the client
     std::string message = connection.receive_message(1024);
-    std::cout << "Received message: " << message << "\n";
+    std::cout << "Received message: \n" << message << "\n";
 
+    std::cout << "Processing ... \n";
+
+
+    Lexer       lexer(message);
+    Parser     parser(lexer);
 }
 
 

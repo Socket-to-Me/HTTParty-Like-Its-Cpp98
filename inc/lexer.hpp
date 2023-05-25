@@ -6,30 +6,31 @@
 namespace IRC {
 
     enum TokenType {
+
         COMMAND,
-        PARAMETER,
-        COLON,
         SPACE,
-        EOF_TOKEN
+        PARAMETER,
+        TRAILING,
+        NEWLINE,
+        EOF_TOKEN,
+        ERROR
     };
 
     struct Token {
-        TokenType type;
+    
+        TokenType   type;
         std::string value;
     };
 
     class Lexer {
-    
+
         public:
             Lexer(const std::string& text);
-            void advance();
-            char peek();
             Token getNextToken();
 
         private:
-            std::string text;
-            size_t pos;
+            std::string _text;
+            size_t      _pos;
     };
 
 }
-

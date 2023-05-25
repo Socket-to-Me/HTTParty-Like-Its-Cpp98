@@ -1,17 +1,20 @@
 #include "lexer.hpp"
 
-class Parser {
+namespace IRC {
+
+    class Parser {
+            
+        public:
         
-    public:
-    
-        Parser(const Lexer& lexer);
-        void error(void);
-        void eat(TokenType tokenType);
-        std::vector<std::string> parseParameters(void);
-        std::vector<std::string> parse(void);
+            Parser(const Lexer& lexer);
+            void error(void);
+            void eat(TokenType tokenType);
+            std::vector<std::string> parseParameters(void);
+            std::vector<std::string> parse(void);
 
-    private:
+        private:
 
-        Lexer lexer;
-        Token currentToken;
-};
+            Lexer   _lexer;
+            Token   _currToken;
+    };
+}

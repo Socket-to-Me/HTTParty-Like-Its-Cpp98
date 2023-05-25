@@ -46,20 +46,21 @@ int main(int ac, char** av) {
 
 	IRC::Server& server = IRC::Server::instance();
 
-	server.start("0.0.0.0", 5000);
-return 0;
-	IRC::Socket socket;
+	server.start("0.0.0.0", 5001);
 
-	socket.create<IRC::Inet, IRC::Stream>();
 
-	IRC::SockAddr addr(PF_INET, PORT, "localhost");
+	// IRC::Socket socket;
 
-	int err = IRC::bind(socket, addr);
+	// socket.create<IRC::Inet, IRC::Stream>();
 
-	if (err == -1) {
-		std::cout << "Failed to bind to IP/Port. " << err << std::endl;
-		return EXIT_FAILURE;
-	}
+	// IRC::SockAddr addr(PF_INET, PORT, "localhost");
+
+	// int err = IRC::bind(socket, addr);
+
+	// if (err == -1) {
+	// 	std::cout << "Failed to bind to IP/Port. " << err << std::endl;
+	// 	return EXIT_FAILURE;
+	// }
 
 
 
