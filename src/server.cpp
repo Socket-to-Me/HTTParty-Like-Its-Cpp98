@@ -140,12 +140,21 @@ void IRC::Server::handleNewConnection(IRC::Connection& connection) {
 
     std::cout << "Processing ... \n";
 
+	Lexer		lexer(message);
+	Parser		parser(lexer);
+	std::vector< std::vector< Token > >	matrix;
 
-    Lexer       lexer(message);
-    Parser     parser(lexer);
+	matrix = parser.parse();
+
+    for (std::vector<Token>& row : matrix) {
+
+        for (Token& token : row) {
+
+            std::cout << token.type << "=" << token.value << std::endl;
+        }
+    }
+
 }
-
-
 
 
 

@@ -7,10 +7,7 @@ namespace IRC {
         public:
         
             Parser(const Lexer& lexer);
-            void error(void);
-            void eat(TokenType tokenType);
-            std::vector<std::string> parseParameters(void);
-            std::vector<std::string> parse(void);
+            std::vector< std::vector< IRC::Token > > parse(void);
 
         private:
 

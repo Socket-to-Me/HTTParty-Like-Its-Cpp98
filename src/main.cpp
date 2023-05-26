@@ -5,6 +5,7 @@
 #include "server.hpp"
 #include "socket.hpp"
 #include "connection.hpp"
+#include "parser.hpp"
 
 
 //#if define(__linux__)
@@ -48,6 +49,24 @@ int main(int ac, char** av) {
 
 	server.start("0.0.0.0", 5001);
 
+	// ------------------------------------------------
+
+	// std::string		str("CAP LS\nNICK swillis\nUSER swillis swillis 0.0.0.0 :Scott WILLIS");
+	// IRC::Lexer		lexer(str);
+	// IRC::Parser		parser(lexer);
+	// std::vector< std::vector< IRC::Token > >	matrix;
+
+	// matrix = parser.parse();
+
+    // for (std::vector<IRC::Token>& row : matrix) {
+
+    //     for (IRC::Token& token : row) {
+
+    //         std::cout << token.type << "=" << token.value << std::endl;
+    //     }
+    // }
+
+	// ------------------------------------------------
 
 	// IRC::Socket socket;
 

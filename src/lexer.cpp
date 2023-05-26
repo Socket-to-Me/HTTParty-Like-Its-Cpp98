@@ -13,6 +13,8 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 		std::string	str;
 		bool		err = false;
 
+		// ----- C O M M A N D ------------------------------------
+
 		if (isalpha(_text[_pos])) {
 
 			bool		caps = true;
@@ -32,11 +34,13 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 			return { PARAMETER, str };
 		}
 
+		// ----- T R A I L I N G ------------------------------------
+
 		if (_text[_pos] == ':') {
 
 			str += _text[_pos++];
 
-			while (_text[_pos] != '\r' && _text[_pos] != '\n' && _text[_pos] != '\0') {
+			while (_text[_pos] && _text[_pos] != '\r' && _text[_pos] != '\n' && _text[_pos] != '\0') {
 
 				if (_text[_pos] == ':') 
 					err = true;
@@ -51,12 +55,16 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 
 		}
 
+		// ----- S P A C E ------------------------------------
+
 		if (_text[_pos] == ' ') {
 
 			str += _text[_pos];
 			++_pos;
 			return { SPACE, str };
 		}
+
+		// ----- N E W  L I N E ------------------------------------
 
 		if (_text[_pos] == '\n') {
 
@@ -65,6 +73,8 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 			return { NEWLINE, str };
 		}
 	
+		// ----- E O F ------------------------------------
+
 		if (_text[_pos] == '\r' && _text[_pos+1] == '\n') {
 
 			++_pos;
@@ -72,7 +82,9 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 			return { EOF_TOKEN, "" };
 		}
 
-		while (_text[_pos] && _text[_pos] != '\r' && _text[_pos] != '\n') {
+		// ----- P A R A M E T E R S ------------------------------------
+
+		while (_text[_pos] && _text[_pos] != ' ' && _text[_pos] != '\r' && _text[_pos] != '\n') {
 
 			if (_text[_pos] == ':') 
 				err = true;
@@ -83,7 +95,7 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 
 		if (err)
 			return { ERROR, str };
-		return { TRAILING, str };
+		return { PARAMETER, str };
 
 	}
 
