@@ -66,7 +66,7 @@ bool IRC::Server::start(const std::string& ip, int port) {
 /* stop server */
 void IRC::Server::stop(void) {
 
-    for (IRC::Connection& conn : _conns) {
+    for (Connection& conn : _conns) {
         conn.close();
     }
     _conns.clear();
