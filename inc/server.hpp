@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <poll.h>
 
 #include "connection.hpp"
 #include "socket.hpp"
@@ -75,6 +76,16 @@ namespace IRC {
 			/* server socket */
 			// TODO = change to socket object
 			int	_socket;
+
+			/* vector pollfd */
+
+			// struct pollfd {
+			//     int fd;         // File descriptor to monitor
+			//     short events;   // Events to monitor (input/output/error events)
+			//     short revents;  // Events that occurred (filled by the kernel)
+			// };
+
+			std::vector<struct pollfd>			_pollfds;
 
 			// -- P R I V A T E  M E T H O D S ----------------------------------
 

@@ -35,32 +35,31 @@ IRC::Server::~Server(void) {
 // -- P U B L I C  M E T H O D S ----------------------------------------------
 
 /* start server */
-bool IRC::Server::start(const std::string& ip, int port) {
+void IRC::Server::start(const std::string& ip, int port) {
 
-	_socket = ::socket(AF_INET, SOCK_STREAM, 0);
-    if (_socket == -1) {
-        std::cout << "Failed to create socket.\n";
-        return false;
+	setupSocket(ip, port);
+
+    while (true) {
+
+        // pollCount = # fds where events were detected
+        // (ptr to array of pollfd strcuts, # elem in array, timeout of 60s)
+        pollCount = poll(&_pollfds[0], _pollfds.size(), 60000)
+
+        if (pollCount == -1)
+		{
+			std::cout << "Poll error" << std::endl;
+			exit(EXIT_FAILURE);
+		}
+		else if (pollCount == 0)
+		{
+			std::cout << "Poll timed out" << std::endl;
+			continue;
+		}	
+
+        acceptNewConnection()
+        process_active_connections()
     }
 
-    sockaddr_in hint{};
-    hint.sin_family = AF_INET;
-    hint.sin_port = htons(port);
-    inet_pton(AF_INET, ip.c_str(), &(hint.sin_addr));
-
-    if (bind(_socket, (sockaddr*)&hint, sizeof(hint)) == -1) {
-        std::cout << "Failed to bind to IP/Port.\n";
-        return false;
-    }
-
-    if (listen(_socket, SOMAXCONN) == -1) {
-        std::cout << "Failed to listen.\n";
-        return false;
-    }
-
-    acceptConnections();
-
-    return true;
 }
 
 /* stop server */
@@ -106,10 +105,37 @@ void IRC::Server::broadcast(const std::string& message) {
 
 // -- P R I V A T E  M E T H O D S ----------------------------------------------
 
-void IRC::Server::acceptConnections(void) {
+/* setup socket */
+void IRC::Server::setupSocket(const std::string& ip, int port) {
 
-    while (true) {
+	_socket = ::socket(AF_INET, SOCK_STREAM, 0);
+    if (_socket == -1) {
+        std::cout << "Failed to create socket.\n";
+        throw std::exception("Failed to create socket.");
+    }
 
+    sockaddr_in hint{};
+    hint.sin_family = AF_INET;
+    hint.sin_port = htons(port);
+    inet_pton(AF_INET, ip.c_str(), &(hint.sin_addr));
+
+    if (bind(_socket, (sockaddr*)&hint, sizeof(hint)) == -1) {
+        std::cout << "Failed to bind to IP/Port.\n";
+        throw std::exception("Failed to bind to IP/Port.");
+    }
+
+    if (listen(_socket, SOMAXCONN) == -1) {
+        std::cout << "Failed to listen.\n";
+        throw std::exception("Failed to listen.");
+    }
+
+}
+
+/* accept new pollfd connection */
+void IRC::Server::acceptNewConnection(void) {
+
+    if (_pfds[0].revents & POLLIN)
+    {
         sockaddr_in client{};
         socklen_t clientSize = sizeof(client);
         int clientSocket = accept(_socket, (sockaddr*)&client, &clientSize);
@@ -121,9 +147,27 @@ void IRC::Server::acceptConnections(void) {
         IRC::Connection connection(clientSocket);
         _conns.push_back(connection);
 
-        // Handle the new client connection
-        handleNewConnection(connection);
-	}
+                int fd = accept_connection(0);
+                _data->add_user(fd, host, remoteIP);
+                bufmap.insert(std::make_pair(fd, Buffer()));
+    }
+
+    // while (true) {
+
+    //     sockaddr_in client{};
+    //     socklen_t clientSize = sizeof(client);
+    //     int clientSocket = accept(_socket, (sockaddr*)&client, &clientSize);
+    //     if (clientSocket == -1) {
+    //         std::cout << "Failed to accept client connection.\n";
+    //         continue;
+    //     }
+
+    //     IRC::Connection connection(clientSocket);
+    //     _conns.push_back(connection);
+
+    //     // Handle the new client connection
+    //     handleNewConnection(connection);
+	// }
 }
 
 void IRC::Server::handleNewConnection(IRC::Connection& connection) {
