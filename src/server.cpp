@@ -38,12 +38,13 @@ IRC::Server::~Server(void) {
 void IRC::Server::start(const std::string& ip, int port) {
 
 	setupSocket(ip, port);
+    addPollfd(_socket);
 
     while (true) {
 
         // pollCount = # fds where events were detected
         // (ptr to array of pollfd strcuts, # elem in array, timeout of 60s)
-        pollCount = poll(&_pollfds[0], _pollfds.size(), 60000)
+        int pollCount = poll(&_pollfds[0], _pollfds.size(), 60000);
 
         if (pollCount == -1)
 		{
@@ -56,8 +57,11 @@ void IRC::Server::start(const std::string& ip, int port) {
 			continue;
 		}	
 
-        acceptNewConnection()
-        process_active_connections()
+        // check server socket for new connections
+        acceptNewConnection();
+
+        // check client sockets for new events
+        handleActiveConnections();
     }
 
 }
@@ -65,16 +69,14 @@ void IRC::Server::start(const std::string& ip, int port) {
 /* stop server */
 void IRC::Server::stop(void) {
 
-    for (Connection& conn : _conns) {
-        conn.close();
-    }
-    _conns.clear();
+    std::vector<struct pollfd>::iterator    iter = _pollfds.begin();
 
-    if (_socket != -1) {
-        ::close(_socket);
-        _socket = -1;
+    while (iter != _pollfds.end()) {
+
+        close(iter->fd);
     }
 
+    _pollfds.empty();
 }
 
 /* restart server */
@@ -110,8 +112,8 @@ void IRC::Server::setupSocket(const std::string& ip, int port) {
 
 	_socket = ::socket(AF_INET, SOCK_STREAM, 0);
     if (_socket == -1) {
-        std::cout << "Failed to create socket.\n";
-        throw std::exception("Failed to create socket.");
+        std::cout << "Failed to create socket." << std::endl;
+        // throw std::exception("Failed to create socket.");
     }
 
     sockaddr_in hint{};
@@ -120,83 +122,129 @@ void IRC::Server::setupSocket(const std::string& ip, int port) {
     inet_pton(AF_INET, ip.c_str(), &(hint.sin_addr));
 
     if (bind(_socket, (sockaddr*)&hint, sizeof(hint)) == -1) {
-        std::cout << "Failed to bind to IP/Port.\n";
-        throw std::exception("Failed to bind to IP/Port.");
+        std::cout << "Failed to bind to IP/Port." << std::endl;
+        // throw std::exception("Failed to bind to IP/Port.");
     }
 
     if (listen(_socket, SOMAXCONN) == -1) {
-        std::cout << "Failed to listen.\n";
-        throw std::exception("Failed to listen.");
+        std::cout << "Failed to listen." << std::endl;
+        // throw std::exception("Failed to listen.");
     }
 
+}
+
+/* add new fd to back of pollfds vector */
+void    IRC::Server::addPollfd(int fd)
+{
+    if (fd != -1)
+    {
+        pollfd  pfd;
+
+        pfd.fd = fd;
+        pfd.events = POLLIN;
+        pfd.revents = 0;
+
+        _pollfds.push_back(pfd);
+    }
+    else
+    {
+        std::cout << "Not a valid socket to build pollfd." << std::endl;
+        // throw std::exception("Not a valid socket to build pollfd.");
+    }
 }
 
 /* accept new pollfd connection */
 void IRC::Server::acceptNewConnection(void) {
 
-    if (_pfds[0].revents & POLLIN)
+    // check server listening socket for recent events
+    if (_pollfds[0].revents & POLLIN)
     {
         sockaddr_in client{};
         socklen_t clientSize = sizeof(client);
         int clientSocket = accept(_socket, (sockaddr*)&client, &clientSize);
         if (clientSocket == -1) {
-            std::cout << "Failed to accept client connection.\n";
-            continue;
+            std::cout << "Failed to accept client connection." << std::endl;
+            // throw std::exception("Failed to accept client connection.");
         }
 
-        IRC::Connection connection(clientSocket);
-        _conns.push_back(connection);
-
-                int fd = accept_connection(0);
-                _data->add_user(fd, host, remoteIP);
-                bufmap.insert(std::make_pair(fd, Buffer()));
+        addPollfd(clientSocket);
     }
 
-    // while (true) {
-
-    //     sockaddr_in client{};
-    //     socklen_t clientSize = sizeof(client);
-    //     int clientSocket = accept(_socket, (sockaddr*)&client, &clientSize);
-    //     if (clientSocket == -1) {
-    //         std::cout << "Failed to accept client connection.\n";
-    //         continue;
-    //     }
-
-    //     IRC::Connection connection(clientSocket);
-    //     _conns.push_back(connection);
-
-    //     // Handle the new client connection
-    //     handleNewConnection(connection);
-	// }
 }
 
-void IRC::Server::handleNewConnection(IRC::Connection& connection) {
+void IRC::Server::handleActiveConnections(void) {
 
-    // Implement your logic to handle the new client connection
-    std::cout << "New client connected. Socket: " << connection.get_sd() << "\n";
+    char    buffer[BUFFER_SIZE];
 
-    // Example: Send a welcome message to the client
-    connection.send_message("Welcome to the server!");
+    std::vector<struct pollfd>::iterator    iter = _pollfds.begin() + 1;
 
-    // Example: Receive and process incoming messages from the client
-    std::string message = connection.receive_message(1024);
-    std::cout << "Received message: \n" << message << "\n";
+    while (iter != _pollfds.end())
+    {
 
-    std::cout << "Processing ... \n";
+        if (iter->revents & POLLIN)
+        {
+            ssize_t	receivedCount = recv(iter->fd, buffer, BUFFER_SIZE, 0);
+    
+            Lexer		lexer(buffer);
+            Parser		parser(lexer);
+            std::vector< std::vector< Token > >	cmdtbl;
 
-	Lexer		lexer(message);
-	Parser		parser(lexer);
-	std::vector< std::vector< Token > >	matrix;
+            cmdtbl = parser.parse();
 
-	matrix = parser.parse();
+            for (std::vector<Token>& cmd : cmdtbl) {
 
-    for (std::vector<Token>& row : matrix) {
+                std::cout << std::endl << " --- N E W  C M D --- " << std::endl;
+    
+                for (Token& token : cmd) {
 
-        for (Token& token : row) {
+                    std::cout << token.type << "=" << token.value << " | ";
 
-            std::cout << token.type << "=" << token.value << std::endl;
+                    std::string response;
+                    ssize_t bytesSent;
+
+                    if (token.type == IRC::COMMAND && token.value == "CAP")
+                    {
+                        response = "CAP * END";
+                        bytesSent = ::send(iter->fd, response.c_str(), response.length(), 0);
+                        if (bytesSent == -1) {
+                            std::cout << std::endl << "Error sending response to client" << std::endl;
+                        }
+                    }
+                    else if (token.type == IRC::COMMAND && token.value == "USER")
+                    {
+                        response = ":irc 001 swillis :Welcome to the IRC server, swillis!\n";
+                        bytesSent = ::send(iter->fd, response.c_str(), response.length(), 0);
+                        if (bytesSent == -1) {
+                            std::cout << std::endl << "Error sending response to client" << std::endl;
+                        }
+
+                        response = ":irc 002 swillis :Your host is irc, running version 1.0\n";
+                        bytesSent = ::send(iter->fd, response.c_str(), response.length(), 0);
+                        if (bytesSent == -1) {
+                            std::cout << std::endl << "Error sending response to client" << std::endl;
+                        }
+
+                        response = ":irc 003 swillis :This server was created 29-05-2023\n";
+                        bytesSent = ::send(iter->fd, response.c_str(), response.length(), 0);
+                        if (bytesSent == -1) {
+                            std::cout << std::endl << "Error sending response to client" << std::endl;
+                        }
+
+                        response = ":irc 004 swillis irc 1.0 A B\r\n";
+                        bytesSent = ::send(iter->fd, response.c_str(), response.length(), 0);
+                        if (bytesSent == -1) {
+                            std::cout << std::endl << "Error sending response to client" << std::endl;
+                        }
+                        
+                    }
+                }
+
+            }
         }
+
+        ++iter;
     }
+
 
 }
 

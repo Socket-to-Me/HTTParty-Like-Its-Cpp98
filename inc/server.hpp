@@ -1,12 +1,14 @@
 #ifndef SERVER_HEADER
-#define SERVER_HEADER
+# define SERVER_HEADER
 
-#include <vector>
-#include <string>
-#include <poll.h>
+# define BUFFER_SIZE 100000
 
-#include "connection.hpp"
-#include "socket.hpp"
+# include <vector>
+# include <string>
+# include <poll.h>
+
+# include "connection.hpp"
+# include "socket.hpp"
 
 // -- N A M E S P A C E  I R C ------------------------------------------------
 
@@ -21,7 +23,7 @@ namespace IRC {
 			// -- P U B L I C  M E T H O D S ----------------------------------
 
 			/* start server */
-			bool	start(const std::string& ip, int port);
+			void	start(const std::string& ip, int port);
 
 			/* stop server */
 			void	stop(void);
@@ -89,11 +91,10 @@ namespace IRC {
 
 			// -- P R I V A T E  M E T H O D S ----------------------------------
 
-			/* accept connections */
-			void	acceptConnections(void);
-
-			/* handle new connection */
-			void	handleNewConnection(IRC::Connection& connection);
+			void	setupSocket(const std::string& ip, int port);
+			void    addPollfd(int fd);
+			void	acceptNewConnection(void);
+			void 	handleActiveConnections(void);
 
 
 	};

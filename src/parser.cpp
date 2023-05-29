@@ -21,7 +21,7 @@ std::vector< std::vector< IRC::Token > > IRC::Parser::parse(void) {
         }
 
         matrix.push_back(cmd);
-        cmd.empty();
+        cmd.clear();
         _currToken = _lexer.getNextToken();
 
     }

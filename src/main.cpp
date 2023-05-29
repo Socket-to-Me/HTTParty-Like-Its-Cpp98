@@ -47,7 +47,7 @@ int main(int ac, char** av) {
 
 	IRC::Server& server = IRC::Server::instance();
 
-	server.start("0.0.0.0", 5001);
+	server.start("127.0.0.1", 5052);
 
 	// ------------------------------------------------
 
