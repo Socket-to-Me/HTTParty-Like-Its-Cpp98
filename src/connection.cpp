@@ -1,37 +1,42 @@
 #include "connection.hpp"
 
-IRC::Connection::Connection(int sd)
-: _sd(sd) {
+IRC::Connection::Connection(const struct pollfd& pfd)
+: _pfd(pfd) {
 
 	return;
 }
 
-void IRC::Connection::send_message(const std::string& msg) {
-
-	send(_sd, msg.c_str(), msg.length(), 0);
-	return;
+bool    	IRC::Connection::hasEventOccured(void)
+{
+	if (_pfd.revents & POLLIN)
+		return true;
+	return false;
 }
 
-std::string IRC::Connection::receive_message(const int buffer_size) {
-
-	std::vector<char>	buffer(buffer_size, 0);
-	int 				bytesReceived;
-	
-	bytesReceived = recv(_sd, buffer.data(), buffer_size - 1, 0);
-	if (bytesReceived == -1) {
-		std::cerr << "Error in receiving message.\n";
-		return "";
+ssize_t    	IRC::Connection::send(const std::string& message)
+{
+	ssize_t bytesSent = ::send(getfd(), message.c_str(), message.length(), 0);
+	if (bytesSent == -1) {
+		std::cout << std::endl << "Error sending response to client" << std::endl;
 	}
-	return std::string(buffer.data());
+	return bytesSent;
 }
 
-void IRC::Connection::close() {
-
-	::close(_sd);
-	return;
+ssize_t		IRC::Connection::receive(char* buffer, int buffer_size)
+{
+	ssize_t	bytesReceived = ::recv(getfd(), buffer, buffer_size, 0);
+	if (bytesReceived == -1) {
+		std::cout << std::endl << "Error sending response to client" << std::endl;
+	}
+	return bytesReceived;
 }
 
-int IRC::Connection::get_sd(void) {
+void    	IRC::Connection::close(void) 
+{
+	::close(getfd());
+}
 
-	return _sd;
+int     	IRC::Connection::getfd(void)
+{
+	return _pfd.fd;
 }

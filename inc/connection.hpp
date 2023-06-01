@@ -7,25 +7,31 @@
 #include <unistd.h>
 #include <cstring>
 #include <vector>
+#include <poll.h>
 
 namespace IRC {
 
     class Connection {
 
-    private:
+        private:
 
-        int _sd;
+            const struct pollfd& _pfd;
 
-    public:
+        public:
 
-        Connection(int sd);
-        void send_message(const std::string& message);
-        std::string receive_message(const int buffer_size);
-        void close(void);
-        int get_sd(void);
+            Connection(const struct pollfd& pfd);
+        
+            bool    	hasEventOccured(void);
+            ssize_t    	send(const std::string& message);
+            ssize_t		receive(char* buffer, int buffer_size);
+            void        close(void);
+            int         getfd(void);
 
     };
 
 }
 
 #endif
+
+
+

@@ -1,5 +1,6 @@
 #include "server.hpp"
 #include "parser.hpp"
+#include "connection.hpp"
 
 
 // -- S I N G L E T O N  I N S T A N C E --------------------------------------
@@ -168,6 +169,8 @@ void IRC::Server::acceptNewConnection(void) {
         }
 
         addPollfd(clientSocket);
+        Connection  conn(_pollfds.back());
+        _connections.push_back(conn);
     }
 
 }
@@ -176,18 +179,18 @@ void IRC::Server::handleActiveConnections(void) {
 
     char    buffer[BUFFER_SIZE];
 
-    std::vector<struct pollfd>::iterator    iter = _pollfds.begin() + 1;
+    std::vector<Connection>::iterator    iter = _connections.begin();
 
-    while (iter != _pollfds.end())
+    while (iter != _connections.end())
     {
 
-        if (iter->revents & POLLIN)
+        if (iter->hasEventOccured())
         {
-            ssize_t	receivedCount = recv(iter->fd, buffer, BUFFER_SIZE, 0);
+            ssize_t	bytesReceived = iter->receive(buffer, BUFFER_SIZE);
     
             Lexer		lexer(buffer);
             Parser		parser(lexer);
-            std::vector< std::vector< Token > >	cmdtbl;
+            std::vector<std::vector<Token>>	cmdtbl;
 
             cmdtbl = parser.parse();
 
@@ -199,43 +202,16 @@ void IRC::Server::handleActiveConnections(void) {
 
                     std::cout << token.type << "=" << token.value << " | ";
 
-                    std::string response;
-                    ssize_t bytesSent;
-
                     if (token.type == IRC::COMMAND && token.value == "CAP")
                     {
-                        response = "CAP * END";
-                        bytesSent = ::send(iter->fd, response.c_str(), response.length(), 0);
-                        if (bytesSent == -1) {
-                            std::cout << std::endl << "Error sending response to client" << std::endl;
-                        }
+                        iter->send("CAP * END");
                     }
                     else if (token.type == IRC::COMMAND && token.value == "USER")
                     {
-                        response = ":irc 001 swillis :Welcome to the IRC server, swillis!\n";
-                        bytesSent = ::send(iter->fd, response.c_str(), response.length(), 0);
-                        if (bytesSent == -1) {
-                            std::cout << std::endl << "Error sending response to client" << std::endl;
-                        }
-
-                        response = ":irc 002 swillis :Your host is irc, running version 1.0\n";
-                        bytesSent = ::send(iter->fd, response.c_str(), response.length(), 0);
-                        if (bytesSent == -1) {
-                            std::cout << std::endl << "Error sending response to client" << std::endl;
-                        }
-
-                        response = ":irc 003 swillis :This server was created 29-05-2023\n";
-                        bytesSent = ::send(iter->fd, response.c_str(), response.length(), 0);
-                        if (bytesSent == -1) {
-                            std::cout << std::endl << "Error sending response to client" << std::endl;
-                        }
-
-                        response = ":irc 004 swillis irc 1.0 A B\r\n";
-                        bytesSent = ::send(iter->fd, response.c_str(), response.length(), 0);
-                        if (bytesSent == -1) {
-                            std::cout << std::endl << "Error sending response to client" << std::endl;
-                        }
-                        
+                        iter->send(":irc 001 swillis :Welcome to the IRC server, swillis!\n");
+                        iter->send(":irc 002 swillis :Your host is irc, running version 1.0\n");
+                        iter->send(":irc 003 swillis :This server was created 29-05-2023\n");
+                        iter->send(":irc 004 swillis irc 1.0 A B\r\n");
                     }
                 }
 

@@ -71,15 +71,9 @@ namespace IRC {
 
 			// -- P R I V A T E  M E M B E R S --------------------------------
 
-			/* server clients */
-			// std::vector<Client> _client;
-			std::vector<IRC::Connection> _conns;
-
 			/* server socket */
 			// TODO = change to socket object
 			int	_socket;
-
-			/* vector pollfd */
 
 			// struct pollfd {
 			//     int fd;         // File descriptor to monitor
@@ -87,7 +81,8 @@ namespace IRC {
 			//     short revents;  // Events that occurred (filled by the kernel)
 			// };
 
-			std::vector<struct pollfd>			_pollfds;
+			std::vector<struct pollfd>		_pollfds;
+			std::vector<IRC::Connection>	_connections;
 
 			// -- P R I V A T E  M E T H O D S ----------------------------------
 
