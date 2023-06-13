@@ -6,9 +6,9 @@
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
 
-namespace IRC {
+namespace irc {
 
-	class join : public IRC::cmd {
+	class join : public irc::cmd {
 
 		public:
 

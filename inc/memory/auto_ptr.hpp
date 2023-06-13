@@ -6,7 +6,7 @@
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
 
-namespace IRC {
+namespace irc {
 
 
 	// -- U N I Q U E  P O I N T E R  C L A S S -------------------------------

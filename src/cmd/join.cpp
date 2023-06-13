@@ -1,26 +1,26 @@
 #include "join.hpp"
 
 /* default constructor */
-IRC::join::join(void) {
+irc::join::join(void) {
 	return;
 }
 
 /* destructor */
-IRC::join::~join(void) {
+irc::join::~join(void) {
 	return;
 }
 
 /* execute command */
-bool IRC::join::execute(void) {
+bool irc::join::execute(void) {
 	return false;
 }
 
 /* evaluate command */
-bool IRC::join::evaluate(void) {
+bool irc::join::evaluate(void) {
 	return false;
 }
 
 /* create command */
-IRC::auto_ptr<IRC::cmd> IRC::join::create(void) {
-	return IRC::auto_ptr<IRC::cmd>(new IRC::join());
+irc::auto_ptr<irc::cmd> irc::join::create(void) {
+	return irc::auto_ptr<irc::cmd>(new irc::join());
 }

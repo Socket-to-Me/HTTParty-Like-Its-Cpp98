@@ -12,7 +12,7 @@
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
 
-namespace IRC {
+namespace irc {
 
 
 	// -- C M D  F A C T O R Y  C L A S S ------------------------------------
@@ -24,7 +24,7 @@ namespace IRC {
 			// -- T Y P E S ---------------------------------------------------
 
 			/* command pointer */
-			typedef auto_ptr<cmd> cmd_ptr;
+			typedef irc::auto_ptr<irc::cmd> cmd_ptr;
 
 
 
