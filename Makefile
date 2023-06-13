@@ -87,7 +87,7 @@ override JSNDIR := $(BLDDIR)/_json
 # -- S O U R C E S ------------------------------------------------------------
 
 # list all source files
-override FILES_NAME := main socket server sockaddr connection lexer parser
+override FILES_NAME := main socket server sockaddr connection cmd join cmd_factory
 
 ifeq ($(FILES_NAME),)
  $(error $(shell echo "No \033[1;32msource\033[0m files found"))
@@ -137,7 +137,7 @@ RM := rm -rf
 
 CXX := $(shell which c++)
 
-STD := -std=c++17
+STD := -std=c++98
 
 OPT := -O0
 
