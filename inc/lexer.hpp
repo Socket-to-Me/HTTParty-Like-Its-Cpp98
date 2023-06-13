@@ -2,8 +2,83 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <array>
 
 namespace IRC {
+
+	enum token_type {
+
+		MAX_TOKEN_TYPE
+	};
+
+	enum lexer_state {
+
+		DEFAULT,
+
+		IN_TAG,
+
+		IN_SOURCE,
+
+		START_CMD,
+		IN_CMD,
+
+
+		MAX_LEXER_STATE
+	};
+
+
+	enum char_type {
+
+		AT,                 // @
+		COLON, // :
+		SPACE, // ' '
+		NEWLINE, // \n
+		CARRIAGE_RETURN, // \r
+		OTHER, // all other characters
+		MAX_CHAR_TYPE
+	};
+
+
+	enum lexer_action {
+		SKIP,
+		CATCH,
+		MAX_LEXER_ACTION
+	};
+
+
+	class lexer {
+
+		struct transition {
+			lexer_state		state;
+			lexer_action	action;
+		};
+
+		std::array<std::array<transition,
+							MAX_CHAR_TYPE>,
+				MAX_LEXER_STATE> _lookup = {
+
+			// -- D E F A U L T  S T A T E ----------------------------------------
+
+				{ IN_TAG, SKIP },  // AT
+				{ DEFAULT, SKIP }, // COLON
+				{ DEFAULT, SKIP }, // SPACE
+				{ DEFAULT, SKIP }, // NEWLINE
+				{ DEFAULT, SKIP }, // CARRIAGE_RETURN
+				{ DEFAULT, SKIP }  // OTHER
+		};
+
+
+
+		transition trans = _lookup[current_state][current_char];
+
+	};
+
+
+
+
+
+
+
 
     enum TokenType {
 
