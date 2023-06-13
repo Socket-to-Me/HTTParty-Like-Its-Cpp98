@@ -20,9 +20,9 @@
 
 int main(int ac, char** av) {
 
-	IRC::cmd_factory& facto = IRC::cmd_factory::instance();
+	irc::cmd_factory& facto = irc::cmd_factory::instance();
 
-	IRC::cmd_factory::cmd_ptr cmd = facto.search("JOIN");
+	irc::cmd_factory::cmd_ptr cmd = facto.search("JOIN");
 
 	if (!!cmd) {
 		if (cmd->evaluate() == true) {
@@ -55,7 +55,7 @@ int main(int ac, char** av) {
 	// IRC::SockAddr addr(AF_INET, 6667);
 
 
-	IRC::join j;
+	irc::join j;
 
 	// IRC::bind(socket, addr);
 
