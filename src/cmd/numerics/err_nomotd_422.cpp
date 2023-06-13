@@ -1,0 +1,26 @@
+#include "err_nomotd_422.hpp"
+
+/* default constructor */
+irc::err_nomotd_422::err_nomotd_422(void) {
+    return;
+}
+
+/* destructor */
+irc::err_nomotd_422::~err_nomotd_422(void) {
+    return;
+}
+
+/* execute command */
+bool irc::err_nomotd_422::execute(void) {
+    return false;
+}
+
+/* evaluate command */
+bool irc::err_nomotd_422::evaluate(void) {
+    return false;
+}
+
+/* create command */
+irc::auto_ptr<irc::cmd> irc::err_nomotd_422::create(void) {
+    return irc::auto_ptr<irc::cmd>(new irc::err_nomotd_422());
+}

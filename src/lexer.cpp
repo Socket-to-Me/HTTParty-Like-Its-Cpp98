@@ -1,5 +1,23 @@
 #include "lexer.hpp"
 
+char_type IRC::Lexer::getCharType(uint8_t c) {
+
+    switch (c) {
+        case '@':
+            return AT;
+        case ':':
+            return COLON;
+        case ' ':
+            return SPACE;
+        case '\n':
+            return NEWLINE;
+        case '\r':
+            return CARRIAGE_RETURN;
+        default:
+            return OTHER;
+    }
+}
+
 IRC::Token::Token(TokenType type, const std::string& value)
 : _type(type), _value(value) 
 {

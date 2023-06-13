@@ -38,7 +38,6 @@ namespace IRC {
 		MAX_CHAR_TYPE
 	};
 
-
 	enum lexer_action {
 		SKIP,
 		CATCH,
@@ -47,6 +46,9 @@ namespace IRC {
 
 
 	class lexer {
+
+        // treating UTF8 need to take in char as unsigned char
+        char_type   getCharType(uint8_t c);
 
 		struct transition {
 			lexer_state		state;

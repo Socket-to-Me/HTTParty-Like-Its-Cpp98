@@ -30,8 +30,6 @@ int main(int ac, char** av) {
 		}
 	}
 
-
-
 	// // server class test
 
 	// IRC::Server& server = IRC::Server::instance();
@@ -55,7 +53,7 @@ int main(int ac, char** av) {
 	// IRC::SockAddr addr(AF_INET, 6667);
 
 
-	irc::join j;
+	// irc::join j;
 
 	// IRC::bind(socket, addr);
 
@@ -74,7 +72,7 @@ int main(int ac, char** av) {
 	// std::vector< std::vector< IRC::Token > >	matrix;
 
 	// matrix = parser.parse();
-	IRC::SockAddr addr(PF_INET, 4243, "localhost");
+	// IRC::SockAddr addr(PF_INET, 4243, "localhost");
 
     // for (std::vector<IRC::Token>& row : matrix) {
 
@@ -104,5 +102,5 @@ int main(int ac, char** av) {
 	//  use irssi in terminal to connect to server
 	// type -> /connect 0.0.0.0 5000
 
-	return EXIT_SUCCESS;
+	// return EXIT_SUCCESS;
 }

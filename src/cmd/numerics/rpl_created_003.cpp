@@ -1,0 +1,26 @@
+#include "rpl_created_003.hpp"
+
+/* default constructor */
+irc::rpl_created_003::rpl_created_003(void) {
+    return;
+}
+
+/* destructor */
+irc::rpl_created_003::~rpl_created_003(void) {
+    return;
+}
+
+/* execute command */
+bool irc::rpl_created_003::execute(void) {
+    return false;
+}
+
+/* evaluate command */
+bool irc::rpl_created_003::evaluate(void) {
+    return false;
+}
+
+/* create command */
+irc::auto_ptr<irc::cmd> irc::rpl_created_003::create(void) {
+    return irc::auto_ptr<irc::cmd>(new irc::rpl_created_003());
+}
