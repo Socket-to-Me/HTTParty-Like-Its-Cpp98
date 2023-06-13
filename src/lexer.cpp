@@ -1,5 +1,21 @@
 #include "lexer.hpp"
 
+IRC::Token::Token(TokenType type, const std::string& value)
+: _type(type), _value(value) 
+{
+	return ;
+}
+
+IRC::TokenType               IRC::Token::getType(void) const
+{
+	return _type;
+}
+
+const std::string&      IRC::Token::getValue(void) const
+{
+	return _value;
+}
+
 IRC::Lexer::Lexer(const std::string& text)
 : _text(text), _pos(0) {
 
@@ -29,9 +45,9 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 			}
 
 			if (caps)
-				return { COMMAND, str };
+				return Token(COMMAND, str);
 
-			return { PARAMETER, str };
+			return Token(PARAMETER, str);
 		}
 
 		// ----- T R A I L I N G ------------------------------------
@@ -50,8 +66,8 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 			}
 
 			if (err)
-				return { ERROR, str };
-			return { TRAILING, str };
+				return Token(ERROR, str);
+			return Token(TRAILING, str);
 
 		}
 
@@ -61,7 +77,7 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 
 			str += _text[_pos];
 			++_pos;
-			return { SPACE, str };
+			return Token(SPACE, str);
 		}
 
 		// ----- N E W  L I N E ------------------------------------
@@ -70,7 +86,7 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 
 			str += _text[_pos];
 			++_pos;
-			return { NEWLINE, str };
+			return Token(NEWLINE, str);
 		}
 	
 		// ----- E O F ------------------------------------
@@ -79,7 +95,7 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 
 			++_pos;
 			++_pos;
-			return { EOF_TOKEN, "" };
+			return Token(EOF_TOKEN, "");
 		}
 
 		// ----- P A R A M E T E R S ------------------------------------
@@ -94,10 +110,9 @@ IRC::Token	IRC::Lexer::getNextToken(void) {
 		}
 
 		if (err)
-			return { ERROR, str };
-		return { PARAMETER, str };
-
+			return Token(ERROR, str);
+		return Token(PARAMETER, str);
 	}
 
-	return { EOF_TOKEN, "" };
+	return Token(EOF_TOKEN, "");
 }

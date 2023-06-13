@@ -11,9 +11,9 @@ std::vector< std::vector< IRC::Token > > IRC::Parser::parse(void) {
     std::vector< std::vector< Token > > matrix;
     std::vector<Token> cmd;
 
-    while (_currToken.type != EOF_TOKEN) {
+    while (_currToken.getType() != EOF_TOKEN) {
 
-        while (_currToken.type != NEWLINE && _currToken.type != EOF_TOKEN) {
+        while (_currToken.getType() != NEWLINE && _currToken.getType() != EOF_TOKEN) {
 
             cmd.push_back(_currToken);
             _currToken = _lexer.getNextToken();

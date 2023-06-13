@@ -80,7 +80,7 @@ void IRC::Server::start(const std::string& ip, int port) {
         return;
     }
 
-    acceptConnections();
+    acceptNewConnection();
 
     //return true;
 }
@@ -92,11 +92,11 @@ void IRC::Server::stop(void) {
 	typedef std::vector<IRC::Connection>::size_type conn_size;
 
 	// FUCK IT
-    for (conn_size x = 0; x < _conns.size(); ++x) {
-        _conns[x].close();
+    for (std::vector<IRC::Connection>::size_type x = 0; x < _connections.size(); ++x) {
+        _connections[x].close();
     }
 
-    _conns.clear();
+    _connections.clear();
 
     while (iter != _pollfds.end()) {
 
@@ -143,7 +143,7 @@ void IRC::Server::setupSocket(const std::string& ip, int port) {
         // throw std::exception("Failed to create socket.");
     }
 
-    sockaddr_in hint{};
+    sockaddr_in hint;
     hint.sin_family = AF_INET;
     hint.sin_port = htons(port);
     inet_pton(AF_INET, ip.c_str(), &(hint.sin_addr));
@@ -186,7 +186,6 @@ void IRC::Server::acceptNewConnection(void) {
     // check server listening socket for recent events
     if (_pollfds[0].revents & POLLIN)
     {
-        sockaddr_in client{};
         sockaddr_in client;
         socklen_t clientSize = sizeof(client);
         int clientSocket = accept(_socket, (sockaddr*)&client, &clientSize);
@@ -219,7 +218,7 @@ void IRC::Server::handleActiveConnections(void) {
 
             std::vector<std::vector<Token> > cmdtbl;
 			// size type typedef
-			typedef std::vector<void>::size_type size_type;
+			typedef std::vector<int>::size_type size_type;
 
             cmdtbl = parser.parse();
 
@@ -231,13 +230,13 @@ void IRC::Server::handleActiveConnections(void) {
 
 					Token&	token = cmdtbl[x][z];
 
-                    std::cout << token.type << "=" << token.value << " | ";
+                    std::cout << token.getType() << "=" << token.getValue() << " | ";
 
-                    if (token.type == IRC::COMMAND && token.value == "CAP")
+                    if (token.getType() == IRC::COMMAND && token.getValue() == "CAP")
                     {
                         iter->send("CAP * END");
                     }
-                    else if (token.type == IRC::COMMAND && token.value == "USER")
+                    else if (token.getType() == IRC::COMMAND && token.getValue() == "USER")
                     {
                         iter->send(":irc 001 swillis :Welcome to the IRC server, swillis!\n");
                         iter->send(":irc 002 swillis :Your host is irc, running version 1.0\n");

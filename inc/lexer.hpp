@@ -16,10 +16,16 @@ namespace IRC {
         ERROR
     };
 
-    struct Token {
-    
-        TokenType   type;
-        std::string value;
+    class Token {
+
+        public:
+            Token(TokenType type, const std::string& value);
+            TokenType               getType(void) const;
+            const std::string&      getValue(void) const;
+
+        private:
+            TokenType       _type;
+            std::string     _value;
     };
 
     class Lexer {
