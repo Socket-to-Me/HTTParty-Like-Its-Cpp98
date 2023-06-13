@@ -65,12 +65,37 @@ void IRC::Server::start(const std::string& ip, int port) {
         handleActiveConnections();
     }
 
+    sockaddr_in hint;
+    hint.sin_family = AF_INET;
+    hint.sin_port = htons(port);
+    inet_pton(AF_INET, ip.c_str(), &(hint.sin_addr));
+
+    if (bind(_socket, (sockaddr*)&hint, sizeof(hint)) == -1) {
+        std::cout << "Failed to bind to IP/Port.\n";
+        return false;
+    }
+
+    if (listen(_socket, SOMAXCONN) == -1) {
+        std::cout << "Failed to listen.\n";
+        return false;
+    }
+
+    acceptConnections();
+
+    return true;
 }
 
 /* stop server */
 void IRC::Server::stop(void) {
 
     std::vector<struct pollfd>::iterator    iter = _pollfds.begin();
+	typedef std::vector<IRC::Connection>::size_type conn_size;
+
+	// FUCK IT
+    for (conn_size x = 0; x < _conns.size(); ++x) {
+        _conns[x].close();
+    }
+    _conns.clear();
 
     while (iter != _pollfds.end()) {
 
@@ -98,7 +123,7 @@ void IRC::Server::unsubscribe(const IRC::Connection& conn) {
 /* send message to one client */
 void IRC::Server::send(IRC::Connection& conn, const std::string& message) {
 
-    
+
 }
 
 /* send message to all clients */
@@ -161,6 +186,7 @@ void IRC::Server::acceptNewConnection(void) {
     if (_pollfds[0].revents & POLLIN)
     {
         sockaddr_in client{};
+        sockaddr_in client;
         socklen_t clientSize = sizeof(client);
         int clientSocket = accept(_socket, (sockaddr*)&client, &clientSize);
         if (clientSocket == -1) {
