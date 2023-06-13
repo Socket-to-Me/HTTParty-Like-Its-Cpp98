@@ -56,7 +56,7 @@ void IRC::Server::start(const std::string& ip, int port) {
 		{
 			std::cout << "Poll timed out" << std::endl;
 			continue;
-		}	
+		}
 
         // check server socket for new connections
         acceptNewConnection();
@@ -72,29 +72,30 @@ void IRC::Server::start(const std::string& ip, int port) {
 
     if (bind(_socket, (sockaddr*)&hint, sizeof(hint)) == -1) {
         std::cout << "Failed to bind to IP/Port.\n";
-        return false;
+        return;
     }
 
     if (listen(_socket, SOMAXCONN) == -1) {
         std::cout << "Failed to listen.\n";
-        return false;
+        return;
     }
 
     acceptConnections();
 
-    return true;
+    //return true;
 }
 
 /* stop server */
 void IRC::Server::stop(void) {
 
-    std::vector<struct pollfd>::iterator    iter = _pollfds.begin();
+    std::vector<struct pollfd>::iterator iter = _pollfds.begin();
 	typedef std::vector<IRC::Connection>::size_type conn_size;
 
 	// FUCK IT
     for (conn_size x = 0; x < _conns.size(); ++x) {
         _conns[x].close();
     }
+
     _conns.clear();
 
     while (iter != _pollfds.end()) {
@@ -207,24 +208,28 @@ void IRC::Server::handleActiveConnections(void) {
 
     std::vector<Connection>::iterator    iter = _connections.begin();
 
-    while (iter != _connections.end())
-    {
+    while (iter != _connections.end()) {
 
         if (iter->hasEventOccured())
         {
             ssize_t	bytesReceived = iter->receive(buffer, BUFFER_SIZE);
-    
+
             Lexer		lexer(buffer);
             Parser		parser(lexer);
-            std::vector<std::vector<Token>>	cmdtbl;
+
+            std::vector<std::vector<Token> > cmdtbl;
+			// size type typedef
+			typedef std::vector<void>::size_type size_type;
 
             cmdtbl = parser.parse();
 
-            for (std::vector<Token>& cmd : cmdtbl) {
+			for (size_type x = 0; x < cmdtbl.size(); ++x) {
 
                 std::cout << std::endl << " --- N E W  C M D --- " << std::endl;
-    
-                for (Token& token : cmd) {
+
+                for (size_type z = 0; z < cmdtbl[x].size(); ++z) {
+
+					Token&	token = cmdtbl[x][z];
 
                     std::cout << token.type << "=" << token.value << " | ";
 
