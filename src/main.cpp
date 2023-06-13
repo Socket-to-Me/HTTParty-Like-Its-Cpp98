@@ -13,8 +13,24 @@
 ///else
 //#//define port 4243
 //#endif
+#include "join.hpp"
+#include "cmd_factory.hpp"
+
+#include <memory>
 
 int main(int ac, char** av) {
+
+	IRC::cmd_factory& facto = IRC::cmd_factory::instance();
+
+	IRC::cmd_factory::cmd_ptr cmd = facto.search("JOIN");
+
+	if (!!cmd) {
+		if (cmd->evaluate() == true) {
+			cmd->execute();
+		}
+	}
+
+
 
 	// // server class test
 
@@ -39,6 +55,7 @@ int main(int ac, char** av) {
 	// IRC::SockAddr addr(AF_INET, 6667);
 
 
+	IRC::join j;
 
 	// IRC::bind(socket, addr);
 
@@ -57,6 +74,7 @@ int main(int ac, char** av) {
 	// std::vector< std::vector< IRC::Token > >	matrix;
 
 	// matrix = parser.parse();
+	IRC::SockAddr addr(PF_INET, 4243, "localhost");
 
     // for (std::vector<IRC::Token>& row : matrix) {
 
