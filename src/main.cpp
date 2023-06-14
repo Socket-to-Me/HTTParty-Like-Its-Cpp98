@@ -30,7 +30,9 @@ int main(int ac, char** av) {
 		if (cmd->evaluate() == true) {
 			cmd->execute();
 		}
-	}
+	}*/
+
+	return 0;
 
 	return 0;
 

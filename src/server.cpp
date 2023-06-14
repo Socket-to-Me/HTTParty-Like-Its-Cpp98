@@ -203,15 +203,19 @@ void IRC::Server::acceptNewConnection(void) {
 
 void IRC::Server::handleActiveConnections(void) {
 
-    char    buffer[BUFFER_SIZE];
+	// iterator typedef
+	typedef std::vector<Connection>::iterator conn_iter;
 
-    std::vector<Connection>::iterator    iter = _connections.begin();
+	/* loop over all connections */
+	for (conn_iter it = _connections.begin(); it != _connections.end(); ++it) {
 
-    while (iter != _connections.end()) {
+        if (it->receive()) {
 
-        if (iter->hasEventOccured())
-        {
-            ssize_t	bytesReceived = iter->receive(buffer, BUFFER_SIZE);
+			std::string msg = it->extract_message();
+
+			std::cout << msg << std::endl;
+
+			//irc::lexer::lex(msg);
 
             // ------ Connection Registration -------------------
 
@@ -327,7 +331,6 @@ void IRC::Server::handleActiveConnections(void) {
 			*/
         }
 
-        ++iter;
     }
 
 

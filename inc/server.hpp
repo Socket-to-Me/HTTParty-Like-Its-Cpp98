@@ -1,7 +1,6 @@
 #ifndef SERVER_HEADER
 # define SERVER_HEADER
 
-# define BUFFER_SIZE 512
 
 # include <vector>
 # include <string>

@@ -9,9 +9,61 @@
 #include <vector>
 #include <poll.h>
 
+
+// -- I R C  N A M E S P A C E ------------------------------------------------
+
 namespace IRC {
 
+
+	// -- C O N N E C T I O N -------------------------------------------------
+
     class Connection {
+
+
+        public:
+
+			// -- public constructors -----------------------------------------
+
+			/* pollfd reference constructor */
+            Connection(const struct pollfd&);
+
+			/* copy constructor */
+			Connection(const Connection&);
+
+			/* destructor */
+			~Connection(void);
+
+
+		private:
+
+			// -- private assignment operator ----------------------------------
+
+			/* copy assignment operator */
+			Connection& operator=(const Connection&);
+
+
+		public:
+
+			// -- public methods ----------------------------------------------
+
+			/* receive bytes */
+            bool receive(void);
+
+			/* send bytes */
+            ssize_t send(const std::string& message);
+
+			/* close connection */
+            void close(void);
+
+			/* extract message */
+			std::string extract_message(void);
+
+
+			// -- public accessors --------------------------------------------
+
+			/* get file descriptor */
+            int getfd(void);
+
 
         private:
 
