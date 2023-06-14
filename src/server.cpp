@@ -43,23 +43,21 @@ void IRC::Server::start(const std::string& ip, int port) {
 
     while (true) {
 
-        // pollCount = # fds where events were detected
-        // (ptr to array of pollfd strcuts, # elem in array, timeout of 60s)
-        int pollCount = poll(&_pollfds[0], _pollfds.size(), 60000);
+		// pollCount = # fds where events were detected
+		// (ptr to array of pollfd strcuts, # elem in array, timeout of 60s)
+		int pollCount = poll(&_pollfds[0], _pollfds.size(), 60000);
 
-        if (pollCount == -1)
-		{
+		if (pollCount == -1) {
 			std::cout << "Poll error" << std::endl;
 			exit(EXIT_FAILURE);
 		}
-		else if (pollCount == 0)
-		{
+		else if (pollCount == 0) {
 			std::cout << "Poll timed out" << std::endl;
 			continue;
 		}
 
-        // check server socket for new connections
-        acceptNewConnection();
+		// check server socket for new connections
+		acceptNewConnection();
 
         // check client sockets for new events
         handleActiveConnections();
@@ -103,7 +101,7 @@ void IRC::Server::stop(void) {
         close(iter->fd);
     }
 
-    _pollfds.empty();
+	(void)_pollfds.empty();
 }
 
 /* restart server */
@@ -213,6 +211,7 @@ void IRC::Server::handleActiveConnections(void) {
         {
             ssize_t	bytesReceived = iter->receive(buffer, BUFFER_SIZE);
 
+			/*
             Lexer		lexer(buffer);
             Parser		parser(lexer);
 
@@ -246,6 +245,7 @@ void IRC::Server::handleActiveConnections(void) {
                 }
 
             }
+			*/
         }
 
         ++iter;
