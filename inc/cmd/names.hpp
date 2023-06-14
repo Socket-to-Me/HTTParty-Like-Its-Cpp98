@@ -1,6 +1,6 @@
 
-#ifndef JOIN_HPP
-# define JOIN_HPP
+#ifndef NAMES_HPP
+# define NAMES_HPP
 
 # include "auto_ptr.hpp"
 # include "cmd.hpp"
@@ -11,17 +11,17 @@ namespace irc {
 
 	// -- C M D  B A S E  C L A S S -------------------------------------------
 
-	class join : public irc::cmd {
+	class names : public irc::cmd {
 
 		public:
 
 			// -- C O N S T R U C T O R S -------------------------------------
 
 			/* default constructor */
-			join(void);
+			names(void);
 
 			/* destructor */
-			~join(void);
+			~names(void);
 
 
 			// -- V I R T U A L  M E T H O D S --------------------------------
@@ -40,10 +40,10 @@ namespace irc {
 			// -- N O N - C O P Y A B L E  C L A S S --------------------------
 
 			/* copy constructor */
-			join(const join&);
+			names(const names&);
 
 			/* copy assignment operator */
-			join& operator=(const join&);
+			names& operator=(const names&);
 
 	};
 

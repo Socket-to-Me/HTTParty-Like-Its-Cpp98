@@ -26,15 +26,17 @@ namespace irc {
 			/* command pointer */
 			typedef irc::auto_ptr<irc::cmd> cmd_ptr;
 
+			/* new command prototype */
+			typedef cmd_ptr (*cmd_maker)(void);
+
 
 
 			// -- F A C T O R Y  M E T H O D S ---------------------------------
 
 			/* create command */
-			cmd_ptr search(const std::string& cmd);
+			static cmd_maker search(const std::string& cmd);
 
-			/* get instance */
-			static cmd_factory& instance(void);
+			
 
 
 
@@ -42,21 +44,19 @@ namespace irc {
 
 			// -- P R I V A T E  T Y P E S ------------------------------------
 
-			/* new command prototype */
-			typedef cmd_ptr (*new_cmd)(void);
+			
 
 
 			// -- S T A T I C  M E M B E R S ----------------------------------
 
-			/* instance */
-			static cmd_factory _instance;
+		
 
 
 
 			// -- M E M B E R S -----------------------------------------------
 
 			/* command set */
-			std::map<std::string, new_cmd> _cmds;
+			static std::map<std::string, cmd_maker> _cmds;
 
 
 			// -- N O N  I N S T A N T I A B L E  C L A S S -------------------

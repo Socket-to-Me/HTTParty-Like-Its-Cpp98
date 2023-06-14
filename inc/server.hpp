@@ -1,7 +1,7 @@
 #ifndef SERVER_HEADER
 # define SERVER_HEADER
 
-# define BUFFER_SIZE 100000
+# define BUFFER_SIZE 512
 
 # include <vector>
 # include <string>
@@ -83,6 +83,9 @@ namespace IRC {
 
 			std::vector<struct pollfd>		_pollfds;
 			std::vector<IRC::Connection>	_connections;
+
+			// <networkname>
+			static const std::string		_networkname;
 
 			// -- P R I V A T E  M E T H O D S ----------------------------------
 

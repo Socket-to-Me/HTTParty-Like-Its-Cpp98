@@ -18,27 +18,21 @@
 
 #include <memory>
 
-
 int main(int ac, char** av) {
+	
 
-	irc::message_list mlist;
-
-	irc::lexer::lex(mlist, ":Camille!camille@example.com JOIN #channel\r\n");
-
-
-	return 0;
+	irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search("JOIN");
 
 
+	if (maker) {
+		irc::auto_ptr<irc::cmd> cmd = maker();
 
-	irc::cmd_factory& facto = irc::cmd_factory::instance();
-
-	irc::cmd_factory::cmd_ptr cmd = facto.search("JOIN");
-
-	if (!!cmd) {
 		if (cmd->evaluate() == true) {
 			cmd->execute();
 		}
 	}
+
+	return 0;
 
 	// // server class test
 

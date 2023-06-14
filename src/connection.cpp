@@ -36,7 +36,33 @@ void    	IRC::Connection::close(void)
 	::close(getfd());
 }
 
-int     	IRC::Connection::getfd(void)
+// G E T T E R S ---------
+
+int     	IRC::Connection::getfd(void) const
 {
 	return _pfd.fd;
+}
+
+const std::string&  IRC::Connection::getnick(void) const
+{
+	return _nick;
+}
+
+const std::string&  IRC::Connection::getuser(void) const
+{
+	return _user;
+}
+
+// S E T T E R S ---------
+
+void  IRC::Connection::setnick(const std::string& str)
+{
+	_nick = str;
+	return;
+}
+
+void  IRC::Connection::setuser(const std::string& str)
+{
+	_user = str;
+	return;
 }

@@ -15,7 +15,9 @@ namespace IRC {
 
         private:
 
-            const struct pollfd& _pfd;
+            const struct pollfd&    _pfd;
+            std::string             _nick;
+            std::string             _user;
 
         public:
 
@@ -25,10 +27,15 @@ namespace IRC {
             ssize_t    	send(const std::string& message);
             ssize_t		receive(char* buffer, int buffer_size);
             void        close(void);
-            int         getfd(void);
+            int         getfd(void) const;
+
+            const std::string&  getnick(void) const;
+            const std::string&  getuser(void) const;
+
+            void  setnick(const std::string& str);
+            void  setuser(const std::string& str);
 
     };
-
 }
 
 #endif

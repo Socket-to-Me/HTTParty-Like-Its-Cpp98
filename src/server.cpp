@@ -5,6 +5,8 @@
 
 // -- S I N G L E T O N  I N S T A N C E --------------------------------------
 
+const std::string IRC::Server::_networkname = "httparty.like.its.98";
+
 /* singleton instance */
 IRC::Server IRC::Server::_instance = IRC::Server();
 
@@ -211,6 +213,83 @@ void IRC::Server::handleActiveConnections(void) {
         {
             ssize_t	bytesReceived = iter->receive(buffer, BUFFER_SIZE);
 
+            // ------ Connection Registration -------------------
+
+            // --- STEP 1 - CAP message ---
+            // 
+            // Command: CAP
+            // Parameters: <subcommand> [:<capabilities>]
+            // 
+            // --- client ---
+            // CAP LS
+            // --- server ---
+            // CAP END
+            // --- errors ---
+            // 
+            // ----------------------------
+
+
+
+            // --- STEP 2 - PASS message ---
+            // 
+            // Command: PASS
+            // Parameters: <password>
+            // 
+            // --- client ---
+            // PASS secretpasswordhere
+            // --- server ---
+            // 
+            // --- errors ---
+            // ERR_NEEDMOREPARAMS (461)
+            // ERR_ALREADYREGISTERED (462)
+            // ERR_PASSWDMISMATCH (464)
+            // -----------------------------
+
+
+            // --- STEP 3 - NICK and USER message ---
+            // 
+            // Command: NICK
+            // Parameters: <nickname>
+            // 
+            // --- client ---
+            // NICK Wiz                         ; Requesting the new nick "Wiz".
+            // :WiZ NICK Kilroy                 ; WiZ changed his nickname to Kilroy.
+            // :dan-!d@localhost NICK Mamoped   ; dan- changed his nickname to Mamoped.
+            // --- server ---
+            // 
+            // --- errors ---
+            // ERR_NONICKNAMEGIVEN (431)
+            // ERR_ERRONEUSNICKNAME (432)
+            // ERR_NICKNAMEINUSE (433)
+            // ERR_NICKCOLLISION (436)
+            // 
+            // 
+            // Command: USER
+            // Parameters: <username> 0 * <realname>
+            // 
+            // --- client ---
+            //   USER guest 0 * :Ronnie Reagan     ; No ident server
+            //                                     ; User gets registered with username "~guest" and real name "Ronnie Reagan"
+            //   USER guest 0 * :Ronnie Reagan     ; Ident server gets contacted and returns the name "danp"
+            //                                     ; User gets registered with username "danp" and real name "Ronnie Reagan"
+            // --- server ---
+            // 
+            // --- errors ---
+            // ERR_NEEDMOREPARAMS (461)
+            // ERR_ALREADYREGISTERED (462)
+            // -----------------------------
+
+
+// Completion of registration process
+// server sends RPL_WELCOME (001), RPL_YOURHOST (002), RPL_CREATED (003), RPL_MYINFO (004)
+// and at least one RPL_ISUPPORT (005)
+ 
+// The server responds as though the client sent it the MOTD command, i.e. it must send either the successful Message of the Day numerics or the ERR_NOMOTD (422) numeric.
+
+
+
+
+
 			/*
             Lexer		lexer(buffer);
             Parser		parser(lexer);
@@ -253,8 +332,3 @@ void IRC::Server::handleActiveConnections(void) {
 
 
 }
-
-
-
-
-
