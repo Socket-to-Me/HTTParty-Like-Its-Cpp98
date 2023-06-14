@@ -1,8 +1,6 @@
 #ifndef SERVER_HEADER
 # define SERVER_HEADER
 
-# define BUFFER_SIZE 100000
-
 # include <vector>
 # include <string>
 # include <poll.h>
