@@ -218,10 +218,6 @@ namespace irc {
         // treating UTF8 need to take in char as unsigned char
         char_type   get_char_type(uint8_t c);
 
-		struct transition {
-			lexer_state		state;
-			lexer_action	action;
-		};
 
 		public:
 

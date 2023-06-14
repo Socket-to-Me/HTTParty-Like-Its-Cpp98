@@ -4,17 +4,17 @@ irc::char_type irc::lexer::get_char_type(uint8_t c) {
 
     switch (c) {
         case '@':
-            return AT;
+            return irc::AT_CHAR;
         case ':':
-            return COLON;
+            return irc::COLON_CHAR;
         case ' ':
-            return SPACE;
+            return irc::SPACE_CHAR;
         case '\n':
-            return NEWLINE;
+            return irc::NL_CHAR;
         case '\r':
-            return CARRIAGE_RETURN;
+            return irc::CR_CHAR;
         default:
-            return OTHER;
+            return irc::OTHER_CHAR;
     }
 }
 
