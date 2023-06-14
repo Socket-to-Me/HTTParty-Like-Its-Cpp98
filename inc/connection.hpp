@@ -62,24 +62,23 @@ namespace IRC {
 			// -- public accessors --------------------------------------------
 
 			/* get file descriptor */
-            int getfd(void);
+            int getfd(void) const;
 
 
         private:
 
+			bool check_crlf(void);
+
+			enum { BUFFER_SIZE = 1024 };
+
             const struct pollfd&    _pfd;
+			std::string             _buffer;
             std::string             _nick;
             std::string             _user;
 
         public:
 
-            Connection(const struct pollfd& pfd);
-        
-            bool    	hasEventOccured(void);
-            ssize_t    	send(const std::string& message);
-            ssize_t		receive(char* buffer, int buffer_size);
-            void        close(void);
-            int         getfd(void) const;
+           
 
             const std::string&  getnick(void) const;
             const std::string&  getuser(void) const;
