@@ -1,6 +1,7 @@
 #ifndef JOIN_HEADER
 #define JOIN_HEADER
 
+#include <iostream>
 #include "auto_ptr.hpp"
 #include "cmd.hpp"
 
@@ -19,6 +20,7 @@ namespace irc {
 
 			/* destructor */
 			~join(void);
+
 
 			// -- O V E R R I D E  M E T H O D S ------------------------------
 
