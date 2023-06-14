@@ -67,6 +67,7 @@ namespace irc {
 				return *this;
 			}
 
+
 			/* destructor */
 			~auto_ptr(void) {
 				// check pointer validity
