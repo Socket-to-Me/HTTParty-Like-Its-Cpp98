@@ -165,8 +165,70 @@ namespace irc {
 
 	// -- M E S S A G E  L I S T ----------------------------------------------
 
-	/* message vector type */
-	typedef std::vector<message> message_list;
+	class message_list {
+
+
+		public:
+
+			// -- public types ------------------------------------------------
+
+			/* size type */
+			typedef std::vector<message>::size_type size_type;
+
+
+			// -- public constructors -----------------------------------------
+
+			/* default constructor */
+			message_list(void);
+
+			/* copy constructor */
+			message_list(const message_list&);
+
+			/* destructor */
+			~message_list(void);
+
+
+			// -- public assignment operator ----------------------------------
+
+			/* copy assignment operator */
+			message_list& operator=(const message_list&);
+
+
+			// -- public subscript operator -----------------------------------
+
+			/* subscript operator */
+			const message& operator[](const size_type) const;
+
+
+			// -- public accessors --------------------------------------------
+
+			/* get vector size */
+			size_type size(void) const;
+
+
+			// -- public modifiers --------------------------------------------
+
+			/* append token */
+			void append(const char*, const token::size_type, const token_type);
+
+			/* new message */
+			void new_message(void);
+
+			/* clear */
+			void clear(void);
+
+
+		private:
+
+			// -- private members ---------------------------------------------
+
+			/* messages vector */
+			std::vector<message> _msgs;
+
+			/* size */
+			size_type _idx;
+
+	};
 
 
 
@@ -175,9 +237,16 @@ namespace irc {
 
 	enum lexer_state {
 		DEFAULT_STATE,
+
 		TAG_STATE,
+		TAG_END_STATE,
+
 		SOURCE_STATE,
+		SOURCE_END_STATE,
+
 		COMMAND_STATE,
+		COMMAND_END_STATE,
+
 		MAX_LEXER_STATE
 	};
 
@@ -214,9 +283,6 @@ namespace irc {
 	// -- L E X E R -----------------------------------------------------------
 
 	class lexer {
-
-        // treating UTF8 need to take in char as unsigned char
-        char_type   get_char_type(uint8_t c);
 
 
 		public:
@@ -270,6 +336,10 @@ namespace irc {
 				public:
 
 					// -- public constructors ---------------------------------
+
+					// TEMPORARY default constructor
+					// to be REMOVED !!!
+					transition(void);
 
 					/* members constructors */
 					transition(const lexer_state, const token_type, const lexer_action);
