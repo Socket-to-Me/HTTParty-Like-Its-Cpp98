@@ -79,8 +79,6 @@ namespace IRC {
 
         public:
 
-           
-
             const std::string&  getnick(void) const;
             const std::string&  getuser(void) const;
             const std::string&  getmsg(void) const;

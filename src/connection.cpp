@@ -113,24 +113,12 @@ std::string IRC::Connection::extract_message(void) {
 
 // -- public accessors --------------------------------------------------------
 
-
 // G E T T E R S ---------
 
 int     	IRC::Connection::getfd(void) const
 {
 	return _pfd.fd;
 }
-
-
-// -- private methods ---------------------------------------------------------
-
-/* check end of message */
-bool IRC::Connection::check_crlf(void) {
-	// find CRLF
-	return _buffer.find("\r\n") != std::string::npos;
-}
-
-
 
 const std::string&  IRC::Connection::getnick(void) const
 {
@@ -165,4 +153,12 @@ void  IRC::Connection::setmsg(const std::string& str)
 {
 	_msg = str;
 	return;
+}
+
+// -- private methods ---------------------------------------------------------
+
+/* check end of message */
+bool IRC::Connection::check_crlf(void) {
+	// find CRLF
+	return _buffer.find("\r\n") != std::string::npos;
 }
