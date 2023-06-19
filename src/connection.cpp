@@ -142,6 +142,11 @@ const std::string&  IRC::Connection::getuser(void) const
 	return _user;
 }
 
+const std::string&  IRC::Connection::getmsg(void) const
+{
+	return _msg;
+}
+
 // S E T T E R S ---------
 
 void  IRC::Connection::setnick(const std::string& str)
@@ -153,5 +158,11 @@ void  IRC::Connection::setnick(const std::string& str)
 void  IRC::Connection::setuser(const std::string& str)
 {
 	_user = str;
+	return;
+}
+
+void  IRC::Connection::setmsg(const std::string& str)
+{
+	_msg = str;
 	return;
 }

@@ -5,13 +5,19 @@ irc::kill::kill(void) {
     return;
 }
 
+/* parametric constructor */
+irc::kill::kill(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::kill::~kill(void) {
     return;
 }
 
 /* execute command */
-bool irc::kill::execute(void) {
+bool irc::kill::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::kill::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::kill::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::kill());
+irc::auto_ptr<irc::cmd> irc::kill::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::kill(std::vector<irc::token> tokens));
 }

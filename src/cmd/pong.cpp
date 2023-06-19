@@ -5,13 +5,19 @@ irc::pong::pong(void) {
     return;
 }
 
+/* parametric constructor */
+irc::pong::pong(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::pong::~pong(void) {
     return;
 }
 
 /* execute command */
-bool irc::pong::execute(void) {
+bool irc::pong::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::pong::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::pong::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::pong());
+irc::auto_ptr<irc::cmd> irc::pong::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::pong(std::vector<irc::token> tokens));
 }

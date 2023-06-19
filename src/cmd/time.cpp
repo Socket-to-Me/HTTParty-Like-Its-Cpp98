@@ -5,13 +5,19 @@ irc::time::time(void) {
     return;
 }
 
+/* parametric constructor */
+irc::time::time(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::time::~time(void) {
     return;
 }
 
 /* execute command */
-bool irc::time::execute(void) {
+bool irc::time::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::time::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::time::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::time());
+irc::auto_ptr<irc::cmd> irc::time::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::time(std::vector<irc::token> tokens));
 }

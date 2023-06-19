@@ -5,13 +5,19 @@ irc::motd::motd(void) {
     return;
 }
 
+/* parametric constructor */
+irc::motd::motd(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::motd::~motd(void) {
     return;
 }
 
 /* execute command */
-bool irc::motd::execute(void) {
+bool irc::motd::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::motd::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::motd::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::motd());
+irc::auto_ptr<irc::cmd> irc::motd::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::motd(std::vector<irc::token> tokens));
 }

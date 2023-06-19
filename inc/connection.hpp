@@ -73,6 +73,7 @@ namespace IRC {
 
             const struct pollfd&    _pfd;
 			std::string             _buffer;
+			std::string             _msg;
             std::string             _nick;
             std::string             _user;
 
@@ -82,9 +83,11 @@ namespace IRC {
 
             const std::string&  getnick(void) const;
             const std::string&  getuser(void) const;
+            const std::string&  getmsg(void) const;
 
             void  setnick(const std::string& str);
             void  setuser(const std::string& str);
+            void  setmsg(const std::string& str);
 
     };
 }

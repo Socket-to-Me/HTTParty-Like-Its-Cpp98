@@ -5,13 +5,19 @@ irc::pass::pass(void) {
     return;
 }
 
+/* parametric constructor */
+irc::pass::pass(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::pass::~pass(void) {
     return;
 }
 
 /* execute command */
-bool irc::pass::execute(void) {
+bool irc::pass::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::pass::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::pass::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::pass());
+irc::auto_ptr<irc::cmd> irc::pass::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::pass(std::vector<irc::token> tokens));
 }

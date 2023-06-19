@@ -5,13 +5,19 @@ irc::invite::invite(void) {
     return;
 }
 
+/* parametric constructor */
+irc::invite::invite(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::invite::~invite(void) {
     return;
 }
 
 /* execute command */
-bool irc::invite::execute(void) {
+bool irc::invite::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::invite::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::invite::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::invite());
+irc::auto_ptr<irc::cmd> irc::invite::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::invite(std::vector<irc::token> tokens));
 }

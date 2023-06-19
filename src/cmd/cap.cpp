@@ -5,13 +5,19 @@ irc::cap::cap(void) {
     return;
 }
 
+/* parametric constructor */
+irc::cap::cap(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::cap::~cap(void) {
     return;
 }
 
 /* execute command */
-bool irc::cap::execute(void) {
+bool irc::cap::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::cap::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::cap::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::cap());
+irc::auto_ptr<irc::cmd> irc::cap::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::cap(std::vector<irc::token> tokens));
 }

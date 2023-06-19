@@ -5,13 +5,19 @@ irc::oper::oper(void) {
     return;
 }
 
+/* parametric constructor */
+irc::oper::oper(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::oper::~oper(void) {
     return;
 }
 
 /* execute command */
-bool irc::oper::execute(void) {
+bool irc::oper::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::oper::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::oper::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::oper());
+irc::auto_ptr<irc::cmd> irc::oper::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::oper(std::vector<irc::token> tokens));
 }

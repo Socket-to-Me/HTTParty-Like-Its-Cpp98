@@ -5,13 +5,19 @@ irc::links::links(void) {
     return;
 }
 
+/* parametric constructor */
+irc::links::links(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::links::~links(void) {
     return;
 }
 
 /* execute command */
-bool irc::links::execute(void) {
+bool irc::links::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::links::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::links::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::links());
+irc::auto_ptr<irc::cmd> irc::links::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::links(std::vector<irc::token> tokens));
 }

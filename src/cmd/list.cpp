@@ -5,13 +5,19 @@ irc::list::list(void) {
     return;
 }
 
+/* parametric constructor */
+irc::list::list(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::list::~list(void) {
     return;
 }
 
 /* execute command */
-bool irc::list::execute(void) {
+bool irc::list::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::list::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::list::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::list());
+irc::auto_ptr<irc::cmd> irc::list::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::list(std::vector<irc::token> tokens));
 }

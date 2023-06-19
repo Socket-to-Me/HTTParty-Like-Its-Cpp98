@@ -2,6 +2,7 @@
 #ifndef JOIN_HPP
 # define JOIN_HPP
 
+# include "numerics.hpp"
 # include "auto_ptr.hpp"
 # include "cmd.hpp"
 
@@ -20,6 +21,9 @@ namespace irc {
 			/* default constructor */
 			join(void);
 
+			/* parametric constructor */
+			join(std::vector<irc::token> tokens);
+
 			/* destructor */
 			~join(void);
 
@@ -27,13 +31,13 @@ namespace irc {
 			// -- V I R T U A L  M E T H O D S --------------------------------
 
 			/* execute command */
-			bool execute(void);
+			bool execute(irc::connection& conn);
 
 			/* evaluate command */
 			bool evaluate(void);
 
             /* create command */
-            static irc::auto_ptr<irc::cmd> create(void);
+            static irc::auto_ptr<irc::cmd> create(std::vector<irc::token> tokens);
 
 		private:
 
@@ -44,6 +48,9 @@ namespace irc {
 
 			/* copy assignment operator */
 			join& operator=(const join&);
+
+			// -- M E M B E R S --------------------------
+			std::vector<irc::token>	_tokens;
 
 	};
 

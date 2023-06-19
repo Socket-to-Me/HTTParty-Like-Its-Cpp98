@@ -1,9 +1,13 @@
 #include "join.hpp"
-#include <iostream>
 
 /* default constructor */
 irc::join::join(void) {
-    std::cout << "NEW JOIN INSTANCE" << std::endl;
+    return;
+}
+
+/* parametric constructor */
+irc::join::join(std::vector<irc::token> tokens)
+: _tokens(tokens) {
     return;
 }
 
@@ -13,7 +17,7 @@ irc::join::~join(void) {
 }
 
 /* execute command */
-bool irc::join::execute(void) {
+bool irc::join::execute(irc::connection& conn) {
     return false;
 }
 
@@ -23,6 +27,6 @@ bool irc::join::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::join::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::join);
+irc::auto_ptr<irc::cmd> irc::join::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::join(std::vector<irc::token> tokens));
 }

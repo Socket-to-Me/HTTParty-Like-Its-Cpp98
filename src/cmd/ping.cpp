@@ -5,13 +5,19 @@ irc::ping::ping(void) {
     return;
 }
 
+/* parametric constructor */
+irc::ping::ping(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::ping::~ping(void) {
     return;
 }
 
 /* execute command */
-bool irc::ping::execute(void) {
+bool irc::ping::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::ping::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::ping::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::ping());
+irc::auto_ptr<irc::cmd> irc::ping::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::ping(std::vector<irc::token> tokens));
 }

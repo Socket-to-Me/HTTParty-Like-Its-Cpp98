@@ -5,13 +5,19 @@ irc::topic::topic(void) {
     return;
 }
 
+/* parametric constructor */
+irc::topic::topic(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::topic::~topic(void) {
     return;
 }
 
 /* execute command */
-bool irc::topic::execute(void) {
+bool irc::topic::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::topic::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::topic::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::topic());
+irc::auto_ptr<irc::cmd> irc::topic::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::topic(std::vector<irc::token> tokens));
 }

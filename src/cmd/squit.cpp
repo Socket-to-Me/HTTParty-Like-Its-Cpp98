@@ -5,13 +5,19 @@ irc::squit::squit(void) {
     return;
 }
 
+/* parametric constructor */
+irc::squit::squit(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::squit::~squit(void) {
     return;
 }
 
 /* execute command */
-bool irc::squit::execute(void) {
+bool irc::squit::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::squit::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::squit::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::squit());
+irc::auto_ptr<irc::cmd> irc::squit::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::squit(std::vector<irc::token> tokens));
 }

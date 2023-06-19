@@ -1,4 +1,3 @@
-
 #ifndef NUMERICS_HPP
 # define NUMERICS_HPP
 

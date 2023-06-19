@@ -20,13 +20,19 @@ irc::$lowercase_command::$lowercase_command(void) {
     return;
 }
 
+/* parametric constructor */
+irc::$lowercase_command::$lowercase_command(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::$lowercase_command::~$lowercase_command(void) {
     return;
 }
 
 /* execute command */
-bool irc::$lowercase_command::execute(void) {
+bool irc::$lowercase_command::execute(irc::connection& conn) {
     return false;
 }
 
@@ -36,8 +42,8 @@ bool irc::$lowercase_command::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::$lowercase_command::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::$lowercase_command());
+irc::auto_ptr<irc::cmd> irc::$lowercase_command::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::$lowercase_command(std::vector<irc::token> tokens));
 }
 EOF
 

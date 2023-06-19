@@ -5,13 +5,19 @@ irc::names::names(void) {
     return;
 }
 
+/* parametric constructor */
+irc::names::names(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::names::~names(void) {
     return;
 }
 
 /* execute command */
-bool irc::names::execute(void) {
+bool irc::names::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::names::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::names::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::names());
+irc::auto_ptr<irc::cmd> irc::names::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::names(std::vector<irc::token> tokens));
 }

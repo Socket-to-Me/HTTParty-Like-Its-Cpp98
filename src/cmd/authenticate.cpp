@@ -5,13 +5,19 @@ irc::authenticate::authenticate(void) {
     return;
 }
 
+/* parametric constructor */
+irc::authenticate::authenticate(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::authenticate::~authenticate(void) {
     return;
 }
 
 /* execute command */
-bool irc::authenticate::execute(void) {
+bool irc::authenticate::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::authenticate::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::authenticate::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::authenticate());
+irc::auto_ptr<irc::cmd> irc::authenticate::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::authenticate(std::vector<irc::token> tokens));
 }

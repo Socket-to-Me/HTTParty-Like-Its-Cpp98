@@ -8,11 +8,12 @@
 #include "parser.hpp"
 
 
-//#if define(__linux__)
-#define PORT 5000
-///else
-//#//define port 4243
-//#endif
+#if define(__linux__)
+# define PORT 5000
+#else
+# define PORT 4243
+#endif
+
 #include "join.hpp"
 #include "cmd_factory.hpp"
 
@@ -21,18 +22,26 @@
 int main(int ac, char** av) {
 	
 
-	irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search("JOIN");
-
+	irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search("CAP");
 
 	if (maker) {
-		irc::auto_ptr<irc::cmd> cmd = maker();
 
-		if (cmd->evaluate() == true) {
-			cmd->execute();
+		std::vector<irc::token> tk;
+
+		tk.push_back(irc::token("CAP", COMMAND_TOKEN));
+		tk.push_back(irc::token("LS", COMMAND_TOKEN));
+
+		irc::auto_ptr<irc::cmd> cmd1 = maker();
+		irc::auto_ptr<irc::cmd> cmd2 = maker(tk);
+
+		if (cmd1->evaluate() == true) {
+			cmd1->execute();
+		}
+
+		if (cmd2->evaluate() == true) {
+			cmd2->execute();
 		}
 	}
-
-	return 0;
 
 	return 0;
 

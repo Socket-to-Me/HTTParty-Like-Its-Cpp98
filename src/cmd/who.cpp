@@ -5,13 +5,19 @@ irc::who::who(void) {
     return;
 }
 
+/* parametric constructor */
+irc::who::who(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::who::~who(void) {
     return;
 }
 
 /* execute command */
-bool irc::who::execute(void) {
+bool irc::who::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::who::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::who::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::who());
+irc::auto_ptr<irc::cmd> irc::who::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::who(std::vector<irc::token> tokens));
 }

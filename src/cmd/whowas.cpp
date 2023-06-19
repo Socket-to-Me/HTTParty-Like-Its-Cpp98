@@ -5,13 +5,19 @@ irc::whowas::whowas(void) {
     return;
 }
 
+/* parametric constructor */
+irc::whowas::whowas(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::whowas::~whowas(void) {
     return;
 }
 
 /* execute command */
-bool irc::whowas::execute(void) {
+bool irc::whowas::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::whowas::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::whowas::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::whowas());
+irc::auto_ptr<irc::cmd> irc::whowas::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::whowas(std::vector<irc::token> tokens));
 }

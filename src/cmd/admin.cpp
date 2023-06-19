@@ -5,13 +5,19 @@ irc::admin::admin(void) {
     return;
 }
 
+/* parametric constructor */
+irc::admin::admin(std::vector<irc::token> tokens)
+: _tokens(tokens) {
+    return;
+}
+
 /* destructor */
 irc::admin::~admin(void) {
     return;
 }
 
 /* execute command */
-bool irc::admin::execute(void) {
+bool irc::admin::execute(irc::connection& conn) {
     return false;
 }
 
@@ -21,6 +27,6 @@ bool irc::admin::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::admin::create(void) {
-    return irc::auto_ptr<irc::cmd>(new irc::admin());
+irc::auto_ptr<irc::cmd> irc::admin::create(std::vector<irc::token> tokens) {
+    return irc::auto_ptr<irc::cmd>(new irc::admin(std::vector<irc::token> tokens));
 }
