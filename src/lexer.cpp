@@ -7,7 +7,6 @@
 
 /* look up table */
 const irc::lexer::table irc::lexer::_lookup = {
-	{
 
 		// -- D E F A U L T  S T A T E ----------------------------------------
 		{
@@ -84,7 +83,6 @@ const irc::lexer::table irc::lexer::_lookup = {
 
 		},
 
-	}
 
 };
 

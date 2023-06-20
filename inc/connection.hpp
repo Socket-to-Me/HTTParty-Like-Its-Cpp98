@@ -17,7 +17,7 @@ namespace irc {
 
 	// -- C O N N E C T I O N -------------------------------------------------
 
-    class Connection {
+    class connection {
 
 
         public:
@@ -25,13 +25,13 @@ namespace irc {
 			// -- public constructors -----------------------------------------
 
 			/* pollfd reference constructor */
-            Connection(const struct pollfd&);
+            connection(const struct pollfd&);
 
 			/* copy constructor */
-			Connection(const Connection&);
+			connection(const connection&);
 
 			/* destructor */
-			~Connection(void);
+			~connection(void);
 
 
 		private:
@@ -39,7 +39,7 @@ namespace irc {
 			// -- private assignment operator ----------------------------------
 
 			/* copy assignment operator */
-			Connection& operator=(const Connection&);
+			connection& operator=(const connection&);
 
 
 		public:

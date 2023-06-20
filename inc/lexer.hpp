@@ -391,30 +391,28 @@ namespace irc {
 			// -- private types -----------------------------------------------
 
 			/* lookup table type */
-			typedef std::array<std::array<transition,
-					           MAX_CHAR_TYPE>,
-					MAX_LEXER_STATE> table;
+			typedef transition table[MAX_LEXER_STATE][MAX_CHAR_TYPE];
 
 			/* action prototype */
 			typedef void(lexer::*proto)(void);
 
 			/* action table type */
-			typedef std::array<proto, MAX_LEXER_ACTION> action;
+			typedef proto action[MAX_LEXER_ACTION];
 
 			/* char table type */
-			typedef std::array<char_type, 256> char_table;
+			typedef char_type char_table[256];
 
 			/* size type */
 			typedef std::string::size_type size_type;
 
 			/* state debug type */
-			typedef std::array<std::string, MAX_LEXER_STATE> state_debug;
+			typedef std::string state_debug[MAX_LEXER_STATE];
 
 			/* action debug type */
-			typedef std::array<std::string, MAX_LEXER_ACTION> action_debug;
+			typedef std::string action_debug[MAX_LEXER_ACTION];
 
 			/* char debug type */
-			typedef std::array<std::string, MAX_CHAR_TYPE> char_debug;
+			typedef std::string char_debug[MAX_CHAR_TYPE];
 
 
 			// -- private members ---------------------------------------------

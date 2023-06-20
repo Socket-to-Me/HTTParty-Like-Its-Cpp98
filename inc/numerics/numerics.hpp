@@ -2,6 +2,7 @@
 # define NUMERICS_HPP
 
 # include <string>
+# include "connection.hpp"
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
 

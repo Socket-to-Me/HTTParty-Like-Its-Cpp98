@@ -7,19 +7,19 @@
 // -- public constructors -----------------------------------------------------
 
 /* pollfd reference constructor */
-irc::Connection::Connection(const struct pollfd& pfd)
+irc::connection::connection(const struct pollfd& pfd)
 : _pfd(pfd), _buffer("") {
 	// nothing to do...
 }
 
 /* copy constructor */
-irc::Connection::Connection(const irc::Connection& conn)
+irc::connection::connection(const irc::connection& conn)
 : _pfd(conn._pfd), _buffer(conn._buffer) {
 	// nothing to do...
 }
 
 /* destructor */
-irc::Connection::~Connection(void) {
+irc::connection::~connection(void) {
 	// close fd
 	close();
 }
@@ -28,7 +28,7 @@ irc::Connection::~Connection(void) {
 // -- private assignment operator ----------------------------------------------
 
 /* copy assignment operator */
-irc::Connection& irc::Connection::operator=(const irc::Connection& conn) {
+irc::connection& irc::connection::operator=(const irc::connection& conn) {
 	// copy not allowed
 	return *this;
 }
@@ -37,7 +37,7 @@ irc::Connection& irc::Connection::operator=(const irc::Connection& conn) {
 // -- public methods ----------------------------------------------------------
 
 /* receive bytes */
-bool irc::Connection::receive(void) {
+bool irc::connection::receive(void) {
 
 	// check if POLLIN event occured
 	if (_pfd.revents & POLLIN) {
@@ -68,7 +68,7 @@ bool irc::Connection::receive(void) {
 }
 
 /* send bytes */
-ssize_t irc::Connection::send(const std::string& message) {
+ssize_t irc::connection::send(const std::string& message) {
 
 	ssize_t bytesSent = ::send(_pfd.fd, message.c_str(), message.size(), 0);
 	if (bytesSent == -1) {
@@ -78,7 +78,7 @@ ssize_t irc::Connection::send(const std::string& message) {
 }
 
 /* close connection */
-void irc::Connection::close(void) {
+void irc::connection::close(void) {
 	// check fd validity
 	if (_pfd.fd != -1) {
 		// close fd
@@ -87,7 +87,7 @@ void irc::Connection::close(void) {
 }
 
 /* extract message */
-std::string irc::Connection::extract_message(void) {
+std::string irc::connection::extract_message(void) {
 
 	// find CRLF
 	size_t pos = _buffer.find("\r\n");
@@ -115,41 +115,41 @@ std::string irc::Connection::extract_message(void) {
 
 // G E T T E R S ---------
 
-int     	irc::Connection::getfd(void) const
+int     	irc::connection::getfd(void) const
 {
 	return _pfd.fd;
 }
 
-const std::string&  irc::Connection::getnick(void) const
+const std::string&  irc::connection::getnick(void) const
 {
 	return _nick;
 }
 
-const std::string&  irc::Connection::getuser(void) const
+const std::string&  irc::connection::getuser(void) const
 {
 	return _user;
 }
 
-const std::string&  irc::Connection::getmsg(void) const
+const std::string&  irc::connection::getmsg(void) const
 {
 	return _msg;
 }
 
 // S E T T E R S ---------
 
-void  irc::Connection::setnick(const std::string& str)
+void  irc::connection::setnick(const std::string& str)
 {
 	_nick = str;
 	return;
 }
 
-void  irc::Connection::setuser(const std::string& str)
+void  irc::connection::setuser(const std::string& str)
 {
 	_user = str;
 	return;
 }
 
-void  irc::Connection::setmsg(const std::string& str)
+void  irc::connection::setmsg(const std::string& str)
 {
 	_msg = str;
 	return;
@@ -158,7 +158,7 @@ void  irc::Connection::setmsg(const std::string& str)
 // -- private methods ---------------------------------------------------------
 
 /* check end of message */
-bool irc::Connection::check_crlf(void) {
+bool irc::connection::check_crlf(void) {
 	// find CRLF
 	return _buffer.find("\r\n") != std::string::npos;
 }

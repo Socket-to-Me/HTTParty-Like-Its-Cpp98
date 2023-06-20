@@ -97,10 +97,10 @@ void irc::Server::stop(void)
 {
 
     std::vector<struct pollfd>::iterator iter = _pollfds.begin();
-    typedef std::vector<irc::Connection>::size_type conn_size;
+    typedef std::vector<irc::connection>::size_type conn_size;
 
     // FUCK IT
-    for (std::vector<irc::Connection>::size_type x = 0; x < _connections.size(); ++x)
+    for (std::vector<irc::connection>::size_type x = 0; x < _connections.size(); ++x)
     {
         _connections[x].close();
     }
@@ -123,19 +123,19 @@ void irc::Server::restart(void)
 }
 
 /* subscribe client */
-void irc::Server::subscribe(const irc::Connection &conn)
+void irc::Server::subscribe(const irc::connection &conn)
 {
     // TODO
 }
 
 /* unsubscribe client */
-void irc::Server::unsubscribe(const irc::Connection &conn)
+void irc::Server::unsubscribe(const irc::connection &conn)
 {
     // TODO
 }
 
 /* send message to one client */
-void irc::Server::send(irc::Connection &conn, const std::string &message)
+void irc::Server::send(irc::connection &conn, const std::string &message)
 {
 }
 
@@ -213,10 +213,10 @@ void irc::Server::acceptNewConnection(void)
         }
 
         addPollfd(clientSocket);
-        Connection conn(_pollfds.back());
+        connection conn(_pollfds.back());
         _connections.push_back(conn);
 
-        if (conn.receive()) {            
+        if (conn.receive()) {
 
             irc::message_list   msgs;
             irc::lexer::lex(msgs, conn.extract_message());
@@ -247,7 +247,7 @@ void irc::Server::handleActiveConnections(void)
 {
 
     // iterator typedef
-    typedef std::vector<Connection>::iterator conn_iter;
+    typedef std::vector<connection>::iterator conn_iter;
 
     /* loop over all connections */
     for (conn_iter it = _connections.begin(); it != _connections.end(); ++it)
