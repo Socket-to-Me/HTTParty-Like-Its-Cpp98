@@ -10,10 +10,10 @@
 
 namespace irc {
 
-	
+
 	template<bool B, class T = void>
 	struct enable_if {};
- 
+
 	template<class T>
 	struct enable_if<true, T> { typedef T type; };
 
@@ -24,7 +24,7 @@ namespace irc {
 	// this structs are used to define socket domain type
 
 	/* local domain (also known as unix domain) */
-	struct Local {
+	struct local {
 		#ifdef __linux__
 			static const int value = AF_LOCAL;
 		#elif __APPLE__ || __FreeBSD__
@@ -33,7 +33,7 @@ namespace irc {
 	};
 
 	/* inet domain (also known as ipv4 domain) */
-	struct Inet {
+	struct inet {
 		#ifdef __linux__
 			static const int value = AF_INET;
 		#elif __APPLE__ || __MACH__ || __FreeBSD__
@@ -42,7 +42,7 @@ namespace irc {
 	};
 
 	/* inet6 domain (also known as ipv6 domain) */
-	struct Inet6 {
+	struct inet6 {
 		#ifdef __linux__
 			static const int value = AF_INET6;
 		#elif __APPLE__ || __MACH__ || __FreeBSD__
@@ -55,19 +55,27 @@ namespace irc {
 
 	/* is domain false */
 	template <class T>
-	struct IsDomain        : std::__false_type {};
+	struct is_domain {
+		static const bool value = false;
+	};
 
 	/* is domain true */
 	template <>
-	struct IsDomain<Local> : std::__true_type {};
+	struct is_domain<local> {
+		static const bool value = true;
+	};
 
 	/* is domain true */
 	template <>
-	struct IsDomain<Inet>  : std::__true_type {};
+	struct is_domain<inet> {
+		static const bool value = true;
+	};
 
 	/* is domain true */
 	template <>
-	struct IsDomain<Inet6> : std::__true_type {};
+	struct is_domain<inet6> {
+		static const bool value = true;
+	};
 
 
 	// -- T Y P E  S T R U C T S ----------------------------------------------
@@ -75,32 +83,40 @@ namespace irc {
 	// this structs are used to define socket type type
 
 	/* stream type */
-	struct Stream   { static const int value = SOCK_STREAM; };
+	struct stream   { static const int value = SOCK_STREAM; };
 
 	/* datagram type */
-	struct Datagram { static const int value = SOCK_DGRAM;  };
+	struct datagram { static const int value = SOCK_DGRAM;  };
 
 	/* raw type */
-	struct Raw      { static const int value = SOCK_RAW;    };
+	struct raw      { static const int value = SOCK_RAW;    };
 
 
 	// -- T Y P E  M E T A  U T I L I T Y ---------------------------------
 
 	/* is type false */
 	template <class T>
-	struct IsType          : std::__false_type {};
+	struct is_type {
+		static const bool value = false;
+	};
 
 	/* is type true */
 	template <>
-	struct IsType<Stream>  : std::__true_type {};
+	struct is_type<stream> {
+		static const bool value = true;
+	};
 
 	/* is type true */
 	template <>
-	struct IsType<Datagram>: std::__true_type {};
+	struct is_type<datagram> {
+		static const bool value = true;
+	};
 
 	/* is type true */
 	template <>
-	struct IsType<Raw>     : std::__true_type {};
+	struct is_type<raw> {
+		static const bool value = true;
+	};
 
 
 
@@ -168,9 +184,9 @@ namespace irc {
 			void create(Protocol protocol = 0) {
 
 				// compile time check for domain
-				typedef typename irc::enable_if<irc::IsDomain<D>::value, D>::type Domain;
+				typedef typename irc::enable_if<irc::is_domain<D>::value, D>::type Domain;
 				// compile time check for type
-				typedef typename irc::enable_if<irc::IsType<T>::value, T>::type Type;
+				typedef typename irc::enable_if<irc::is_type<T>::value, T>::type Type;
 
 				// call destructor
 				this->~Socket();
