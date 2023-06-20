@@ -10,7 +10,7 @@
 
 // -- N A M E S P A C E S  I R C ----------------------------------------------
 
-namespace IRC {
+namespace irc {
 
 	// -- D O M A I N  S T R U C T S ------------------------------------------
 
@@ -161,9 +161,9 @@ namespace IRC {
 			void create(Protocol protocol = 0) {
 
 				// compile time check for domain
-				typedef typename std::enable_if<IRC::IsDomain<D>::value, D>::type Domain;
+				typedef typename std::enable_if<irc::IsDomain<D>::value, D>::type Domain;
 				// compile time check for type
-				typedef typename std::enable_if<IRC::IsType<T>::value, T>::type Type;
+				typedef typename std::enable_if<irc::IsType<T>::value, T>::type Type;
 
 				// call destructor
 				this->~Socket();

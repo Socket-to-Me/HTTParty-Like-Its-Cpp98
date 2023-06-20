@@ -1,8 +1,11 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <sstream>
-#include <array>
+#ifndef LEXER_HEADER
+# define LEXER_HEADER
+
+# include <iostream>
+# include <string>
+# include <vector>
+# include <sstream>
+# include <array>
 
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
@@ -460,3 +463,5 @@ namespace irc {
 
 
 }
+
+#endif

@@ -2,7 +2,7 @@
 
 --- S T E P S ---
 
-Define the IRC Protocol: Start by understanding and defining the IRC protocol specifications. Determine the format of IRC messages, commands, and their parameters. This will serve as the foundation for implementing the server and handling client interactions.
+Define the irc Protocol: Start by understanding and defining the irc protocol specifications. Determine the format of irc messages, commands, and their parameters. This will serve as the foundation for implementing the server and handling client interactions.
 
 Implement the Connection Class: Create the Connection class to represent individual client connections. This class should handle the low-level socket communication with clients, such as sending and receiving messages.
 
@@ -12,11 +12,11 @@ Implement User and Channel Management: Design and implement the classes or data 
 
 Implement Authentication: Add authentication functionality to your server. Clients should be required to provide a password to connect to the server, and you should validate the password before allowing access. Consider securely storing and comparing passwords.
 
-Implement IRC Message Parsing: Create functions or classes to parse incoming IRC messages. These functions should take a raw message as input and extract relevant information, such as the prefix, command, and parameters. Store the parsed information in an appropriate data structure or object.
+Implement irc Message Parsing: Create functions or classes to parse incoming irc messages. These functions should take a raw message as input and extract relevant information, such as the prefix, command, and parameters. Store the parsed information in an appropriate data structure or object.
 
-Implement Command Validation: Develop a mechanism to validate IRC commands received from clients. Verify if the command is supported and if the provided parameters are valid. Handle errors gracefully and respond to clients with appropriate error messages.
+Implement Command Validation: Develop a mechanism to validate irc commands received from clients. Verify if the command is supported and if the provided parameters are valid. Handle errors gracefully and respond to clients with appropriate error messages.
 
-Implement Response Generation: Based on the parsed IRC message and validated commands, generate appropriate responses to be sent back to clients. These responses can include success messages, error messages, or data requested by clients.
+Implement Response Generation: Based on the parsed irc message and validated commands, generate appropriate responses to be sent back to clients. These responses can include success messages, error messages, or data requested by clients.
 
 Implement Event Loop: Use the poll() (or equivalent) function to create an event loop for handling I/O operations. This loop should efficiently manage incoming connections, client messages, and other events from the server side.
 
@@ -24,9 +24,9 @@ Handle Operator Commands: Implement the specific commands that are available onl
 
 --- F U N C T I O N S ---
 
-Define the IRC Protocol:
+Define the irc Protocol:
 
-- No specific functions are directly related to this step. It involves understanding and defining the structure and rules of IRC messages and commands.
+- No specific functions are directly related to this step. It involves understanding and defining the structure and rules of irc messages and commands.
 
 Implement the Connection Class:
 
@@ -50,17 +50,17 @@ Implement Authentication:
 
 - Compare the password provided by the client with the stored password using appropriate comparison functions.
 
-Implement IRC Message Parsing:
+Implement irc Message Parsing:
 
-- Develop functions or classes to parse incoming IRC messages, extracting relevant information such as the prefix, command, and parameters.
+- Develop functions or classes to parse incoming irc messages, extracting relevant information such as the prefix, command, and parameters.
 
 Implement Command Validation:
 
-- Validate the parsed IRC commands, checking if they are supported and if the provided parameters are valid.
+- Validate the parsed irc commands, checking if they are supported and if the provided parameters are valid.
 
 Implement Response Generation:
 
-- Based on the parsed and validated IRC commands, generate appropriate responses to be sent back to clients using the send function.
+- Based on the parsed and validated irc commands, generate appropriate responses to be sent back to clients using the send function.
 
 Implement Event Loop:
 

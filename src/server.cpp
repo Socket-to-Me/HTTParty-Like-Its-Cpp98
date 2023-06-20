@@ -4,13 +4,13 @@
 
 // -- S I N G L E T O N  I N S T A N C E --------------------------------------
 
-const std::string IRC::Server::_networkname = "httparty.like.its.98";
+const std::string irc::Server::_networkname = "httparty.like.its.98";
 
 /* singleton instance */
-IRC::Server IRC::Server::_instance = IRC::Server();
+irc::Server irc::Server::_instance = irc::Server();
 
 /* get singleton instance */
-IRC::Server &IRC::Server::instance(void)
+irc::Server &irc::Server::instance(void)
 {
     // return singleton instance
     return _instance;
@@ -19,19 +19,19 @@ IRC::Server &IRC::Server::instance(void)
 // -- P R I V A T E  C O N S T R U C T O R S ----------------------------------
 
 /* default constructor */
-IRC::Server::Server(void)
+irc::Server::Server(void)
 {
     // TODO
 }
 
 /* copy constructor */
-IRC::Server::Server(const Server &server)
+irc::Server::Server(const Server &server)
 {
     // TODO
 }
 
 /* destructor */
-IRC::Server::~Server(void)
+irc::Server::~Server(void)
 {
     // TODO
 }
@@ -39,7 +39,7 @@ IRC::Server::~Server(void)
 // -- P U B L I C  M E T H O D S ----------------------------------------------
 
 /* start server */
-void IRC::Server::start(const std::string &ip, int port)
+void irc::Server::start(const std::string &ip, int port)
 {
 
     setupSocket(ip, port);
@@ -93,14 +93,14 @@ void IRC::Server::start(const std::string &ip, int port)
 }
 
 /* stop server */
-void IRC::Server::stop(void)
+void irc::Server::stop(void)
 {
 
     std::vector<struct pollfd>::iterator iter = _pollfds.begin();
-    typedef std::vector<IRC::Connection>::size_type conn_size;
+    typedef std::vector<irc::Connection>::size_type conn_size;
 
     // FUCK IT
-    for (std::vector<IRC::Connection>::size_type x = 0; x < _connections.size(); ++x)
+    for (std::vector<irc::Connection>::size_type x = 0; x < _connections.size(); ++x)
     {
         _connections[x].close();
     }
@@ -117,30 +117,30 @@ void IRC::Server::stop(void)
 }
 
 /* restart server */
-void IRC::Server::restart(void)
+void irc::Server::restart(void)
 {
     // TODO
 }
 
 /* subscribe client */
-void IRC::Server::subscribe(const IRC::Connection &conn)
+void irc::Server::subscribe(const irc::Connection &conn)
 {
     // TODO
 }
 
 /* unsubscribe client */
-void IRC::Server::unsubscribe(const IRC::Connection &conn)
+void irc::Server::unsubscribe(const irc::Connection &conn)
 {
     // TODO
 }
 
 /* send message to one client */
-void IRC::Server::send(IRC::Connection &conn, const std::string &message)
+void irc::Server::send(irc::Connection &conn, const std::string &message)
 {
 }
 
 /* send message to all clients */
-void IRC::Server::broadcast(const std::string &message)
+void irc::Server::broadcast(const std::string &message)
 {
     // TODO
 }
@@ -148,7 +148,7 @@ void IRC::Server::broadcast(const std::string &message)
 // -- P R I V A T E  M E T H O D S ----------------------------------------------
 
 /* setup socket */
-void IRC::Server::setupSocket(const std::string &ip, int port)
+void irc::Server::setupSocket(const std::string &ip, int port)
 {
 
     _socket = ::socket(AF_INET, SOCK_STREAM, 0);
@@ -177,7 +177,7 @@ void IRC::Server::setupSocket(const std::string &ip, int port)
 }
 
 /* add new fd to back of pollfds vector */
-void IRC::Server::addPollfd(int fd)
+void irc::Server::addPollfd(int fd)
 {
     if (fd != -1)
     {
@@ -197,7 +197,7 @@ void IRC::Server::addPollfd(int fd)
 }
 
 /* accept new pollfd connection */
-void IRC::Server::acceptNewConnection(void)
+void irc::Server::acceptNewConnection(void)
 {
 
     // check server listening socket for recent events
@@ -243,7 +243,7 @@ void IRC::Server::acceptNewConnection(void)
     }
 }
 
-void IRC::Server::handleActiveConnections(void)
+void irc::Server::handleActiveConnections(void)
 {
 
     // iterator typedef
@@ -351,13 +351,13 @@ void IRC::Server::handleActiveConnections(void)
 
                     std::cout << token.getType() << "=" << token.getValue() << " | ";
 
-                    if (token.getType() == IRC::COMMAND && token.getValue() == "CAP")
+                    if (token.getType() == irc::COMMAND && token.getValue() == "CAP")
                     {
                         iter->send("CAP * END");
                     }
-                    else if (token.getType() == IRC::COMMAND && token.getValue() == "USER")
+                    else if (token.getType() == irc::COMMAND && token.getValue() == "USER")
                     {
-                        iter->send(":irc 001 swillis :Welcome to the IRC server, swillis!\n");
+                        iter->send(":irc 001 swillis :Welcome to the irc server, swillis!\n");
                         iter->send(":irc 002 swillis :Your host is irc, running version 1.0\n");
                         iter->send(":irc 003 swillis :This server was created 29-05-2023\n");
                         iter->send(":irc 004 swillis irc 1.0 A B\r\n");

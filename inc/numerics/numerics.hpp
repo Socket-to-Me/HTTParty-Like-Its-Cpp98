@@ -1,6 +1,8 @@
 #ifndef NUMERICS_HPP
 # define NUMERICS_HPP
 
+# include <string>
+
 // -- I R C  N A M E S P A C E ------------------------------------------------
 
 namespace irc {

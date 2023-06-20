@@ -3,7 +3,7 @@
 // -- S O C K A D D R  C L A S S ----------------------------------------------
 
 /* default constructor */
-IRC::SockAddr::SockAddr(void)
+irc::SockAddr::SockAddr(void)
 :	_family(0),
 	_port(0),
 	_ip("") {
@@ -11,7 +11,7 @@ IRC::SockAddr::SockAddr(void)
 }
 
 /* copy constructor */
-IRC::SockAddr::SockAddr(const Self& other)
+irc::SockAddr::SockAddr(const Self& other)
 :	_family(other._family),
 	_port(other._port),
 	_ip(other._ip) {
@@ -19,7 +19,7 @@ IRC::SockAddr::SockAddr(const Self& other)
 }
 
 /* field constructor */
-IRC::SockAddr::SockAddr(const Family& family, const Port& port, const Ip& ip)
+irc::SockAddr::SockAddr(const Family& family, const Port& port, const Ip& ip)
 :	_family(family),
 	_port(htons(port)),
 	_ip(ip) {
@@ -27,7 +27,7 @@ IRC::SockAddr::SockAddr(const Family& family, const Port& port, const Ip& ip)
 }
 
 /* destructor */
-IRC::SockAddr::~SockAddr(void) {
+irc::SockAddr::~SockAddr(void) {
 	// code here...
 }
 
@@ -35,7 +35,7 @@ IRC::SockAddr::~SockAddr(void) {
 // -- P U B L I C  A S S I G N M E N T  O P E R A T O R S ---------------------
 
 /* copy assignment operator */
-IRC::SockAddr& IRC::SockAddr::operator=(const Self& other) {
+irc::SockAddr& irc::SockAddr::operator=(const Self& other) {
 	// check for self-assignment
 	if (this != &other) {
 		// assign private members
@@ -50,17 +50,17 @@ IRC::SockAddr& IRC::SockAddr::operator=(const Self& other) {
 // -- P U B L I C  A C C E S S O R S ------------------------------------------
 
 /* family accessor */
-const IRC::SockAddr::Family& IRC::SockAddr::family(void) const {
+const irc::SockAddr::Family& irc::SockAddr::family(void) const {
 	return _family;
 }
 
 /* port accessor */
-const IRC::SockAddr::Port& IRC::SockAddr::port(void) const {
+const irc::SockAddr::Port& irc::SockAddr::port(void) const {
 	return _port;
 }
 
 /* ip accessor */
-const IRC::SockAddr::Ip& IRC::SockAddr::ip(void) const {
+const irc::SockAddr::Ip& irc::SockAddr::ip(void) const {
 	return _ip;
 }
 
@@ -68,7 +68,7 @@ const IRC::SockAddr::Ip& IRC::SockAddr::ip(void) const {
 // -- P U B L I C  C O N V E R S I O N ----------------------------------------
 
 /* conversion to addr_in */
-IRC::SockAddr::SockAddrIn IRC::SockAddr::to_sockaddr_in(void) const {
+irc::SockAddr::SockAddrIn irc::SockAddr::to_sockaddr_in(void) const {
 
 	// instantiate SockAddrIn structure
 	SockAddrIn addr_in;
@@ -108,11 +108,11 @@ IRC::SockAddr::SockAddrIn IRC::SockAddr::to_sockaddr_in(void) const {
 // -- B I N D  F U N C T I O N ------------------------------------------------
 
 /* bind function */
-int IRC::bind(const Socket& socket, const SockAddr& addr) {
+int irc::bind(const Socket& socket, const SockAddr& addr) {
 	// check for invalid socket
 	if (socket) {
 		// convert SockAddr to SockAddrIn structure
-		const IRC::SockAddr::SockAddrIn addr_in = addr.to_sockaddr_in();
+		const irc::SockAddr::SockAddrIn addr_in = addr.to_sockaddr_in();
 		std::cout << "trying to bind to: " << inet_ntoa(addr_in.sin_addr) << std::endl;
 		// bind socket to addr
 		return ::bind(*socket,

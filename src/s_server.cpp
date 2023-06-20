@@ -1,12 +1,12 @@
 #include "server.hpp"
 #include "connection.hpp"
 
-IRC::Server::Server()
+irc::Server::Server()
 : serverSocket(-1) {
     return;
 }
 
-bool IRC::Server::start(const std::string& ipAddress, int port) {
+bool irc::Server::start(const std::string& ipAddress, int port) {
 
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket == -1) {
@@ -32,7 +32,7 @@ bool IRC::Server::start(const std::string& ipAddress, int port) {
     return true;
 }
 
-void IRC::Server::acceptConnections() {
+void irc::Server::acceptConnections() {
 
     while (true) {
 
@@ -44,7 +44,7 @@ void IRC::Server::acceptConnections() {
             continue;
         }
 
-        IRC::Connection connection(clientSocket);
+        irc::Connection connection(clientSocket);
         connections.push_back(connection);
 
         // Handle the new client connection
@@ -52,7 +52,7 @@ void IRC::Server::acceptConnections() {
 }
 }
 
-void IRC::Server::handleNewConnection(IRC::Connection& connection) {
+void irc::Server::handleNewConnection(irc::Connection& connection) {
 
     // Implement your logic to handle the new client connection
     std::cout << "New client connected. Socket: " << connection.get_sd() << "\n";
@@ -65,7 +65,7 @@ void IRC::Server::handleNewConnection(IRC::Connection& connection) {
     std::cout << "Received message: " << message << "\n";
 }
 
-void IRC::Server::stop() {
+void irc::Server::stop() {
 
     for (auto& connection : connections) {
         connection.close();

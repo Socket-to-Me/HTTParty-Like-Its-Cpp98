@@ -1,12 +1,12 @@
 #include "parser.hpp"
 
-//IRC::Parser::Parser(const Lexer& lexer)
+//irc::Parser::Parser(const Lexer& lexer)
 //: _lexer(lexer), _currToken(_lexer.getNextToken()) {
 //
 //    return ;
 //}
 //
-//std::vector< std::vector< IRC::Token > > IRC::Parser::parse(void) {
+//std::vector< std::vector< irc::Token > > irc::Parser::parse(void) {
 //
 //    std::vector< std::vector< Token > > matrix;
 //    std::vector<Token> cmd;

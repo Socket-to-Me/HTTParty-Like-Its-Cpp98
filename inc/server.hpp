@@ -11,7 +11,7 @@
 
 // -- N A M E S P A C E  I R C ------------------------------------------------
 
-namespace IRC {
+namespace irc {
 
 	// -- S E R V E R  C L A S S ----------------------------------------------
 
@@ -31,16 +31,16 @@ namespace IRC {
 			void	restart(void);
 
 			/* subscribe client */
-			void	subscribe(const IRC::Connection& conn);
+			void	subscribe(const irc::Connection& conn);
 
 			/* unsubscribe client */
-			void	unsubscribe(const IRC::Connection& conn);
+			void	unsubscribe(const irc::Connection& conn);
 
 			/* send message to all clients */
 			void	broadcast(const std::string& msg);
 
 
-			void send(IRC::Connection& conn, const std::string& message);
+			void send(irc::Connection& conn, const std::string& message);
 
 			// -- P U B L I C  S T A T I C  M E T H O D S ---------------------
 
@@ -81,7 +81,7 @@ namespace IRC {
 			// };
 
 			std::vector<struct pollfd>		_pollfds;
-			std::vector<IRC::Connection>	_connections;
+			std::vector<irc::Connection>	_connections;
 
 			// <networkname>
 			static const std::string		_networkname;

@@ -47,13 +47,13 @@ int main(int ac, char** av) {
 
 	// // server class test
 
-	// IRC::Server& server = IRC::Server::instance();
+	// irc::Server& server = irc::Server::instance();
 
 	// server.start();
 
-	// server.subscribe(IRC::Client());
+	// server.subscribe(irc::Client());
 
-	// server.unsubscribe(IRC::Client());
+	// server.unsubscribe(irc::Client());
 
 	// server.broadcast("Hello World!");
 
@@ -61,37 +61,37 @@ int main(int ac, char** av) {
 
 	// server.stop();
 
-	// IRC::Socket socket;
+	// irc::Socket socket;
 
-	// socket.create<IRC::Inet, IRC::Stream>();
+	// socket.create<irc::Inet, irc::Stream>();
 
-	// IRC::SockAddr addr(AF_INET, 6667);
+	// irc::SockAddr addr(AF_INET, 6667);
 
 
 	// irc::join j;
 
-	// IRC::bind(socket, addr);
+	// irc::bind(socket, addr);
 
 
 	// ------------------------------------------------
 
-	IRC::Server& server = IRC::Server::instance();
+	irc::Server& server = irc::Server::instance();
 
 	server.start("127.0.0.1", 5052);
 
 	// ------------------------------------------------
 
 	// std::string		str("CAP LS\nNICK swillis\nUSER swillis swillis 0.0.0.0 :Scott WILLIS");
-	// IRC::Lexer		lexer(str);
-	// IRC::Parser		parser(lexer);
-	// std::vector< std::vector< IRC::Token > >	matrix;
+	// irc::Lexer		lexer(str);
+	// irc::Parser		parser(lexer);
+	// std::vector< std::vector< irc::Token > >	matrix;
 
 	// matrix = parser.parse();
-	// IRC::SockAddr addr(PF_INET, 4243, "localhost");
+	// irc::SockAddr addr(PF_INET, 4243, "localhost");
 
-    // for (std::vector<IRC::Token>& row : matrix) {
+    // for (std::vector<irc::Token>& row : matrix) {
 
-    //     for (IRC::Token& token : row) {
+    //     for (irc::Token& token : row) {
 
     //         std::cout << token.type << "=" << token.value << std::endl;
     //     }
@@ -99,13 +99,13 @@ int main(int ac, char** av) {
 
 	// ------------------------------------------------
 
-	// IRC::Socket socket;
+	// irc::Socket socket;
 
-	// socket.create<IRC::Inet, IRC::Stream>();
+	// socket.create<irc::Inet, irc::Stream>();
 
-	// IRC::SockAddr addr(PF_INET, PORT, "localhost");
+	// irc::SockAddr addr(PF_INET, PORT, "localhost");
 
-	// int err = IRC::bind(socket, addr);
+	// int err = irc::bind(socket, addr);
 
 	// if (err == -1) {
 	// 	std::cout << "Failed to bind to IP/Port. " << err << std::endl;

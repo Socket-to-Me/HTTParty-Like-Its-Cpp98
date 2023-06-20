@@ -1,13 +1,13 @@
 #include "lexer.hpp"
 
-namespace IRC {
+namespace irc {
 
 //    class Parser {
 //
 //        public:
 //
 //            Parser(const Lexer& lexer);
-//            std::vector< std::vector< IRC::Token > > parse(void);
+//            std::vector< std::vector< irc::Token > > parse(void);
 //
 //        private:
 //

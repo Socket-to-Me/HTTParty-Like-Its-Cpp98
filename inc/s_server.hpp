@@ -3,21 +3,21 @@
 
 #include "connection.hpp"
 
-namespace IRC {
+namespace irc {
 
     class Server {
 
     private:
 
         int serverSocket;
-        std::vector<IRC::Connection> connections;
+        std::vector<irc::Connection> connections;
 
     public:
 
         Server();
         bool start(const std::string& ipAddress, int port);
         void acceptConnections();
-        void handleNewConnection(IRC::Connection& connection);
+        void handleNewConnection(irc::Connection& connection);
         void stop();
 
     };

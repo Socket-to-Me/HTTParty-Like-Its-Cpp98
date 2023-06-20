@@ -4,13 +4,13 @@
 // -- P U B L I C  C O N S T R U C T O R S ------------------------------------
 
 /* default constructor */
-IRC::Socket::Socket(void)
+irc::Socket::Socket(void)
 : _descriptor(NULL_DESCRIPTOR), _count(NULL) {
 	// code here...
 }
 
 /* copy constructor */
-IRC::Socket::Socket(const Socket& other)
+irc::Socket::Socket(const Socket& other)
 : _descriptor(other._descriptor), _count(other._count) {
 	// check count validity
 	if (_count) {
@@ -20,7 +20,7 @@ IRC::Socket::Socket(const Socket& other)
 }
 
 /* destructor */
-IRC::Socket::~Socket(void) {
+irc::Socket::~Socket(void) {
 	// check socket end of life
 	if (_count && (--(*_count) == 0)) {
 		// check descriptor validity
@@ -40,7 +40,7 @@ IRC::Socket::~Socket(void) {
 // -- P U B L I C  O P E R A T O R S ------------------------------------------
 
 /* copy assignment operator */
-IRC::Socket& IRC::Socket::operator=(const Socket& socket) {
+irc::Socket& irc::Socket::operator=(const Socket& socket) {
 	// check self assignment
 	if (this != &socket) {
 		// call destructor
@@ -57,31 +57,31 @@ IRC::Socket& IRC::Socket::operator=(const Socket& socket) {
 }
 
 /* bool operator */
-IRC::Socket::operator bool(void) const {
+irc::Socket::operator bool(void) const {
 	// check descriptor validity
 	return _descriptor != NULL_DESCRIPTOR;
 }
 
 /* not operator */
-bool IRC::Socket::operator!(void) const {
+bool irc::Socket::operator!(void) const {
 	// check descriptor validity
 	return _descriptor == NULL_DESCRIPTOR;
 }
 
 /* equality operator */
-bool IRC::Socket::operator==(const Socket& socket) const {
+bool irc::Socket::operator==(const Socket& socket) const {
 	// check descriptors equality
 	return _descriptor == socket._descriptor;
 }
 
 /* inequality operator */
-bool IRC::Socket::operator!=(const Socket& socket) const {
+bool irc::Socket::operator!=(const Socket& socket) const {
 	// check descriptors inequality
 	return (_descriptor != socket._descriptor);
 }
 
 /* dereference operator */
-IRC::Socket::Descriptor IRC::Socket::operator*(void) const {
+irc::Socket::Descriptor irc::Socket::operator*(void) const {
 	// return descriptor
 	return _descriptor;
 }
