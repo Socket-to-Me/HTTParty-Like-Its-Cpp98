@@ -4,23 +4,21 @@ std::map<std::string, irc::cmd_factory::cmd_maker>	init(void) {
 
 	std::map<std::string, irc::cmd_factory::cmd_maker> _cmds;
 
-	std::pair<std::string, irc::cmd_factory::cmd_maker> _pair("INVITE", &irc::invite::create);
+	typedef std::pair<std::string, irc::cmd_factory::cmd_maker> pair;
 
-	_cmds.insert(_pair);
-
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>{"INVITE", irc::invite::create});
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("JOIN", irc::join::create));
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("KICK", irc::kick::create));
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("LIST", irc::list::create));
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("MODE", irc::mode::create));
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("NICK", irc::nick::create));
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("PART", irc::part::create));
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("PASS", irc::pass::create));
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("PING", irc::ping::create));
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("PRIVMSG", irc::privmsg::create));
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("QUIT", irc::quit::create));
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("TOPIC", irc::topic::create));
-	// _cmds.insert(std::pair<std::string, irc::cmd_factory::cmd_maker>("USER", irc::user::create));
+	_cmds.insert(pair("INVITE", irc::invite::create));
+	_cmds.insert(pair("JOIN", irc::join::create));
+	_cmds.insert(pair("KICK", irc::kick::create));
+	_cmds.insert(pair("LIST", irc::list::create));
+	_cmds.insert(pair("MODE", irc::mode::create));
+	_cmds.insert(pair("NICK", irc::nick::create));
+	_cmds.insert(pair("PART", irc::part::create));
+	_cmds.insert(pair("PASS", irc::pass::create));
+	_cmds.insert(pair("PING", irc::ping::create));
+	_cmds.insert(pair("PRIVMSG", irc::privmsg::create));
+	_cmds.insert(pair("QUIT", irc::quit::create));
+	_cmds.insert(pair("TOPIC", irc::topic::create));
+	_cmds.insert(pair("USER", irc::user::create));
 
 	return _cmds;
 }
