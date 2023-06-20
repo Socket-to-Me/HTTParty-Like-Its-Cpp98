@@ -17,7 +17,7 @@ irc::kick::~kick(void) {
 }
 
 /* execute command */
-bool irc::kick::execute(irc::connection& conn) {
+bool irc::kick::execute(void) {
     return false;
 }
 
@@ -28,5 +28,5 @@ bool irc::kick::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::kick::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::kick(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::kick(tokens));
 }

@@ -1,12 +1,20 @@
-#include "connection.hpp"
+#include "channel.hpp"
 
 // -- public constructors -----------------------------------------
 
 /* parametric constructor */
-channel(const std::string& name, const std::string& topic);
+irc::channel::channel(const std::string& name, const std::string& topic)
+: _name(name), _topic(topic) {
+
+	return;
+}
 
 /* copy constructor */
-channel(const channel&);
+irc::channel::channel(const channel& other) 
+: _name(other._name), _topic(other._topic), _mode(other._mode), _key(other._key) {
+
+	return;
+}
 
 /* destructor */
 ~channel(void);
@@ -28,8 +36,6 @@ void invite(const irc::connection& op, const irc::connection& conn);
 void giveOperatorPrivilege(const irc::connection& op, const irc::connection& conn);
 void takeOperatorPrivilege(const irc::connection& op, const irc::connection& conn);
 
-private:
-
 /* default constructor */
 channel(void);
 
@@ -37,11 +43,3 @@ channel(void);
 
 /* copy assignment operator */
 channel& operator=(const channel&);
-
-// -- private members --------------------------------------------
-std::string				_name;
-std::string				_topic;
-std::string				_mode;
-std::string				_key;
-std::vector<irc::connection>	_operators;
-std::vector<irc::connection>	_connections;

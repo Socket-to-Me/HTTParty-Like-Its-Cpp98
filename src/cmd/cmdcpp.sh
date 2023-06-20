@@ -1,11 +1,13 @@
 #!/bin/bash
 
-commands=("CAP" "AUTHENTICATE" "PASS" "NICK" "USER" "PING" "PONG"
-            "OPER" "QUIT" "ERROR" "JOIN" "PART" "TOPIC" "NAMES" "LIST"
-            "INVITE" "KICK" "MOTD" "VERSION" "ADMIN" "CONNECT" "LUSERS"
-            "TIME" "STATS" "HELP" "INFO" "MODE" "PRIVMSG" "NOTICE"
-            "WHO" "WHOIS" "WHOWAS" "KILL" "REHASH" "RESTART" "SQUIT"
-            "AWAY" "LINKS" "USERHOST" "WALLOPS")
+# commands=("CAP" "AUTHENTICATE" "PASS" "NICK" "USER" "PING" "PONG"
+#             "OPER" "QUIT" "ERROR" "JOIN" "PART" "TOPIC" "NAMES" "LIST"
+#             "INVITE" "KICK" "MOTD" "VERSION" "ADMIN" "CONNECT" "LUSERS"
+#             "TIME" "STATS" "HELP" "INFO" "MODE" "PRIVMSG" "NOTICE"
+#             "WHO" "WHOIS" "WHOWAS" "KILL" "REHASH" "RESTART" "SQUIT"
+#             "AWAY" "LINKS" "USERHOST" "WALLOPS")
+
+commands=("INVITE" "JOIN" "KICK" "LIST" "MODE" "NICK" "PART" "PASS" "PING" "PRIVMSG" "QUIT" "TOPIC" "USER")
 
 for command in "${commands[@]}"; do
     lowercase_command=$(echo "$command" | tr '[:upper:]' '[:lower:]')
@@ -32,7 +34,7 @@ irc::$lowercase_command::~$lowercase_command(void) {
 }
 
 /* execute command */
-bool irc::$lowercase_command::execute(irc::connection& conn) {
+bool irc::$lowercase_command::execute(void) {
     return false;
 }
 
@@ -43,7 +45,7 @@ bool irc::$lowercase_command::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::$lowercase_command::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::$lowercase_command(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::$lowercase_command(tokens));
 }
 EOF
 

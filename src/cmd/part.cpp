@@ -17,7 +17,7 @@ irc::part::~part(void) {
 }
 
 /* execute command */
-bool irc::part::execute(irc::connection& conn) {
+bool irc::part::execute(void) {
     return false;
 }
 
@@ -28,5 +28,5 @@ bool irc::part::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::part::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::part(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::part(tokens));
 }

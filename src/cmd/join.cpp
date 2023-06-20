@@ -17,7 +17,7 @@ irc::join::~join(void) {
 }
 
 /* execute command */
-bool irc::join::execute(irc::connection& conn) {
+bool irc::join::execute(void) {
     return false;
 }
 
@@ -28,5 +28,5 @@ bool irc::join::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::join::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::join(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::join(tokens));
 }

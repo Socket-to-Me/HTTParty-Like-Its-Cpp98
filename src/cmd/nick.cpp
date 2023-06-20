@@ -17,7 +17,7 @@ irc::nick::~nick(void) {
 }
 
 /* execute command */
-bool irc::nick::execute(irc::connection& conn) {
+bool irc::nick::execute(void) {
     return false;
 }
 
@@ -28,5 +28,5 @@ bool irc::nick::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::nick::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::nick(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::nick(tokens));
 }

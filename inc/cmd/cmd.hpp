@@ -2,6 +2,7 @@
 #define CMD_HEADER
 
 #include "auto_ptr.hpp"
+#include "lexer.hpp"
 
 
 // -- I R C  N A M E S P A C E ------------------------------------------------

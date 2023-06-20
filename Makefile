@@ -87,7 +87,7 @@ override JSNDIR := $(BLDDIR)/_json
 # -- S O U R C E S ------------------------------------------------------------
 
 # list all source files
-override FILES_NAME := main socket server sockaddr connection lexer parser cmd cmd_factory admin authenticate away cap connect error help info invite join kick kill links list lusers mode motd names nick notice oper part pass ping pong privmsg quit rehash restart squit stats time topic user userhost version wallops who whois whowas
+override FILES_NAME := main socket server sockaddr connection lexer parser cmd cmd_factory invite join kick list mode nick part pass ping privmsg quit topic user
 
 ifeq ($(FILES_NAME),)
  $(error $(shell echo "No \033[1;32msource\033[0m files found"))

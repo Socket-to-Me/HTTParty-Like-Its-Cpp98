@@ -8,7 +8,7 @@
 #include "parser.hpp"
 
 
-#if define(__linux__)
+#if defined(__linux__)
 # define PORT 5000
 #else
 # define PORT 4243
@@ -24,24 +24,24 @@ int main(int ac, char** av) {
 
 	irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search("CAP");
 
-	if (maker) {
+	// if (maker) {
 
-		std::vector<irc::token> tk;
+	// 	std::vector<irc::token> tk;
 
-		tk.push_back(irc::token("CAP", COMMAND_TOKEN));
-		tk.push_back(irc::token("LS", COMMAND_TOKEN));
+	// 	tk.push_back(irc::token("CAP", irc::token::COMMAND_TOKEN));
+	// 	tk.push_back(irc::token("LS", irc::token::COMMAND_TOKEN));
 
-		irc::auto_ptr<irc::cmd> cmd1 = maker();
-		irc::auto_ptr<irc::cmd> cmd2 = maker(tk);
+	// 	irc::auto_ptr<irc::cmd> cmd1 = maker();
+	// 	irc::auto_ptr<irc::cmd> cmd2 = maker(tk);
 
-		if (cmd1->evaluate() == true) {
-			cmd1->execute();
-		}
+	// 	if (cmd1->evaluate() == true) {
+	// 		cmd1->execute();
+	// 	}
 
-		if (cmd2->evaluate() == true) {
-			cmd2->execute();
-		}
-	}
+	// 	if (cmd2->evaluate() == true) {
+	// 		cmd2->execute();
+	// 	}
+	// }
 
 	return 0;
 
@@ -75,7 +75,7 @@ int main(int ac, char** av) {
 
 	// ------------------------------------------------
 
-	irc::Server& server = irc::Server::instance();
+	irc::server& server = irc::server::instance();
 
 	server.start("127.0.0.1", 5052);
 

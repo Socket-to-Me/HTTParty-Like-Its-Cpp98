@@ -4,8 +4,12 @@
 
 # include <vector>
 # include <string>
+# include <cstdlib>
 # include <poll.h>
+# include <iostream>
 
+# include "parser.hpp"
+# include "cmd.hpp"
 # include "connection.hpp"
 # include "socket.hpp"
 
@@ -15,7 +19,7 @@ namespace irc {
 
 	// -- S E R V E R  C L A S S ----------------------------------------------
 
-	class Server {
+	class server {
 
 		public:
 
@@ -45,7 +49,7 @@ namespace irc {
 			// -- P U B L I C  S T A T I C  M E T H O D S ---------------------
 
 			/* get singleton instance */
-			static Server&	instance(void);
+			static server&	instance(void);
 
 
 		private:
@@ -53,19 +57,19 @@ namespace irc {
 			// -- P R I V A T E  C O N S T R U C T O R S ----------------------
 
 			/* default constructor */
-			Server(void);
+			server(void);
 
 			/* copy constructor */
-			Server(const Server&);
+			server(const server&);
 
 			/* destructor */
-			~Server(void);
+			~server(void);
 
 
 			// -- P R I V A T E  S T A T I C  M E M B E R S -------------------
 
 			/* singleton instance */
-			static Server	_instance;
+			static server	_instance;
 
 
 			// -- P R I V A T E  M E M B E R S --------------------------------

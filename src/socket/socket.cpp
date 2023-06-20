@@ -32,7 +32,7 @@ irc::Socket::~Socket(void) {
 		} // deallocate count
 		delete _count;
 		// invalidate count
-		_count = nullptr;
+		_count = NULL;
 	}
 }
 

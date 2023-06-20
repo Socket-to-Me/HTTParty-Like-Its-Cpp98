@@ -17,7 +17,7 @@ irc::pass::~pass(void) {
 }
 
 /* execute command */
-bool irc::pass::execute(irc::connection& conn) {
+bool irc::pass::execute(void) {
     return false;
 }
 
@@ -28,5 +28,5 @@ bool irc::pass::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::pass::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::pass(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::pass(tokens));
 }

@@ -1,16 +1,14 @@
 #include "server.hpp"
-#include "parser.hpp"
-#include "connection.hpp"
 
 // -- S I N G L E T O N  I N S T A N C E --------------------------------------
 
-const std::string irc::Server::_networkname = "httparty.like.its.98";
+const std::string irc::server::_networkname = "httparty.like.its.98";
 
 /* singleton instance */
-irc::Server irc::Server::_instance = irc::Server();
+irc::server irc::server::_instance = irc::server();
 
 /* get singleton instance */
-irc::Server &irc::Server::instance(void)
+irc::server &irc::server::instance(void)
 {
     // return singleton instance
     return _instance;
@@ -19,19 +17,19 @@ irc::Server &irc::Server::instance(void)
 // -- P R I V A T E  C O N S T R U C T O R S ----------------------------------
 
 /* default constructor */
-irc::Server::Server(void)
+irc::server::server(void)
 {
     // TODO
 }
 
 /* copy constructor */
-irc::Server::Server(const Server &server)
+irc::server::server(const server &server)
 {
     // TODO
 }
 
 /* destructor */
-irc::Server::~Server(void)
+irc::server::~server(void)
 {
     // TODO
 }
@@ -39,7 +37,7 @@ irc::Server::~Server(void)
 // -- P U B L I C  M E T H O D S ----------------------------------------------
 
 /* start server */
-void irc::Server::start(const std::string &ip, int port)
+void irc::server::start(const std::string &ip, int port)
 {
 
     setupSocket(ip, port);
@@ -55,7 +53,7 @@ void irc::Server::start(const std::string &ip, int port)
         if (pollCount == -1)
         {
             std::cout << "Poll error" << std::endl;
-            exit(EXIT_FAILURE);
+            exit(1);
         }
         else if (pollCount == 0)
         {
@@ -93,7 +91,7 @@ void irc::Server::start(const std::string &ip, int port)
 }
 
 /* stop server */
-void irc::Server::stop(void)
+void irc::server::stop(void)
 {
 
     std::vector<struct pollfd>::iterator iter = _pollfds.begin();
@@ -117,30 +115,30 @@ void irc::Server::stop(void)
 }
 
 /* restart server */
-void irc::Server::restart(void)
+void irc::server::restart(void)
 {
     // TODO
 }
 
 /* subscribe client */
-void irc::Server::subscribe(const irc::connection &conn)
+void irc::server::subscribe(const irc::connection &conn)
 {
     // TODO
 }
 
 /* unsubscribe client */
-void irc::Server::unsubscribe(const irc::connection &conn)
+void irc::server::unsubscribe(const irc::connection &conn)
 {
     // TODO
 }
 
 /* send message to one client */
-void irc::Server::send(irc::connection &conn, const std::string &message)
+void irc::server::send(irc::connection &conn, const std::string &message)
 {
 }
 
 /* send message to all clients */
-void irc::Server::broadcast(const std::string &message)
+void irc::server::broadcast(const std::string &message)
 {
     // TODO
 }
@@ -148,7 +146,7 @@ void irc::Server::broadcast(const std::string &message)
 // -- P R I V A T E  M E T H O D S ----------------------------------------------
 
 /* setup socket */
-void irc::Server::setupSocket(const std::string &ip, int port)
+void irc::server::setupSocket(const std::string &ip, int port)
 {
 
     _socket = ::socket(AF_INET, SOCK_STREAM, 0);
@@ -177,7 +175,7 @@ void irc::Server::setupSocket(const std::string &ip, int port)
 }
 
 /* add new fd to back of pollfds vector */
-void irc::Server::addPollfd(int fd)
+void irc::server::addPollfd(int fd)
 {
     if (fd != -1)
     {
@@ -197,7 +195,7 @@ void irc::Server::addPollfd(int fd)
 }
 
 /* accept new pollfd connection */
-void irc::Server::acceptNewConnection(void)
+void irc::server::acceptNewConnection(void)
 {
 
     // check server listening socket for recent events
@@ -216,34 +214,34 @@ void irc::Server::acceptNewConnection(void)
         connection conn(_pollfds.back());
         _connections.push_back(conn);
 
-        if (conn.receive()) {
+        // if (conn.receive()) {
 
-            irc::message_list   msgs;
-            irc::lexer::lex(msgs, conn.extract_message());
+        //     irc::message_list   msgs;
+        //     irc::lexer::lex(msgs, conn.extract_message());
 
-            irc::message    msg;
+        //     irc::message    msg;
 
-            irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(msg.getcmd());
+        //     irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(msg.getcmd());
 
-            if (maker) {
+        //     if (maker) {
 
-                irc::auto_ptr<irc::cmd> cmd = maker(msg);
+        //         irc::auto_ptr<irc::cmd> cmd = maker(msg);
 
-                if (cmd->evaluate() == true) {
+        //         if (cmd->evaluate() == true) {
 
-                    cmd->execute(conn);
-                }
-            }
-        }
+        //             cmd->execute(conn);
+        //         }
+        //     }
+        // }
 
-        conn.send(irc::numerics::rpl_welcome_001(conn));
-        conn.send(irc::numerics::rpl_yourhost_002(conn));
-        conn.send(irc::numerics::rpl_created_003(conn));
+        // conn.send(irc::numerics::rpl_welcome_001(conn));
+        // conn.send(irc::numerics::rpl_yourhost_002(conn));
+        // conn.send(irc::numerics::rpl_created_003(conn));
 
     }
 }
 
-void irc::Server::handleActiveConnections(void)
+void irc::server::handleActiveConnections(void)
 {
 
     // iterator typedef

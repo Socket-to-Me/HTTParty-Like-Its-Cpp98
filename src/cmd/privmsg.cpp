@@ -17,7 +17,7 @@ irc::privmsg::~privmsg(void) {
 }
 
 /* execute command */
-bool irc::privmsg::execute(irc::connection& conn) {
+bool irc::privmsg::execute(void) {
     return false;
 }
 
@@ -28,5 +28,5 @@ bool irc::privmsg::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::privmsg::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::privmsg(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::privmsg(tokens));
 }

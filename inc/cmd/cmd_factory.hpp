@@ -6,9 +6,22 @@
 #include "auto_ptr.hpp"
 
 #include <string>
-#include <unordered_set>
 #include <map>
 
+#include "invite.hpp"
+#include "join.hpp"
+#include "kick.hpp"
+#include "list.hpp"
+#include "mode.hpp"
+#include "nick.hpp"
+#include "part.hpp"
+#include "pass.hpp"
+#include "ping.hpp"
+#include "privmsg.hpp"
+#include "quit.hpp"
+#include "topic.hpp"
+#include "user.hpp"
+#include <vector>
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
 
@@ -26,8 +39,8 @@ namespace irc {
 			/* command pointer */
 			typedef irc::auto_ptr<irc::cmd> cmd_ptr;
 
-			/* new command prototype */
-			typedef cmd_ptr (*cmd_maker)(void);
+			/* new command prototype */ // method create proto !!!
+			typedef cmd_ptr (*cmd_maker)(std::vector<irc::token>);
 
 
 

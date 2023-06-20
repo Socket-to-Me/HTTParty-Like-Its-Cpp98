@@ -17,7 +17,7 @@ irc::invite::~invite(void) {
 }
 
 /* execute command */
-bool irc::invite::execute(irc::connection& conn) {
+bool irc::invite::execute(void) {
     return false;
 }
 
@@ -28,5 +28,5 @@ bool irc::invite::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::invite::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::invite(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::invite(tokens));
 }

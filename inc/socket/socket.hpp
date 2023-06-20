@@ -4,13 +4,20 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <iostream>
-#include <type_traits>
-
 
 
 // -- N A M E S P A C E S  I R C ----------------------------------------------
 
 namespace irc {
+
+	
+	template<bool B, class T = void>
+	struct enable_if {};
+ 
+	template<class T>
+	struct enable_if<true, T> { typedef T type; };
+
+
 
 	// -- D O M A I N  S T R U C T S ------------------------------------------
 
@@ -48,19 +55,19 @@ namespace irc {
 
 	/* is domain false */
 	template <class T>
-	struct IsDomain        : std::false_type {};
+	struct IsDomain        : std::__false_type {};
 
 	/* is domain true */
 	template <>
-	struct IsDomain<Local> : std::true_type {};
+	struct IsDomain<Local> : std::__true_type {};
 
 	/* is domain true */
 	template <>
-	struct IsDomain<Inet>  : std::true_type {};
+	struct IsDomain<Inet>  : std::__true_type {};
 
 	/* is domain true */
 	template <>
-	struct IsDomain<Inet6> : std::true_type {};
+	struct IsDomain<Inet6> : std::__true_type {};
 
 
 	// -- T Y P E  S T R U C T S ----------------------------------------------
@@ -81,19 +88,19 @@ namespace irc {
 
 	/* is type false */
 	template <class T>
-	struct IsType          : std::false_type {};
+	struct IsType          : std::__false_type {};
 
 	/* is type true */
 	template <>
-	struct IsType<Stream>  : std::true_type {};
+	struct IsType<Stream>  : std::__true_type {};
 
 	/* is type true */
 	template <>
-	struct IsType<Datagram>: std::true_type {};
+	struct IsType<Datagram>: std::__true_type {};
 
 	/* is type true */
 	template <>
-	struct IsType<Raw>     : std::true_type {};
+	struct IsType<Raw>     : std::__true_type {};
 
 
 
@@ -161,9 +168,9 @@ namespace irc {
 			void create(Protocol protocol = 0) {
 
 				// compile time check for domain
-				typedef typename std::enable_if<irc::IsDomain<D>::value, D>::type Domain;
+				typedef typename irc::enable_if<irc::IsDomain<D>::value, D>::type Domain;
 				// compile time check for type
-				typedef typename std::enable_if<irc::IsType<T>::value, T>::type Type;
+				typedef typename irc::enable_if<irc::IsType<T>::value, T>::type Type;
 
 				// call destructor
 				this->~Socket();

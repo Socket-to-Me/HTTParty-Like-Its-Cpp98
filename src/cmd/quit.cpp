@@ -17,7 +17,7 @@ irc::quit::~quit(void) {
 }
 
 /* execute command */
-bool irc::quit::execute(irc::connection& conn) {
+bool irc::quit::execute(void) {
     return false;
 }
 
@@ -28,5 +28,5 @@ bool irc::quit::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::quit::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::quit(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::quit(tokens));
 }

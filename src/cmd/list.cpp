@@ -17,7 +17,7 @@ irc::list::~list(void) {
 }
 
 /* execute command */
-bool irc::list::execute(irc::connection& conn) {
+bool irc::list::execute(void) {
     return false;
 }
 
@@ -28,5 +28,5 @@ bool irc::list::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::list::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::list(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::list(tokens));
 }

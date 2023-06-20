@@ -23,7 +23,7 @@ namespace irc {
             channel(const std::string& name, const std::string& topic);
 
 			/* copy constructor */
-			channel(const channel&);
+			channel(const channel& other);
 
 			/* destructor */
 			~channel(void);

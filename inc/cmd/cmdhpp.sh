@@ -1,11 +1,13 @@
 #!/bin/bash
 
-commands=("CAP" "AUTHENTICATE" "PASS" "NICK" "USER" "PING" "PONG"
-            "OPER" "QUIT" "ERROR" "JOIN" "PART" "TOPIC" "NAMES" "LIST"
-            "INVITE" "KICK" "MOTD" "VERSION" "ADMIN" "CONNECT" "LUSERS"
-            "TIME" "STATS" "HELP" "INFO" "MODE" "PRIVMSG" "NOTICE"
-            "WHO" "WHOIS" "WHOWAS" "KILL" "REHASH" "RESTART" "SQUIT"
-            "AWAY" "LINKS" "USERHOST" "WALLOPS")
+# commands=("CAP" "AUTHENTICATE" "PASS" "NICK" "USER" "PING" "PONG"
+#             "OPER" "QUIT" "ERROR" "JOIN" "PART" "TOPIC" "NAMES" "LIST"
+#             "INVITE" "KICK" "MOTD" "VERSION" "ADMIN" "CONNECT" "LUSERS"
+#             "TIME" "STATS" "HELP" "INFO" "MODE" "PRIVMSG" "NOTICE"
+#             "WHO" "WHOIS" "WHOWAS" "KILL" "REHASH" "RESTART" "SQUIT"
+#             "AWAY" "LINKS" "USERHOST" "WALLOPS")
+
+commands=("INVITE" "JOIN" "KICK" "LIST" "MODE" "NICK" "PART" "PASS" "PING" "PRIVMSG" "QUIT" "TOPIC" "USER")
 
 for command in "${commands[@]}"; do
     lowercase_command=$(echo "$command" | tr '[:upper:]' '[:lower:]')
@@ -46,7 +48,7 @@ namespace irc {
 			// -- V I R T U A L  M E T H O D S --------------------------------
 
 			/* execute command */
-			bool execute(irc::connection& conn);
+			bool execute(void);
 
 			/* evaluate command */
 			bool evaluate(void);

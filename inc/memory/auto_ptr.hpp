@@ -167,11 +167,11 @@ namespace irc {
 			/* reset pointer */
 			void reset(void) {
 				// check pointer validity
-				if (_data != nullptr) {
+				if (_data != NULL) {
 					// deallocate memory
 					delete _data;
 					// invalidate pointer
-					_data = nullptr;
+					_data = NULL;
 				}
 			}
 

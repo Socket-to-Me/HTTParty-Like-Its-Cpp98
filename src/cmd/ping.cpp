@@ -17,7 +17,7 @@ irc::ping::~ping(void) {
 }
 
 /* execute command */
-bool irc::ping::execute(irc::connection& conn) {
+bool irc::ping::execute(void) {
     return false;
 }
 
@@ -28,5 +28,5 @@ bool irc::ping::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::ping::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::ping(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::ping(tokens));
 }

@@ -31,7 +31,7 @@ namespace irc {
 			// -- V I R T U A L  M E T H O D S --------------------------------
 
 			/* execute command */
-			bool execute(irc::connection& conn);
+			bool execute(void);
 
 			/* evaluate command */
 			bool evaluate(void);

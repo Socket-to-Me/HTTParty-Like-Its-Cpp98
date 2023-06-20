@@ -5,7 +5,6 @@
 # include <string>
 # include <vector>
 # include <sstream>
-# include <array>
 
 
 // -- I R C  N A M E S P A C E ------------------------------------------------

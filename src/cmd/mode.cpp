@@ -17,7 +17,7 @@ irc::mode::~mode(void) {
 }
 
 /* execute command */
-bool irc::mode::execute(irc::connection& conn) {
+bool irc::mode::execute(void) {
     return false;
 }
 
@@ -28,5 +28,5 @@ bool irc::mode::evaluate(void) {
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::mode::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::mode(std::vector<irc::token> tokens));
+    return irc::auto_ptr<irc::cmd>(new irc::mode(tokens));
 }
