@@ -25,11 +25,18 @@ irc::connection::~connection(void) {
 }
 
 
-// -- private assignment operator ----------------------------------------------
-
 /* copy assignment operator */
-irc::connection& irc::connection::operator=(const irc::connection& conn) {
-	// copy not allowed
+irc::connection& irc::connection::operator=(const irc::connection& other) {
+
+	if (this != &other) // not a self-assignment
+	{
+		_pfd = other._pfd;
+		_buffer = other._buffer;
+		_msg = other._msg;
+		_nick = other._nick;
+		_user = other._user;
+
+	}
 	return *this;
 }
 
