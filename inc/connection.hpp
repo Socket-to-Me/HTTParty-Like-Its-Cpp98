@@ -25,10 +25,10 @@ namespace irc {
 			// -- public constructors -----------------------------------------
 
 			/* pollfd reference constructor */
-            connection(const struct pollfd&);
+            connection(struct pollfd&);
 
 			/* copy constructor */
-			connection(const connection&);
+			connection(const connection& conn);
 
 			/* destructor */
 			~connection(void);
@@ -50,18 +50,25 @@ namespace irc {
 			// -- public accessors --------------------------------------------
 
 			/* get file descriptor */
+            const struct pollfd& getpfd(void) const;
             int getfd(void) const;
+            short getevents(void) const;
+            short getrevents(void) const;
 
             const std::string&  getnick(void) const;
             const std::string&  getuser(void) const;
             const std::string&  getmsg(void) const;
+            const std::string&  getbuffer(void) const;
 
             void  setnick(const std::string& str);
             void  setuser(const std::string& str);
             void  setmsg(const std::string& str);
 
 			/* copy assignment operator */
-			connection& operator=(const connection&);
+			connection& operator=(const connection& other);
+
+			/* == operator */
+			bool operator==(const connection& other) const;
 
         private:
 
@@ -69,7 +76,7 @@ namespace irc {
 
 			enum { BUFFER_SIZE = 1024 };
 
-            const struct pollfd&    _pfd;
+            struct pollfd&   		_pfd;
 			std::string             _buffer;
 			std::string             _msg;
             std::string             _nick;

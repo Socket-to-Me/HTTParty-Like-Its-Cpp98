@@ -43,8 +43,6 @@ int main(int ac, char** av) {
 	// 	}
 	// }
 
-	return 0;
-
 	// // server class test
 
 	// irc::Server& server = irc::Server::instance();
@@ -78,6 +76,8 @@ int main(int ac, char** av) {
 	irc::server& server = irc::server::instance();
 
 	server.start("127.0.0.1", 5052);
+
+	return 0;
 
 	// ------------------------------------------------
 

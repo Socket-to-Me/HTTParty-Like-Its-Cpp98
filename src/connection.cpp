@@ -7,7 +7,7 @@
 // -- public constructors -----------------------------------------------------
 
 /* pollfd reference constructor */
-irc::connection::connection(const struct pollfd& pfd)
+irc::connection::connection(struct pollfd& pfd)
 : _pfd(pfd), _buffer("") {
 	// nothing to do...
 }
@@ -30,16 +30,27 @@ irc::connection& irc::connection::operator=(const irc::connection& other) {
 
 	if (this != &other) // not a self-assignment
 	{
-		_pfd = other._pfd;
-		_buffer = other._buffer;
-		_msg = other._msg;
-		_nick = other._nick;
-		_user = other._user;
+		_pfd = other.getpfd();
+		_buffer = other.getbuffer();
+		_msg = other.getmsg();
+		_nick = other.getnick();
+		_user = other.getuser();
 
 	}
 	return *this;
 }
 
+/* == operator */
+bool irc::connection::operator==(const irc::connection& other) const
+{
+    return _pfd.fd == other.getfd() 
+		&& _pfd.events == other.getevents()
+		&& _pfd.revents == other.getrevents()
+		&& _buffer == other.getbuffer()
+		&& _msg == other.getmsg()
+		&& _nick == other.getnick()
+		&& _user == other.getuser();
+}
 
 // -- public methods ----------------------------------------------------------
 
@@ -122,9 +133,25 @@ std::string irc::connection::extract_message(void) {
 
 // G E T T E R S ---------
 
-int     	irc::connection::getfd(void) const
+const struct pollfd& irc::connection::getpfd(void) const
+{
+	return _pfd;
+}
+
+
+int	irc::connection::getfd(void) const
 {
 	return _pfd.fd;
+}
+
+short	irc::connection::getevents(void) const
+{
+	return _pfd.events;
+}
+
+short	irc::connection::getrevents(void) const
+{
+	return _pfd.revents;
 }
 
 const std::string&  irc::connection::getnick(void) const
@@ -140,6 +167,11 @@ const std::string&  irc::connection::getuser(void) const
 const std::string&  irc::connection::getmsg(void) const
 {
 	return _msg;
+}
+
+const std::string&  irc::connection::getbuffer(void) const
+{
+	return _buffer;
 }
 
 // S E T T E R S ---------

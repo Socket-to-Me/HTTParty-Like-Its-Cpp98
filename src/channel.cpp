@@ -30,6 +30,14 @@ const std::string&  irc::channel::gettopic(void) const {
 	return _topic;
 }
 
+const std::vector<irc::connection>&  irc::channel::getoperators(void) const {
+	return _operators;
+}
+
+const std::vector<irc::connection>&  irc::channel::getconnections(void) const {
+	return _connections;
+}
+
 // -- public methods ----------------------------------------------
 
 const std::string irc::channel::getmode(void) const {
@@ -190,9 +198,9 @@ const std::string&  irc::channel::getkey(void) const {
 	return _key;
 }
 
-bool irc::channel::isOperator(irc::connection& op) const {
+bool irc::channel::isOperator(const irc::connection& op) const {
 
-    for (std::vector<irc::connection>::iterator it=_operators.begin(); it!=_operators.end(); it++) {
+    for (std::vector<irc::connection>::const_iterator it=_operators.begin(); it!=_operators.end(); it++) {
         if (*it == op) {
             return true;
         }
@@ -203,7 +211,16 @@ bool irc::channel::isOperator(irc::connection& op) const {
 // -- private assignment operator ----------------------------------
 
 /* copy assignment operator */
-irc::channel& operator=(const irc::channel& other) {
-	// copy not allowed
+irc::channel& irc::channel::operator=(const irc::channel& other) {
+
+	if (this != &other) // not a self-assignment
+	{
+		_name = other.getname();
+		_topic = other.gettopic();
+		_key = other.getmode();
+		_operators = other.getoperators();
+		_connections = other.getconnections();
+
+	}
 	return *this;
 }
