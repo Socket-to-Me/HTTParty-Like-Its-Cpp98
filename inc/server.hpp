@@ -43,8 +43,15 @@ namespace irc {
 			/* send message to all clients */
 			void	broadcast(const std::string& msg);
 
+			/* send message to a client */
+			void	send(irc::connection& conn, const std::string& message);
 
-			void send(irc::connection& conn, const std::string& message);
+			// -- G E T T E R S ---------------------
+
+			const std::string&	getname(void) const;
+			const std::string&	getversion(void) const;
+			const std::string&	getusermodes(void) const;
+			const std::string&	getchannelmodes(void) const;
 
 			// -- P U B L I C  S T A T I C  M E T H O D S ---------------------
 
@@ -60,7 +67,7 @@ namespace irc {
 			server(void);
 
 			/* copy constructor */
-			server(const server&);
+			server(const server& other);
 
 			/* destructor */
 			~server(void);
@@ -70,7 +77,6 @@ namespace irc {
 
 			/* singleton instance */
 			static server	_instance;
-
 
 			// -- P R I V A T E  M E M B E R S --------------------------------
 
@@ -86,9 +92,11 @@ namespace irc {
 
 			std::vector<struct pollfd>		_pollfds;
 			std::vector<irc::connection>	_connections;
-
-			// <networkname>
 			static const std::string		_networkname;
+			static const std::string		_version;
+			static const std::string		_usermodes;
+			static const std::string		_channelmodes;
+			static const std::string		_channelmodeswithparams;
 
 			// -- P R I V A T E  M E T H O D S ----------------------------------
 
