@@ -1,7 +1,7 @@
 #ifndef SERVER_HEADER
 # define SERVER_HEADER
 
-
+# include <algorithm>
 # include <vector>
 # include <string>
 # include <cstdlib>
@@ -45,6 +45,11 @@ namespace irc {
 
 			/* send message to a client */
 			void	send(irc::connection& conn, const std::string& message);
+
+			// -- C O M M A N D  U T I L S ---------------------
+
+			bool	isConnRegistered(const irc::connection& conn) const;
+			bool	isNickInUse(const std::string& nick) const;
 
 			// -- G E T T E R S ---------------------
 

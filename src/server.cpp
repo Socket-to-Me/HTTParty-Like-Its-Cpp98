@@ -136,15 +136,44 @@ void irc::server::unsubscribe(const irc::connection &conn)
     // TODO
 }
 
-/* send message to one client */
-void irc::server::send(irc::connection &conn, const std::string &message)
-{
-}
-
 /* send message to all clients */
 void irc::server::broadcast(const std::string &message)
 {
     // TODO
+}
+
+/* send message to one client */
+void irc::server::send(irc::connection &conn, const std::string &message)
+{
+    // TODO
+}
+
+
+// -- C O M M A N D  U T I L S ---------------------
+
+bool	irc::server::isConnRegistered(const irc::connection& conn) const {
+
+    if (!_connections.empty()) {
+
+        if(std::find(_connections.begin(), _connections.end(), conn) != _connections.end()) {
+            return true;
+        } 
+    }
+    return false;
+}
+
+bool	irc::server::isNickInUse(const std::string& nick) const {
+
+    if (!_connections.empty()) {
+
+        for (std::vector<irc::connection>::const_iterator it=_connections.begin(); it!=_connections.end(); ++it) {
+
+            if (it->getnick() == nick) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 

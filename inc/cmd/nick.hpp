@@ -2,6 +2,7 @@
 #ifndef NICK_HPP
 # define NICK_HPP
 
+# include "server.hpp"
 # include "numerics.hpp"
 # include "auto_ptr.hpp"
 # include "cmd.hpp"
@@ -22,7 +23,7 @@ namespace irc {
 			nick(void);
 
 			/* parametric constructor */
-			nick(std::vector<irc::token> tokens);
+			// nick(const std::data& data);
 
 			/* destructor */
 			~nick(void);
@@ -50,8 +51,9 @@ namespace irc {
 			nick& operator=(const nick&);
 
 			// -- M E M B E R S --------------------------
-			std::vector<irc::token>	_tokens;
-
+			// const irc::data&			_data;
+			// const irc::connection&	_conn;
+			// std::string				_nick;
 	};
 
 }
