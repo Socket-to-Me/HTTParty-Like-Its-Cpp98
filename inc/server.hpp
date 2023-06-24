@@ -105,7 +105,6 @@ namespace irc {
 			void	acceptNewConnection(void);
 			void 	handleActiveConnections(void);
 
-
 	};
 
 }
