@@ -18,11 +18,36 @@ irc::msg::msg(void)
 }
 
 /* copy constructor */
-irc::msg::msg(const std::string& msg) {
+irc::msg::msg(const irc::msg& msg)
+: _tags(msg._tags),
+  _source(msg._source),
+  _command(msg._command),
+  _params(msg._params),
+  _nick(msg._nick),
+  _user(msg._user),
+  _host(msg._host) {
 }
 
 /* destructor */
 irc::msg::~msg(void) {
+}
+
+
+// -- public assignment operators ---------------------------------------------
+
+/* copy assignment operator */
+irc::msg& irc::msg::operator=(const irc::msg& msg) {
+	// check for self-assignment
+	if (this == &msg) {
+		_tags = msg._tags;
+		_source = msg._source;
+		_command = msg._command;
+		_params = msg._params;
+		_nick = msg._nick;
+		_user = msg._user;
+		_host = msg._host;
+	} // return self reference
+	return *this;
 }
 
 

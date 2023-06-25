@@ -53,10 +53,16 @@ namespace irc {
 			msg(void);
 
 			/* copy constructor */
-			msg(const std::string&);
+			msg(const msg&);
 
 			/* destructor */
 			~msg(void);
+
+
+			// -- public assignment operators ---------------------------------
+
+			/* copy assignment operator */
+			msg& operator=(const msg&);
 
 
 			// -- public accessors --------------------------------------------
