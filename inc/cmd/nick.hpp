@@ -40,6 +40,10 @@ namespace irc {
             /* create command */
             static irc::auto_ptr<irc::cmd> create(std::vector<irc::token> tokens);
 
+
+			// -- P U B L I C  M E T H O D S --------------------------------
+			bool	isValidNick(const std::string& nick) const;
+
 		private:
 
 			// -- N O N - C O P Y A B L E  C L A S S --------------------------

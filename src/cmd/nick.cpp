@@ -18,30 +18,57 @@ irc::nick::~nick(void) {
 
 /* execute command */
 bool irc::nick::execute(void) {
-    return false;
+
+    // _conn.setnick(_nick);
+    return true;
 }
 
 /* evaluate command */
 bool irc::nick::evaluate(void) {
 
-    // if (irc::server::isNickInUse(_nick)) {
-    //     _conn.send(irc::numerics::err_nicknameinuse_433(_conn));
-    //     return false;
-    // }
-
     // std::vector<irc::token>& params = _data.getparams();
 
     // if (params.size() == 0) {
-    //     conn.send(irc::numerics::err_nonicknamegiven_431(conn));
+    //     _conn.send(irc::numerics::err_nonicknamegiven_431(conn));
     //     return false;
     // }
     // else if (params.size() != 1) {
     //     return false;
     // }
 
-    // do nick checks with errors - https://dd.ircdocs.horse/refs/commands/nick
+    // std::string nick = params[0].getstr();
 
-    // _nick = params[0].getstr();
+    // if (!isValidNick(nick)) {
+    //     _conn.send(irc::numerics::err_erroneusnickname_432(conn));
+    //     return false;
+    // }
+    // else if (irc::server::isNickInUse(nick)) {
+    //     _conn.send(irc::numerics::err_nicknameinuse_433(_conn));
+    //     return false;
+    // }
+
+    // _nick = nick;
+    return true;
+}
+
+bool	isValidNick(const std::string& nick) const {
+
+    // no leading character (# & :)
+    if (nick.find("#") == 0 || nick.find("&") == 0 || nick.find(":") == 0) {
+        return false;
+    }
+
+    // no ascii space (# & :)
+    if (nick.find(" ") != std::string::npos) {
+        return false;
+    }
+
+    // is printable
+    for (int i=0; i<strlen(nick); ++i) {
+        if (!isprint(nick[i]))
+            return false;
+   }
+
     return true;
 }
 

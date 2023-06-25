@@ -176,6 +176,20 @@ bool	irc::server::isNickInUse(const std::string& nick) const {
     return false;
 }
 
+bool	irc::server::isChannelExist(const std::string& channel) const {
+
+    if (!_channels.empty()) {
+
+        for (std::vector<irc::channel>::const_iterator it=_channels.begin(); it!=_channels.end(); ++it) {
+
+            if (it->getname() == channel) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 
 // -- G E T T E R S ---------------------
 

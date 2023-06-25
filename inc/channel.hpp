@@ -61,9 +61,9 @@ namespace irc {
 			channel& operator=(const channel&);
 
 			// -- private members --------------------------------------------
-			std::string				_name;
-			std::string				_topic;
-			std::string				_key;
+			std::string						_name;
+			std::string						_topic;
+			std::string						_key;
 			std::vector<irc::connection>	_operators;
 			std::vector<irc::connection>	_connections;
 

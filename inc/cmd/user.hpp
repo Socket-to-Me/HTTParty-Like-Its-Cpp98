@@ -2,6 +2,7 @@
 #ifndef USER_HPP
 # define USER_HPP
 
+# include "server.hpp"
 # include "numerics.hpp"
 # include "auto_ptr.hpp"
 # include "cmd.hpp"
@@ -22,7 +23,7 @@ namespace irc {
 			user(void);
 
 			/* parametric constructor */
-			user(std::vector<irc::token> tokens);
+			// user(const std::data& data);
 
 			/* destructor */
 			~user(void);
@@ -50,7 +51,9 @@ namespace irc {
 			user& operator=(const user&);
 
 			// -- M E M B E R S --------------------------
-			std::vector<irc::token>	_tokens;
+			// const irc::data&			_data;
+			// const irc::connection&	_conn;
+			// std::string				_user;
 
 	};
 

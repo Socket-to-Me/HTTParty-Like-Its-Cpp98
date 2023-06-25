@@ -50,7 +50,10 @@ namespace irc {
 			join& operator=(const join&);
 
 			// -- M E M B E R S --------------------------
-			std::vector<irc::token>	_tokens;
+			// const irc::data&			_data;
+			// const irc::connection&	_conn;
+			// std::string				_channel;
+			// std::string				_password;
 
 	};
 
