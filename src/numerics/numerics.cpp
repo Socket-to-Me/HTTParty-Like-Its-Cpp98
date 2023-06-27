@@ -1,5 +1,100 @@
 #include "numerics.hpp"
 
+// ----------------------------
+// https://defs.ircdocs.horse/defs/numerics.html
+// ----------------------------
+// 
+// Registration process
+// 
+// RPL_WELCOME (001) 
+// RPL_YOURHOST (002) 
+// RPL_CREATED (003) 
+// RPL_MYINFO (004)
+// RPL_ISUPPORT (005)
+// 
+// --- errors ---
+// ERR_NOMOTD (422)
+// ----------------------------
+//
+// Command: CAP
+// Parameters: <subcommand> [:<capabilities>]
+//
+// --- errors ---
+//
+// ----------------------------
+// 
+// Command: PASS
+// Parameters: <password>
+//
+// --- errors ---
+// ERR_NEEDMOREPARAMS (461)
+// ERR_ALREADYREGISTERED (462)
+// ERR_PASSWDMISMATCH (464)
+// -----------------------------
+//
+// Command: NICK
+// Parameters: <nickname>
+//
+// --- errors ---
+// ERR_NONICKNAMEGIVEN (431)
+// ERR_ERRONEUSNICKNAME (432)
+// ERR_NICKNAMEINUSE (433)
+// ERR_NICKCOLLISION (436)
+// -----------------------------
+//
+// Command: USER
+// Parameters: <username> 0 * <realname>
+//
+// --- errors ---
+// ERR_NEEDMOREPARAMS (461)
+// ERR_ALREADYREGISTERED (462)
+// -----------------------------
+//
+// Command: INVITE
+// 
+// -----------------------------
+//
+// Command: JOIN
+// 
+// -----------------------------
+//
+// Command: KICK
+// 
+// -----------------------------
+//
+// Command: LIST
+// 
+// -----------------------------
+//
+// Command: MODE
+// 
+// -----------------------------
+//
+// Command: PART
+// 
+// -----------------------------
+//
+// Command: PASS
+// 
+// -----------------------------
+//
+// Command: PING
+// 
+// -----------------------------
+//
+// Command: PRIVMSG
+// 
+// -----------------------------
+//
+// Command: QUIT
+// 
+// -----------------------------
+//
+// Command: TOPIC
+// 
+// -----------------------------
+
+
 const std::string& irc::numerics::rpl_welcome_001(irc::connection& conn) {
    
     conn.setmsg("001 " + conn.getnick() + ":Welcome to the Internet Relay Network " + conn.getnick())
@@ -19,7 +114,9 @@ const std::string& irc::numerics::rpl_created_003(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_myinfo_004(irc::connection& conn) {
-    return NULL;
+
+    conn.setmsg("004 " + conn.getnick() + " " + irc::server.getname() + " " irc::server.getversion() + " " + irc::server.getusermodes() + " " + irc::server.getchannelmodes())
+    return conn.getmsg();
 }
 
 const std::string& irc::numerics::rpl_isupport_005(irc::connection& conn) {

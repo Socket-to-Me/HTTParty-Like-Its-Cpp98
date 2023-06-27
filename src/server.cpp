@@ -3,6 +3,10 @@
 // -- S I N G L E T O N  I N S T A N C E --------------------------------------
 
 const std::string irc::server::_networkname = "httparty.like.its.98";
+const std::string irc::server::_version = "1.1";
+const std::string irc::server::_usermodes = "oOiwscrknfbghexzSjFI";
+const std::string irc::server::_channelmodes = "itlkob";
+const std::string irc::server::_channelmodeswithparams = "bkohv";
 
 /* singleton instance */
 irc::server irc::server::_instance = irc::server();
@@ -19,19 +23,19 @@ irc::server &irc::server::instance(void)
 /* default constructor */
 irc::server::server(void)
 {
-    // TODO
+    return;
 }
 
 /* copy constructor */
-irc::server::server(const server &server)
+irc::server::server(const server& other)
 {
-    // TODO
+    return;
 }
 
 /* destructor */
 irc::server::~server(void)
 {
-    // TODO
+    return;
 }
 
 // -- P U B L I C  M E T H O D S ----------------------------------------------
@@ -132,15 +136,77 @@ void irc::server::unsubscribe(const irc::connection &conn)
     // TODO
 }
 
-/* send message to one client */
-void irc::server::send(irc::connection &conn, const std::string &message)
-{
-}
-
 /* send message to all clients */
 void irc::server::broadcast(const std::string &message)
 {
     // TODO
+}
+
+/* send message to one client */
+void irc::server::send(irc::connection &conn, const std::string &message)
+{
+    // TODO
+}
+
+
+// -- C O M M A N D  U T I L S ---------------------
+
+bool	irc::server::isConnRegistered(const irc::connection& conn) const {
+
+    if (!_connections.empty()) {
+
+        if(std::find(_connections.begin(), _connections.end(), conn) != _connections.end()) {
+            return true;
+        } 
+    }
+    return false;
+}
+
+bool	irc::server::isNickInUse(const std::string& nick) const {
+
+    if (!_connections.empty()) {
+
+        for (std::vector<irc::connection>::const_iterator it=_connections.begin(); it!=_connections.end(); ++it) {
+
+            if (it->getnick() == nick) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool	irc::server::isChannelExist(const std::string& channel) const {
+
+    if (!_channels.empty()) {
+
+        for (std::vector<irc::channel>::const_iterator it=_channels.begin(); it!=_channels.end(); ++it) {
+
+            if (it->getname() == channel) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+// -- G E T T E R S ---------------------
+
+const std::string&	irc::server::getname(void) const {
+    return _networkname;
+}
+
+const std::string&	irc::server::getversion(void) const {
+    return _version;
+}
+
+const std::string&	irc::server::getusermodes(void) const {
+    return _usermodes;
+}
+
+const std::string&	irc::server::getchannelmodes(void) const {
+    return _channelmodes;
 }
 
 // -- P R I V A T E  M E T H O D S ----------------------------------------------
@@ -259,75 +325,6 @@ void irc::server::handleActiveConnections(void)
             std::cout << msg << std::endl;
 
             // irc::lexer::lex(msg);
-
-            // ------ Connection Registration -------------------
-
-            // --- STEP 1 - CAP message ---
-            //
-            // Command: CAP
-            // Parameters: <subcommand> [:<capabilities>]
-            //
-            // --- client ---
-            // CAP LS
-            // --- server ---
-            // CAP END
-            // --- errors ---
-            //
-            // ----------------------------
-
-            // --- STEP 2 - PASS message ---
-            //
-            // Command: PASS
-            // Parameters: <password>
-            //
-            // --- client ---
-            // PASS secretpasswordhere
-            // --- server ---
-            //
-            // --- errors ---
-            // ERR_NEEDMOREPARAMS (461)
-            // ERR_ALREADYREGISTERED (462)
-            // ERR_PASSWDMISMATCH (464)
-            // -----------------------------
-
-            // --- STEP 3 - NICK and USER message ---
-            //
-            // Command: NICK
-            // Parameters: <nickname>
-            //
-            // --- client ---
-            // NICK Wiz                         ; Requesting the new nick "Wiz".
-            // :WiZ NICK Kilroy                 ; WiZ changed his nickname to Kilroy.
-            // :dan-!d@localhost NICK Mamoped   ; dan- changed his nickname to Mamoped.
-            // --- server ---
-            //
-            // --- errors ---
-            // ERR_NONICKNAMEGIVEN (431)
-            // ERR_ERRONEUSNICKNAME (432)
-            // ERR_NICKNAMEINUSE (433)
-            // ERR_NICKCOLLISION (436)
-            //
-            //
-            // Command: USER
-            // Parameters: <username> 0 * <realname>
-            //
-            // --- client ---
-            //   USER guest 0 * :Ronnie Reagan     ; No ident server
-            //                                     ; User gets registered with username "~guest" and real name "Ronnie Reagan"
-            //   USER guest 0 * :Ronnie Reagan     ; Ident server gets contacted and returns the name "danp"
-            //                                     ; User gets registered with username "danp" and real name "Ronnie Reagan"
-            // --- server ---
-            //
-            // --- errors ---
-            // ERR_NEEDMOREPARAMS (461)
-            // ERR_ALREADYREGISTERED (462)
-            // -----------------------------
-
-            // Completion of registration process
-            // server sends RPL_WELCOME (001), RPL_YOURHOST (002), RPL_CREATED (003), RPL_MYINFO (004)
-            // and at least one RPL_ISUPPORT (005)
-
-            // The server responds as though the client sent it the MOTD command, i.e. it must send either the successful Message of the Day numerics or the ERR_NOMOTD (422) numeric.
 
             /*
             Lexer		lexer(buffer);

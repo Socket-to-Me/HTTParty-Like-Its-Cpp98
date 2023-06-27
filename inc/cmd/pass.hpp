@@ -2,6 +2,7 @@
 #ifndef PASS_HPP
 # define PASS_HPP
 
+# include "server.hpp"
 # include "numerics.hpp"
 # include "auto_ptr.hpp"
 # include "cmd.hpp"
@@ -22,7 +23,7 @@ namespace irc {
 			pass(void);
 
 			/* parametric constructor */
-			pass(std::vector<irc::token> tokens);
+			// pass(const std::data& data);
 
 			/* destructor */
 			~pass(void);
@@ -50,7 +51,9 @@ namespace irc {
 			pass& operator=(const pass&);
 
 			// -- M E M B E R S --------------------------
-			std::vector<irc::token>	_tokens;
+			// const irc::data&			_data;
+			// const irc::connection&	_conn;
+			// std::string				_password;
 
 	};
 

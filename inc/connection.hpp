@@ -49,20 +49,22 @@ namespace irc {
 
 			// -- public accessors --------------------------------------------
 
-			/* get file descriptor */
-            const struct pollfd& getpfd(void) const;
-            int getfd(void) const;
-            short getevents(void) const;
-            short getrevents(void) const;
+            const struct pollfd&	getpfd(void) const;
+
+            int					getfd(void) const;
+            short				getevents(void) const;
+            short				getrevents(void) const;
 
             const std::string&  getnick(void) const;
             const std::string&  getuser(void) const;
             const std::string&  getmsg(void) const;
             const std::string&  getbuffer(void) const;
+            const std::string&  getpassword(void) const;
 
             void  setnick(const std::string& str);
             void  setuser(const std::string& str);
             void  setmsg(const std::string& str);
+            void  setpassword(const std::string& str);
 
 			/* copy assignment operator */
 			connection& operator=(const connection& other);
@@ -81,6 +83,7 @@ namespace irc {
 			std::string             _msg;
             std::string             _nick;
             std::string             _user;
+            std::string             _password;
 
     };
 }

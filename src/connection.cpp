@@ -174,6 +174,11 @@ const std::string&  irc::connection::getbuffer(void) const
 	return _buffer;
 }
 
+const std::string&  irc::connection::getpassword(void) const
+{
+	return _password;
+}
+
 // S E T T E R S ---------
 
 void  irc::connection::setnick(const std::string& str)
@@ -191,6 +196,12 @@ void  irc::connection::setuser(const std::string& str)
 void  irc::connection::setmsg(const std::string& str)
 {
 	_msg = str;
+	return;
+}
+
+void  irc::connection::setpassword(const std::string& str)
+{
+	_password = str;
 	return;
 }
 
