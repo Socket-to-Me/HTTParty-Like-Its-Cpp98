@@ -3,6 +3,7 @@
 
 # include <algorithm>
 # include <vector>
+# include <map>
 # include <string>
 # include <cstdlib>
 # include <poll.h>
@@ -12,6 +13,7 @@
 # include "cmd.hpp"
 # include "connection.hpp"
 # include "socket.hpp"
+# include "channel.hpp"
 
 // -- N A M E S P A C E  I R C ------------------------------------------------
 
@@ -50,7 +52,6 @@ namespace irc {
 
 			bool	isConnRegistered(const irc::connection& conn) const;
 			bool	isNickInUse(const std::string& nick) const;
-			bool	isChannelExist(const std::string& channel) const;
 			bool	isChannelExist(const std::string& channel) const;
 
 			// -- G E T T E R S ---------------------
@@ -99,8 +100,11 @@ namespace irc {
 
 			std::vector<struct pollfd>				_pollfds;
 
-			std::map<std::string, irc::connection>	_connections;	// NICK as key
-			std::map<std::string, irc::channel>		_channels;		// name as key
+			// std::map<std::string, irc::connection>	_connections;	// NICK as key
+			// std::map<std::string, irc::channel>		_channels;		// name as key
+
+			std::vector<irc::connection>	_connections;
+			std::vector<irc::channel>		_channels;
 
 			static const std::string		_networkname;
 			static const std::string		_version;

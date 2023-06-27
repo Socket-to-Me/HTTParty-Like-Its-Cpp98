@@ -51,7 +51,7 @@ bool irc::nick::evaluate(void) {
     return true;
 }
 
-bool	isValidNick(const std::string& nick) const {
+bool	irc::nick::isValidNick(const std::string& nick) const {
 
     // no leading character (# & :)
     if (nick.find("#") == 0 || nick.find("&") == 0 || nick.find(":") == 0) {
@@ -64,7 +64,7 @@ bool	isValidNick(const std::string& nick) const {
     }
 
     // is printable
-    for (int i=0; i<strlen(nick); ++i) {
+    for (size_t i=0; i<nick.length(); ++i) {
         if (!isprint(nick[i]))
             return false;
    }

@@ -25,40 +25,40 @@ bool irc::join::execute(void) {
 /* evaluate command */
 bool irc::join::evaluate(void) {
 
-    std::vector<irc::token>& params = _data.getparams();
+    // std::vector<irc::token>& params = _data.getparams();
 
-    if (params.size() == 0) {
-        _conn.send(irc::numerics::err_needmoreparams_461(conn));
-        return false;
-    }
-    else if (params.size() > 2) {
-        return false;
-    }
+    // if (params.size() == 0) {
+    //     _conn.send(irc::numerics::err_needmoreparams_461(conn));
+    //     return false;
+    // }
+    // else if (params.size() > 2) {
+    //     return false;
+    // }
 
-    std::string channel = params[0];
-    if (params.size() == 2) {
-        std::string password = params[1];
-    }
+    // std::string channel = params[0];
+    // if (params.size() == 2) {
+    //     std::string password = params[1];
+    // }
 
-    if (!irc::server::isChannelExist(channel)) {
-        return false;
-    }
+    // if (!irc::server::isChannelExist(channel)) {
+    //     return false;
+    // }
 
-    const std::vector<irc::channel>&    channels = irc::server::getchannels();
+    // const std::vector<irc::channel>&    channels = irc::server::getchannels();
 
-    for (std::vector<irc::channel>::const_iterator it=channels.begin(); it!=channels.end()); ++it) {
-        if (channel == it) {
-            return true;
-        }
-    }
+    // for (std::vector<irc::channel>::const_iterator it=channels.begin(); it!=channels.end()); ++it) {
+    //     if (channel == it) {
+    //         return true;
+    //     }
+    // }
 
 
-    // Leave all channels
-    if (channel == "0") {
-    if (channel[0] != '#') {
-        _conn.send(irc::numerics::err_badchanmask_476(conn));
-        return false;
-    }
+    // // Leave all channels
+    // if (channel == "0") {
+    // if (channel[0] != '#') {
+    //     _conn.send(irc::numerics::err_badchanmask_476(conn));
+    //     return false;
+    // }
 
     return true;
 }
