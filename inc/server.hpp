@@ -50,7 +50,7 @@ namespace irc {
 
 			// -- C O M M A N D  U T I L S ---------------------
 
-			bool	isConnRegistered(const irc::connection& conn) const;
+			// bool	isConnRegistered(const irc::connection& conn) const;
 			bool	isNickInUse(const std::string& nick) const;
 			bool	isChannelExist(const std::string& channel) const;
 
@@ -100,11 +100,11 @@ namespace irc {
 
 			std::vector<struct pollfd>				_pollfds;
 
-			// std::map<std::string, irc::connection>	_connections;	// NICK as key
-			// std::map<std::string, irc::channel>		_channels;		// name as key
+			std::map<std::string, irc::connection>	_connections;	// NICK as key
+			std::map<std::string, irc::channel>		_channels;		// name as key
 
-			std::vector<irc::connection>	_connections;
-			std::vector<irc::channel>		_channels;
+			// std::vector<irc::connection>	_connections;
+			// std::vector<irc::channel>		_channels;
 
 			static const std::string		_networkname;
 			static const std::string		_version;

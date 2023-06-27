@@ -97,25 +97,20 @@ void irc::server::start(const std::string &ip, int port)
 /* stop server */
 void irc::server::stop(void)
 {
+    // std::vector<struct pollfd>::iterator iter = _pollfds.begin();
+    // typedef std::vector<irc::connection>::size_type conn_size;
+    // while (iter != _pollfds.end())
+    // {
+    //     close(iter->fd);
+    // }
+    // (void)_pollfds.empty();
 
-    std::vector<struct pollfd>::iterator iter = _pollfds.begin();
-    typedef std::vector<irc::connection>::size_type conn_size;
+    typedef std::map<std::string, irc::connection>::iterator map_iter;
 
-    // FUCK IT
-    for (std::vector<irc::connection>::size_type x = 0; x < _connections.size(); ++x)
-    {
-        _connections[x].close();
+    for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
+        it->second.close();
     }
-
     _connections.clear();
-
-    while (iter != _pollfds.end())
-    {
-
-        close(iter->fd);
-    }
-
-    (void)_pollfds.empty();
 }
 
 /* restart server */
@@ -151,26 +146,26 @@ void irc::server::send(irc::connection &conn, const std::string &message)
 
 // -- C O M M A N D  U T I L S ---------------------
 
-bool	irc::server::isConnRegistered(const irc::connection& conn) const {
+// bool	irc::server::isConnRegistered(const irc::connection& conn) const {
 
-    if (!_connections.empty()) {
+//     if (!_connections.empty()) {
 
-        if(std::find(_connections.begin(), _connections.end(), conn) != _connections.end()) {
-            return true;
-        } 
-    }
-    return false;
-}
+//         if(std::find(_connections.begin(), _connections.end(), conn) != _connections.end()) {
+//             return true;
+//         } 
+//     }
+//     return false;
+// }
 
 bool	irc::server::isNickInUse(const std::string& nick) const {
 
+    // iterator typedef
+    typedef std::map<std::string, irc::connection>::const_iterator const_map_iter;
+
     if (!_connections.empty()) {
 
-        for (std::vector<irc::connection>::const_iterator it=_connections.begin(); it!=_connections.end(); ++it) {
-
-            if (it->getnick() == nick) {
-                return true;
-            }
+        if (_connections.find(nick) != _connections.end()) {
+            return true;
         }
     }
     return false;
@@ -178,13 +173,13 @@ bool	irc::server::isNickInUse(const std::string& nick) const {
 
 bool	irc::server::isChannelExist(const std::string& channel) const {
 
+    // iterator typedef
+    typedef std::map<std::string, irc::channel>::const_iterator const_map_iter;
+
     if (!_channels.empty()) {
 
-        for (std::vector<irc::channel>::const_iterator it=_channels.begin(); it!=_channels.end(); ++it) {
-
-            if (it->getname() == channel) {
-                return true;
-            }
+        if (_channels.find(channel) != _channels.end()) {
+            return true;
         }
     }
     return false;
@@ -278,7 +273,6 @@ void irc::server::acceptNewConnection(void)
 
         addPollfd(clientSocket);
         connection conn(_pollfds.back());
-        _connections.push_back(conn);
 
         // if (conn.receive()) {
 
@@ -300,6 +294,8 @@ void irc::server::acceptNewConnection(void)
         //     }
         // }
 
+        _connections.insert(std::make_pair(conn.getnick(), conn));
+
         // conn.send(irc::numerics::rpl_welcome_001(conn));
         // conn.send(irc::numerics::rpl_yourhost_002(conn));
         // conn.send(irc::numerics::rpl_created_003(conn));
@@ -311,16 +307,15 @@ void irc::server::handleActiveConnections(void)
 {
 
     // iterator typedef
-    typedef std::vector<connection>::iterator conn_iter;
+    typedef std::map<std::string, irc::connection>::iterator map_iter;
 
     /* loop over all connections */
-    for (conn_iter it = _connections.begin(); it != _connections.end(); ++it)
-    {
+    for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
 
-        if (it->receive())
+        if (it->second.receive())
         {
 
-            std::string msg = it->extract_message();
+            std::string msg = it->second.extract_message();
 
             std::cout << msg << std::endl;
 
