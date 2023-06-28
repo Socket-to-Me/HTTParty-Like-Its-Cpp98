@@ -8,12 +8,14 @@
 # include <cstdlib>
 # include <poll.h>
 # include <iostream>
+# include <ctime>
 
 # include "parser.hpp"
 # include "cmd.hpp"
 # include "connection.hpp"
 # include "socket.hpp"
 # include "channel.hpp"
+# include "numerics.hpp"
 
 // -- N A M E S P A C E  I R C ------------------------------------------------
 
@@ -60,6 +62,7 @@ namespace irc {
 			const std::string&	getversion(void) const;
 			const std::string&	getusermodes(void) const;
 			const std::string&	getchannelmodes(void) const;
+			std::string	getcreation(void) const;
 
 			// -- P U B L I C  S T A T I C  M E T H O D S ---------------------
 
@@ -74,12 +77,8 @@ namespace irc {
 			/* default constructor */
 			server(void);
 
-			/* copy constructor */
-			server(const server& other);
-
 			/* destructor */
 			~server(void);
-
 
 			// -- P R I V A T E  S T A T I C  M E M B E R S -------------------
 
@@ -103,15 +102,13 @@ namespace irc {
 			std::map<std::string, irc::connection>	_connections;	// NICK as key
 			std::map<std::string, irc::channel>		_channels;		// name as key
 
-			// std::vector<irc::connection>	_connections;
-			// std::vector<irc::channel>		_channels;
-
-			static const std::string		_networkname;
-			static const std::string		_version;
-			static const std::string		_usermodes;
-			static const std::string		_channelmodes;
-			static const std::string		_channelmodeswithparams;
-
+			const std::string		_networkname;
+			const std::string		_version;
+			const std::string		_usermodes;
+			const std::string		_channelmodes;
+			const std::string		_channelmodeswithparams;
+			const std::time_t		_creation;
+ 
 			// -- P R I V A T E  M E T H O D S ----------------------------------
 
 			void	setupSocket(const std::string& ip, int port);

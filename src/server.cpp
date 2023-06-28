@@ -1,12 +1,7 @@
 #include "server.hpp"
+#include "sstream"
 
 // -- S I N G L E T O N  I N S T A N C E --------------------------------------
-
-const std::string irc::server::_networkname = "httparty.like.its.98";
-const std::string irc::server::_version = "1.1";
-const std::string irc::server::_usermodes = "oOiwscrknfbghexzSjFI";
-const std::string irc::server::_channelmodes = "itlkob";
-const std::string irc::server::_channelmodeswithparams = "bkohv";
 
 /* singleton instance */
 irc::server irc::server::_instance = irc::server();
@@ -22,13 +17,12 @@ irc::server &irc::server::instance(void)
 
 /* default constructor */
 irc::server::server(void)
-{
-    return;
-}
-
-/* copy constructor */
-irc::server::server(const server& other)
-{
+: _networkname("httparty.like.its.98"),
+  _version("1.1"),
+  _usermodes("oOiwscrknfbghexzSjFI"),
+  _channelmodes("itlkob"),
+  _channelmodeswithparams("bkohv"),
+  _creation(std::time(nullptr)) {
     return;
 }
 
@@ -196,6 +190,14 @@ const std::string&	irc::server::getversion(void) const {
     return _version;
 }
 
+std::string	irc::server::getcreation(void) const {
+    std::string str;
+    std::stringstream ss;
+    ss << _creation;
+    ss >> str;
+    return str;
+}
+
 const std::string&	irc::server::getusermodes(void) const {
     return _usermodes;
 }
@@ -274,6 +276,9 @@ void irc::server::acceptNewConnection(void)
         addPollfd(clientSocket);
         irc::connection conn(_pollfds.back());
         _connections.insert(std::make_pair("new", conn));
+        conn.send(irc::numerics::rpl_welcome_001(conn));
+        conn.send(irc::numerics::rpl_yourhost_002(conn));
+        conn.send(irc::numerics::rpl_created_003(conn));
     }
 
     if (_connections.find("new") != _connections.end() && _connections.find("new")->second.receive()) {

@@ -6,13 +6,12 @@
 class ProxyServer {
 public:
     ProxyServer(boost::asio::io_context& ioContext, const std::string& ircServer, int ircPort, int proxyPort)
-        : clientAcceptor_(ioContext),
-          ioContext_(ioContext),
+        : ioContext_(ioContext),
           ircSocket_(ioContext),
           clientSocket_(ioContext),
+          clientAcceptor_(ioContext, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), proxyPort)),
           ircServer_(ircServer),
-          ircPort_(ircPort),
-          proxyPort_(proxyPort) {}
+          ircPort_(ircPort) {}
 
     // Start the proxy server
     void start() {
@@ -25,13 +24,6 @@ public:
                     readFromIRC();
                 }
             });
-
-        // Bind and listen on the proxy port for client connections
-        boost::asio::ip::tcp::endpoint proxyEndpoint(boost::asio::ip::tcp::v4(), proxyPort_);
-        clientAcceptor_.open(proxyEndpoint.protocol());
-        clientAcceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
-        clientAcceptor_.bind(proxyEndpoint);
-        clientAcceptor_.listen();
 
         // Accept the client connection
         acceptClientConnection();
@@ -79,21 +71,28 @@ private:
 
                     std::cout << "Received from client: " << message << std::endl;
 
-                    writeToIRC(message);
+                    writeToIRC(message); // Forward the message to the IRC server
+
                     readFromClient();
                 }
             });
     }
 
+
     // Write to the IRC server
     void writeToIRC(const std::string& message) {
         boost::asio::async_write(ircSocket_, boost::asio::buffer(message),
-            [this, message](const boost::system::error_code& ec, std::size_t /*bytesTransferred*/) {
+            [this, message](const boost::system::error_code& ec, std::size_t bytesTransferred) {
                 if (!ec) {
                     std::cout << "Sent to IRC: " << message << std::endl;
+                    // Perform any necessary actions after the message is sent
+                } else {
+                    // Handle the error condition, if needed
+                    std::cout << "Error sending to IRC: " << ec.message() << std::endl;
                 }
             });
     }
+
 
     // Write to the client
     void writeToClient(const std::string& message) {
@@ -114,7 +113,6 @@ private:
     boost::asio::streambuf clientBuffer_;
     std::string ircServer_;
     int ircPort_;
-    int proxyPort_;
 };
 
 int main() {
