@@ -1,15 +1,12 @@
 #include "nick.hpp"
 
-/* default constructor */
-irc::nick::nick(void) {
-    return;
-}
 
 /* parametric constructor */
-// irc::nick::nick(const std::data& data)
-// : _data(data), _conn(data.getconn()) {
-//     return;
-// }
+irc::nick::nick(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "nick command created" << std::endl;
+	return;
+}
 
 /* destructor */
 irc::nick::~nick(void) {
@@ -73,6 +70,6 @@ bool	irc::nick::isValidNick(const std::string& nick) const {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::nick::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::nick());
+irc::auto_ptr<irc::cmd> irc::nick::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::nick(msg, conn));
 }

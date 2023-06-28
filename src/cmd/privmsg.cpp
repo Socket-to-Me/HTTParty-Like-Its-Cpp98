@@ -1,13 +1,10 @@
 #include "privmsg.hpp"
 
-/* default constructor */
-irc::privmsg::privmsg(void) {
-    return;
-}
 
 /* parametric constructor */
-irc::privmsg::privmsg(std::vector<irc::token> tokens)
-: _tokens(tokens) {
+irc::privmsg::privmsg(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "privmsg command created" << std::endl;
     return;
 }
 
@@ -27,6 +24,6 @@ bool irc::privmsg::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::privmsg::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::privmsg(tokens));
+irc::auto_ptr<irc::cmd> irc::privmsg::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::privmsg(msg, conn));
 }

@@ -10,6 +10,8 @@
 # include <iostream>
 # include <ctime>
 
+//#include "msg.hpp"
+#include "cmd_factory.hpp"
 # include "parser.hpp"
 # include "cmd.hpp"
 # include "connection.hpp"
@@ -111,10 +113,10 @@ namespace irc {
  
 			// -- P R I V A T E  M E T H O D S ----------------------------------
 
-			void	setupSocket(const std::string& ip, int port);
-			void    addPollfd(int fd);
-			void	acceptNewConnection(void);
-			void 	handleActiveConnections(void);
+			void setupSocket(const std::string& ip, int port);
+			void addPollfd(int fd);
+			void accept_new_connection(void);
+			void handle_active_connections(void);
 
 	};
 

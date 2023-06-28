@@ -22,7 +22,7 @@ namespace irc {
 			mode(void);
 
 			/* parametric constructor */
-			mode(std::vector<irc::token> tokens);
+			mode(const irc::msg&, irc::connection&);
 
 			/* destructor */
 			~mode(void);
@@ -37,7 +37,7 @@ namespace irc {
 			bool evaluate(void);
 
             /* create command */
-            static irc::auto_ptr<irc::cmd> create(std::vector<irc::token> tokens);
+            static irc::auto_ptr<irc::cmd> create(const irc::msg&, irc::connection&);
 
 		private:
 
@@ -49,8 +49,12 @@ namespace irc {
 			/* copy assignment operator */
 			mode& operator=(const mode&);
 
+
 			// -- M E M B E R S --------------------------
-			std::vector<irc::token>	_tokens;
+
+			const irc::msg& _msg;
+
+			irc::connection& _conn;
 
 	};
 

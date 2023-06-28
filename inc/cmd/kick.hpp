@@ -18,11 +18,8 @@ namespace irc {
 
 			// -- C O N S T R U C T O R S -------------------------------------
 
-			/* default constructor */
-			kick(void);
-
 			/* parametric constructor */
-			kick(std::vector<irc::token> tokens);
+			kick(const irc::msg&, irc::connection&);
 
 			/* destructor */
 			~kick(void);
@@ -37,7 +34,7 @@ namespace irc {
 			bool evaluate(void);
 
             /* create command */
-            static irc::auto_ptr<irc::cmd> create(std::vector<irc::token> tokens);
+            static irc::auto_ptr<irc::cmd> create(const irc::msg&, irc::connection&);
 
 		private:
 
@@ -49,9 +46,12 @@ namespace irc {
 			/* copy assignment operator */
 			kick& operator=(const kick&);
 
-			// -- M E M B E R S --------------------------
-			std::vector<irc::token>	_tokens;
 
+			// -- M E M B E R S --------------------------
+
+			const irc::msg& _msg;
+
+			irc::connection& _conn;
 	};
 
 }

@@ -33,10 +33,14 @@ namespace irc {
 			/* destructor */
 			~connection(void);
 
+
 			// -- public methods ----------------------------------------------
 
 			/* receive bytes */
             bool receive(void);
+
+			/* read bytes after new connection */
+			bool read(void);
 
 			/* send bytes */
             ssize_t send(const std::string& message);

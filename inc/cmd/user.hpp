@@ -19,11 +19,8 @@ namespace irc {
 
 			// -- C O N S T R U C T O R S -------------------------------------
 
-			/* default constructor */
-			user(void);
-
 			/* parametric constructor */
-			// user(const std::data& data);
+			user(const irc::msg&, irc::connection&);
 
 			/* destructor */
 			~user(void);
@@ -38,7 +35,7 @@ namespace irc {
 			bool evaluate(void);
 
             /* create command */
-            static irc::auto_ptr<irc::cmd> create(std::vector<irc::token> tokens);
+            static irc::auto_ptr<irc::cmd> create(const irc::msg&, irc::connection&);
 
 		private:
 
@@ -55,6 +52,11 @@ namespace irc {
 			// const irc::connection&	_conn;
 			// std::string				_user;
 
+			// -- M E M B E R S --------------------------
+
+			const irc::msg& _msg;
+
+			irc::connection& _conn;
 	};
 
 }

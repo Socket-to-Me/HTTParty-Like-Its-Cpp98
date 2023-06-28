@@ -43,7 +43,7 @@ irc::connection& irc::connection::operator=(const irc::connection& other) {
 /* == operator */
 bool irc::connection::operator==(const irc::connection& other) const
 {
-    return _pfd.fd == other.getfd() 
+    return _pfd.fd == other.getfd()
 		&& _pfd.events == other.getevents()
 		&& _pfd.revents == other.getrevents()
 		&& _buffer == other.getbuffer()
@@ -59,31 +59,35 @@ bool irc::connection::receive(void) {
 
 	// check if POLLIN event occured
 	if (_pfd.revents & POLLIN) {
-
-		std::cout << "read into buffer" << std::endl;
-
-		// declare buffer
-		char buffer[BUFFER_SIZE];
-
-		// receive bytes
-		ssize_t readed = ::recv(getfd(), buffer, BUFFER_SIZE, 0);
-
-		// check for error
-		if (readed == -1) {
-			std::cout << "\nError sending response to client" << std::endl;
-			return false;
-		}
-		else if (readed == 0) {
-			std::cout << "\nEmpty response from client" << std::endl;
-			return false;
-		}
-
-		// append to buffer
-		_buffer.append(buffer, readed);
-
-		if (check_crlf()) { return true; }
-
+		return read();
 	}
+	return false;
+}
+
+/* read bytes after new connection */
+bool irc::connection::read(void) {
+
+	// declare buffer
+	char buffer[BUFFER_SIZE];
+
+	// receive bytes
+	ssize_t readed = ::recv(_pfd.fd, buffer, BUFFER_SIZE, 0);
+
+	// check for error
+	if (readed == -1) {
+		std::cout << "\nError sending response to client" << std::endl;
+		return false;
+	}
+	else if (readed == 0) {
+		std::cout << "\nEmpty response from client" << std::endl;
+		return false;
+	}
+
+	// append to buffer
+	_buffer.append(buffer, readed);
+
+	if (check_crlf()) { return true; }
+
 	return false;
 }
 

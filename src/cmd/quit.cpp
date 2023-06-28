@@ -1,13 +1,10 @@
 #include "quit.hpp"
 
-/* default constructor */
-irc::quit::quit(void) {
-    return;
-}
 
 /* parametric constructor */
-irc::quit::quit(std::vector<irc::token> tokens)
-: _tokens(tokens) {
+irc::quit::quit(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "quit command created" << std::endl;
     return;
 }
 
@@ -27,6 +24,6 @@ bool irc::quit::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::quit::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::quit(tokens));
+irc::auto_ptr<irc::cmd> irc::quit::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::quit(msg, conn));
 }

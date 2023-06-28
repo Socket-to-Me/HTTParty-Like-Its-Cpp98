@@ -18,11 +18,8 @@ namespace irc {
 
 			// -- C O N S T R U C T O R S -------------------------------------
 
-			/* default constructor */
-			join(void);
-
 			/* parametric constructor */
-			join(std::vector<irc::token> tokens);
+			join(const irc::msg&, irc::connection&);
 
 			/* destructor */
 			~join(void);
@@ -37,7 +34,7 @@ namespace irc {
 			bool evaluate(void);
 
             /* create command */
-            static irc::auto_ptr<irc::cmd> create(std::vector<irc::token> tokens);
+            static irc::auto_ptr<irc::cmd> create(const irc::msg&, irc::connection&);
 
 		private:
 
@@ -48,6 +45,14 @@ namespace irc {
 
 			/* copy assignment operator */
 			join& operator=(const join&);
+
+
+
+			// -- M E M B E R S --------------------------
+
+			const irc::msg& _msg;
+
+			irc::connection& _conn;
 
 			// -- M E M B E R S --------------------------
 			// const irc::data&			_data;

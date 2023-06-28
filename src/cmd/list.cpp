@@ -1,13 +1,10 @@
 #include "list.hpp"
 
-/* default constructor */
-irc::list::list(void) {
-    return;
-}
 
 /* parametric constructor */
-irc::list::list(std::vector<irc::token> tokens)
-: _tokens(tokens) {
+irc::list::list(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "list command created" << std::endl;
     return;
 }
 
@@ -27,6 +24,6 @@ bool irc::list::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::list::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::list(tokens));
+irc::auto_ptr<irc::cmd> irc::list::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::list(msg, conn));
 }

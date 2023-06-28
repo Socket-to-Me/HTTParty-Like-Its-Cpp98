@@ -1,13 +1,9 @@
 #include "part.hpp"
 
-/* default constructor */
-irc::part::part(void) {
-    return;
-}
-
 /* parametric constructor */
-irc::part::part(std::vector<irc::token> tokens)
-: _tokens(tokens) {
+irc::part::part(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "part command created" << std::endl;
     return;
 }
 
@@ -27,6 +23,6 @@ bool irc::part::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::part::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::part(tokens));
+irc::auto_ptr<irc::cmd> irc::part::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::part(msg, conn));
 }

@@ -2,17 +2,13 @@
 
 // -- C O N S T R U C T O R S -------------------------------------
 
-/* default constructor */
-irc::pass::pass(void) 
-{
-    return;
-}
 
 /* parametric constructor */
-// irc::pass::pass(const std::data& data)
-// : _data(data), _conn(data.getconn()) {
-//     return;
-// }
+irc::pass::pass(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "pass command created" << std::endl;
+	return;
+}
 
 /* destructor */
 irc::pass::~pass(void) {
@@ -23,7 +19,7 @@ irc::pass::~pass(void) {
 
 /* execute command */
 bool irc::pass::execute(void) {
-    
+
     // _conn.setpassword(_password);
     return true;
 }
@@ -51,6 +47,6 @@ bool irc::pass::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::pass::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::pass());
+irc::auto_ptr<irc::cmd> irc::pass::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::pass(msg, conn));
 }

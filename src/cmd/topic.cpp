@@ -1,13 +1,9 @@
 #include "topic.hpp"
 
-/* default constructor */
-irc::topic::topic(void) {
-    return;
-}
-
 /* parametric constructor */
-irc::topic::topic(std::vector<irc::token> tokens)
-: _tokens(tokens) {
+irc::topic::topic(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "topic command created" << std::endl;
     return;
 }
 
@@ -27,6 +23,6 @@ bool irc::topic::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::topic::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::topic(tokens));
+irc::auto_ptr<irc::cmd> irc::topic::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::topic(msg, conn));
 }

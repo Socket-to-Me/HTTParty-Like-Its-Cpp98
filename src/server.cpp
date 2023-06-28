@@ -60,10 +60,10 @@ void irc::server::start(const std::string &ip, int port)
         }
 
         // check server socket for new connections
-        acceptNewConnection();
+        accept_new_connection();
 
         // check client sockets for new events
-        handleActiveConnections();
+        handle_active_connections();
     }
 
     sockaddr_in hint;
@@ -83,7 +83,7 @@ void irc::server::start(const std::string &ip, int port)
         return;
     }
 
-    acceptNewConnection();
+    accept_new_connection();
 
     // return true;
 }
@@ -146,7 +146,7 @@ void irc::server::send(irc::connection &conn, const std::string &message)
 
 //         if(std::find(_connections.begin(), _connections.end(), conn) != _connections.end()) {
 //             return true;
-//         } 
+//         }
 //     }
 //     return false;
 // }
@@ -258,20 +258,24 @@ void irc::server::addPollfd(int fd)
 }
 
 /* accept new pollfd connection */
-void irc::server::acceptNewConnection(void)
-{
+void irc::server::accept_new_connection(void) {
+
+
     // check server listening socket for recent events
     if (_pollfds[0].revents & POLLIN) {
-        std::cout << "accept new connection" << std::endl;
+
 
         sockaddr_in client;
         socklen_t clientSize = sizeof(client);
         int clientSocket = accept(_socket, (sockaddr *)&client, &clientSize);
-        if (clientSocket == -1)
-        {
-            std::cout << "Failed to accept client connection." << std::endl;
-            // throw std::exception("Failed to accept client connection.");
-        }
+
+		// check if accept() failed
+		if (clientSocket == -1) {
+			std::cout << "Failed to accept client connection." << std::endl;
+		}
+		else {
+			std::cout << "\x1b[32m" << "New client connected." << "\x1b[0m" << std::endl;
+		}
 
         addPollfd(clientSocket);
         irc::connection conn(_pollfds.back());
@@ -279,18 +283,45 @@ void irc::server::acceptNewConnection(void)
         conn.send(irc::numerics::rpl_welcome_001(conn));
         conn.send(irc::numerics::rpl_yourhost_002(conn));
         conn.send(irc::numerics::rpl_created_003(conn));
+
+
+		conn.read();
+
+		std::string msg;
+
+
+		do {
+
+			msg = conn.extract_message();
+
+			irc::msg message = irc::parser::parse(msg);
+
+			if (message.have_command()) {
+				irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
+				if (maker) {
+					irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
+					if (cmd->evaluate() == true) {
+						cmd->execute();
+					}
+				}
+			}
+
+
+		} while (msg.size() > 0);
     }
 
-    if (_connections.find("new") != _connections.end() && _connections.find("new")->second.receive()) {
+    //if (_connections.find("new") != _connections.end() && _connections.find("new")->second.receive()) {
 
-        irc::msg    msg = irc::parser::parse(_connections.find("new")->second.extract_message());
+        // if (conn.receive()) {
 
-        std::cout << "CMD: " << msg.get_command() << std::endl;
+        //irc::msg    msg = irc::parser::parse(_connections.find("new")->second.extract_message());
 
-        if (msg.have_nick() && msg.have_user()) {
+        //std::cout << "CMD: " << msg.get_command() << std::endl;
+
+        //if (msg.have_nick() && msg.have_user()) {
 
             // irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(msg.get_command());
-            
+
             // if (maker) {
 
             //     irc::auto_ptr<irc::cmd> cmd = maker(msg);
@@ -299,19 +330,20 @@ void irc::server::acceptNewConnection(void)
             //         cmd->execute(conn);
             //     }
             // }
-        }
-        else {
+        //}
+        //else {
             // ERROR
-        }
+        //}
+
+        //_connections.insert(std::make_pair(conn.getnick(), conn));
 
         // conn.send(irc::numerics::rpl_welcome_001(conn));
         // conn.send(irc::numerics::rpl_yourhost_002(conn));
         // conn.send(irc::numerics::rpl_created_003(conn));
-    }
 
 }
 
-void irc::server::handleActiveConnections(void)
+void irc::server::handle_active_connections(void)
 {
 
     // iterator typedef
@@ -320,14 +352,34 @@ void irc::server::handleActiveConnections(void)
     /* loop over all connections */
     for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
 
-        if (it->second.receive())
-        {
+        if (it->second.receive()) {
 
+			std::cout << "receive active connection" << std::endl;
             std::string msg = it->second.extract_message();
 
-            std::cout << msg << std::endl;
+			irc::msg message = irc::parser::parse(msg);
 
-            // irc::lexer::lex(msg);
+			if (message.have_command()) {
+				irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
+				if (maker) {
+					irc::auto_ptr<irc::cmd> cmd = maker(message, it->second);
+					if (cmd->evaluate() == true) {
+						cmd->execute();
+					}
+				}
+			}
+
+
+        }
+    }
+}
+
+
+
+
+
+
+
 
             /*
             Lexer		lexer(buffer);
@@ -364,6 +416,3 @@ void irc::server::handleActiveConnections(void)
 
             }
             */
-        }
-    }
-}

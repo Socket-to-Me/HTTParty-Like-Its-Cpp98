@@ -18,11 +18,8 @@ namespace irc {
 
 			// -- C O N S T R U C T O R S -------------------------------------
 
-			/* default constructor */
-			ping(void);
-
 			/* parametric constructor */
-			ping(std::vector<irc::token> tokens);
+			ping(const irc::msg&, irc::connection&);
 
 			/* destructor */
 			~ping(void);
@@ -37,7 +34,7 @@ namespace irc {
 			bool evaluate(void);
 
             /* create command */
-            static irc::auto_ptr<irc::cmd> create(std::vector<irc::token> tokens);
+            static irc::auto_ptr<irc::cmd> create(const irc::msg&, irc::connection&);
 
 		private:
 
@@ -50,7 +47,10 @@ namespace irc {
 			ping& operator=(const ping&);
 
 			// -- M E M B E R S --------------------------
-			std::vector<irc::token>	_tokens;
+
+			const irc::msg& _msg;
+
+			irc::connection& _conn;
 
 	};
 

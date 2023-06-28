@@ -1,13 +1,9 @@
 #include "invite.hpp"
 
-/* default constructor */
-irc::invite::invite(void) {
-    return;
-}
-
 /* parametric constructor */
-irc::invite::invite(std::vector<irc::token> tokens)
-: _tokens(tokens) {
+irc::invite::invite(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "invite command created" << std::endl;
     return;
 }
 
@@ -27,6 +23,6 @@ bool irc::invite::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::invite::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::invite(tokens));
+irc::auto_ptr<irc::cmd> irc::invite::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::invite(msg, conn));
 }

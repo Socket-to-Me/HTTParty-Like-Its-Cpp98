@@ -40,7 +40,7 @@ namespace irc {
 			typedef irc::auto_ptr<irc::cmd> cmd_ptr;
 
 			/* new command prototype */ // method create proto !!!
-			typedef cmd_ptr (*cmd_maker)(std::vector<irc::token>);
+			typedef cmd_ptr (*cmd_maker)(const irc::msg&, irc::connection&);
 
 
 
@@ -49,22 +49,9 @@ namespace irc {
 			/* create command */
 			static cmd_maker search(const std::string& cmd);
 
-			
-
 
 
 		private:
-
-			// -- P R I V A T E  T Y P E S ------------------------------------
-
-			
-
-
-			// -- S T A T I C  M E M B E R S ----------------------------------
-
-		
-
-
 
 			// -- M E M B E R S -----------------------------------------------
 

@@ -19,11 +19,8 @@ namespace irc {
 
 			// -- C O N S T R U C T O R S -------------------------------------
 
-			/* default constructor */
-			nick(void);
-
 			/* parametric constructor */
-			// nick(const std::data& data);
+			nick(const irc::msg&, irc::connection&);
 
 			/* destructor */
 			~nick(void);
@@ -38,7 +35,7 @@ namespace irc {
 			bool evaluate(void);
 
             /* create command */
-            static irc::auto_ptr<irc::cmd> create(std::vector<irc::token> tokens);
+            static irc::auto_ptr<irc::cmd> create(const irc::msg&, irc::connection&);
 
 
 			// -- P U B L I C  M E T H O D S --------------------------------
@@ -53,6 +50,13 @@ namespace irc {
 
 			/* copy assignment operator */
 			nick& operator=(const nick&);
+
+
+			// -- M E M B E R S --------------------------
+
+			const irc::msg& _msg;
+
+			irc::connection& _conn;
 
 			// -- M E M B E R S --------------------------
 			// const irc::data&			_data;

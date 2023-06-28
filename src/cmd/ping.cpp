@@ -1,13 +1,9 @@
 #include "ping.hpp"
 
-/* default constructor */
-irc::ping::ping(void) {
-    return;
-}
-
 /* parametric constructor */
-irc::ping::ping(std::vector<irc::token> tokens)
-: _tokens(tokens) {
+irc::ping::ping(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "ping command created" << std::endl;
     return;
 }
 
@@ -27,6 +23,6 @@ bool irc::ping::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::ping::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::ping(tokens));
+irc::auto_ptr<irc::cmd> irc::ping::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::ping(msg, conn));
 }

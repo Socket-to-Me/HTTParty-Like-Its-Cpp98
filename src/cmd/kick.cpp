@@ -1,13 +1,10 @@
 #include "kick.hpp"
 
-/* default constructor */
-irc::kick::kick(void) {
-    return;
-}
 
 /* parametric constructor */
-irc::kick::kick(std::vector<irc::token> tokens)
-: _tokens(tokens) {
+irc::kick::kick(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "kick command created" << std::endl;
     return;
 }
 
@@ -27,6 +24,6 @@ bool irc::kick::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::kick::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::kick(tokens));
+irc::auto_ptr<irc::cmd> irc::kick::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::kick(msg, conn));
 }

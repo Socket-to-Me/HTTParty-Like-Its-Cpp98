@@ -1,13 +1,9 @@
 #include "mode.hpp"
 
-/* default constructor */
-irc::mode::mode(void) {
-    return;
-}
-
 /* parametric constructor */
-irc::mode::mode(std::vector<irc::token> tokens)
-: _tokens(tokens) {
+irc::mode::mode(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "mode command created" << std::endl;
     return;
 }
 
@@ -27,6 +23,6 @@ bool irc::mode::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::mode::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::mode(tokens));
+irc::auto_ptr<irc::cmd> irc::mode::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::mode(msg, conn));
 }

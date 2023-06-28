@@ -1,15 +1,12 @@
 #include "user.hpp"
 
-/* default constructor */
-irc::user::user(void) {
-    return;
-}
 
 /* parametric constructor */
-// irc::nick::nick(const std::data& data)
-// : _data(data), _conn(data.getconn()) {
-//     return;
-// }
+irc::user::user(const irc::msg& msg, irc::connection& conn)
+: _msg(msg), _conn(conn) {
+	std::cout << "user command created" << std::endl;
+    return;
+}
 
 
 /* destructor */
@@ -48,6 +45,6 @@ bool irc::user::evaluate(void) {
 }
 
 /* create command */
-irc::auto_ptr<irc::cmd> irc::user::create(std::vector<irc::token> tokens) {
-    return irc::auto_ptr<irc::cmd>(new irc::user());
+irc::auto_ptr<irc::cmd> irc::user::create(const irc::msg& msg, irc::connection& conn) {
+    return irc::auto_ptr<irc::cmd>(new irc::user(msg, conn));
 }

@@ -2,6 +2,8 @@
 #define CMD_HEADER
 
 #include "auto_ptr.hpp"
+#include "msg.hpp"
+#include "connection.hpp"
 #include "lexer.hpp"
 
 
