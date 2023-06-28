@@ -64,28 +64,8 @@ void irc::server::start(const std::string &ip, int port)
 
         // check client sockets for new events
         handle_active_connections();
+
     }
-
-    sockaddr_in hint;
-    hint.sin_family = AF_INET;
-    hint.sin_port = htons(port);
-    inet_pton(AF_INET, ip.c_str(), &(hint.sin_addr));
-
-    if (bind(_socket, (sockaddr *)&hint, sizeof(hint)) == -1)
-    {
-        std::cout << "Failed to bind to IP/Port.\n";
-        return;
-    }
-
-    if (listen(_socket, SOMAXCONN) == -1)
-    {
-        std::cout << "Failed to listen.\n";
-        return;
-    }
-
-    accept_new_connection();
-
-    // return true;
 }
 
 /* stop server */
@@ -294,55 +274,25 @@ void irc::server::accept_new_connection(void) {
 				if (maker) {
 					irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
 					if (cmd->evaluate() == true) {
-						cmd->execute();
+						executed = cmd->execute();
 					}
 				}
 			}
 
 		} while (msg.size() > 0);
 
-        _connections.insert(std::make_pair(conn.getnick(), conn));
-        conn.send(irc::numerics::rpl_welcome_001(conn));
-        conn.send(irc::numerics::rpl_yourhost_002(conn));
-        conn.send(irc::numerics::rpl_created_003(conn));
+        if (conn.getnick().size()) {
+
+            _connections.insert(std::make_pair(conn.getnick(), conn));
+            conn.send(irc::numerics::rpl_welcome_001(conn));
+            conn.send(irc::numerics::rpl_yourhost_002(conn));
+            conn.send(irc::numerics::rpl_created_003(conn));
+        }
 
     }
-
-    //if (_connections.find("new") != _connections.end() && _connections.find("new")->second.receive()) {
-
-        // if (conn.receive()) {
-
-        //irc::msg    msg = irc::parser::parse(_connections.find("new")->second.extract_message());
-
-        //std::cout << "CMD: " << msg.get_command() << std::endl;
-
-        //if (msg.have_nick() && msg.have_user()) {
-
-            // irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(msg.get_command());
-
-            // if (maker) {
-
-            //     irc::auto_ptr<irc::cmd> cmd = maker(msg);
-
-            //     if (cmd->evaluate() == true) {
-            //         cmd->execute(conn);
-            //     }
-            // }
-        //}
-        //else {
-            // ERROR
-        //}
-
-        //_connections.insert(std::make_pair(conn.getnick(), conn));
-
-        // conn.send(irc::numerics::rpl_welcome_001(conn));
-        // conn.send(irc::numerics::rpl_yourhost_002(conn));
-        // conn.send(irc::numerics::rpl_created_003(conn));
-
 }
 
-void irc::server::handle_active_connections(void)
-{
+void irc::server::handle_active_connections(void) {
 
     // iterator typedef
     typedef std::map<std::string, irc::connection>::iterator map_iter;
@@ -371,46 +321,3 @@ void irc::server::handle_active_connections(void)
         }
     }
 }
-
-
-
-
-
-
-
-
-            /*
-            Lexer		lexer(buffer);
-            Parser		parser(lexer);
-
-            std::vector<std::vector<Token> > cmdtbl;
-            // size type typedef
-            typedef std::vector<int>::size_type size_type;
-
-            cmdtbl = parser.parse();
-
-            for (size_type x = 0; x < cmdtbl.size(); ++x) {
-
-                std::cout << std::endl << " --- N E W  C M D --- " << std::endl;
-
-                for (size_type z = 0; z < cmdtbl[x].size(); ++z) {
-
-                    Token&	token = cmdtbl[x][z];
-
-                    std::cout << token.getType() << "=" << token.getValue() << " | ";
-
-                    if (token.getType() == irc::COMMAND && token.getValue() == "CAP")
-                    {
-                        iter->send("CAP * END");
-                    }
-                    else if (token.getType() == irc::COMMAND && token.getValue() == "USER")
-                    {
-                        iter->send(":irc 001 swillis :Welcome to the irc server, swillis!\n");
-                        iter->send(":irc 002 swillis :Your host is irc, running version 1.0\n");
-                        iter->send(":irc 003 swillis :This server was created 29-05-2023\n");
-                        iter->send(":irc 004 swillis irc 1.0 A B\r\n");
-                    }
-                }
-
-            }
-            */

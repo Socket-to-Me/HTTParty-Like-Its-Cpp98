@@ -97,31 +97,31 @@
 
 const std::string& irc::numerics::rpl_welcome_001(irc::connection& conn) {
    
-    conn.setmsg("001 " + conn.getnick() + " :Welcome to the Internet Relay Network " + conn.getnick());
+    conn.setmsg("001 " + conn.getnick() + " :Welcome to the Internet Relay Network " + conn.getnick() + "\r\n");
     return conn.getmsg();
 }
 
 const std::string& irc::numerics::rpl_yourhost_002(irc::connection& conn) {
      
-    conn.setmsg("002 " + conn.getnick() + " :Your host is " + irc::server::instance().getname() + ", running version " + irc::server::instance().getversion());
+    conn.setmsg("002 " + conn.getnick() + " :Your host is " + irc::server::instance().getname() + ", running version " + irc::server::instance().getversion() + "\r\n");
     return conn.getmsg();
 }
 
 const std::string& irc::numerics::rpl_created_003(irc::connection& conn) {
 
-    conn.setmsg("003 " + conn.getnick() + " :This server was created " + irc::server::instance().getcreation());
+    conn.setmsg("003 " + conn.getnick() + " :This server was created " + irc::server::instance().getcreation() + "\r\n");
     return conn.getmsg();  
 }
 
 const std::string& irc::numerics::rpl_myinfo_004(irc::connection& conn) {
 
-    conn.setmsg("004 " + conn.getnick() + " " + irc::server::instance().getname() + " " + irc::server::instance().getversion() + " " + irc::server::instance().getusermodes() + " " + irc::server::instance().getchannelmodes());
+    conn.setmsg("004 " + conn.getnick() + " " + irc::server::instance().getname() + " " + irc::server::instance().getversion() + " " + irc::server::instance().getusermodes() + " " + irc::server::instance().getchannelmodes() + "\r\n");
     return conn.getmsg();
 }
 
 const std::string& irc::numerics::rpl_isupport_005(irc::connection& conn) {
     
-    conn.setmsg("005 " + conn.getnick() + " :are supported by this server");
+    conn.setmsg("005 " + conn.getnick() + " :are supported by this server" + "\r\n");
     return conn.getmsg();
 }
 
