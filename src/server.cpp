@@ -258,10 +258,10 @@ void irc::server::addPollfd(int fd)
 /* accept new pollfd connection */
 void irc::server::acceptNewConnection(void)
 {
-
     // check server listening socket for recent events
-    if (_pollfds[0].revents & POLLIN)
-    {
+    if (_pollfds[0].revents & POLLIN) {
+        std::cout << "accept new connection" << std::endl;
+
         sockaddr_in client;
         socklen_t clientSize = sizeof(client);
         int clientSocket = accept(_socket, (sockaddr *)&client, &clientSize);
@@ -272,35 +272,38 @@ void irc::server::acceptNewConnection(void)
         }
 
         addPollfd(clientSocket);
-        connection conn(_pollfds.back());
+        irc::connection conn(_pollfds.back());
+        _connections.insert(std::make_pair("new", conn));
+    }
 
-        // if (conn.receive()) {
+    if (_connections.find("new") != _connections.end() && _connections.find("new")->second.receive()) {
 
-        //     irc::message_list   msgs;
-        //     irc::lexer::lex(msgs, conn.extract_message());
+        irc::msg    msg = irc::parser::parse(_connections.find("new")->second.extract_message());
 
-        //     irc::message    msg;
+        std::cout << "CMD: " << msg.get_command() << std::endl;
 
-        //     irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(msg.getcmd());
+        if (msg.have_nick() && msg.have_user()) {
 
-        //     if (maker) {
+            // irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(msg.get_command());
+            
+            // if (maker) {
 
-        //         irc::auto_ptr<irc::cmd> cmd = maker(msg);
+            //     irc::auto_ptr<irc::cmd> cmd = maker(msg);
 
-        //         if (cmd->evaluate() == true) {
-
-        //             cmd->execute(conn);
-        //         }
-        //     }
-        // }
-
-        _connections.insert(std::make_pair(conn.getnick(), conn));
+            //     if (cmd->evaluate() == true) {
+            //         cmd->execute(conn);
+            //     }
+            // }
+        }
+        else {
+            // ERROR
+        }
 
         // conn.send(irc::numerics::rpl_welcome_001(conn));
         // conn.send(irc::numerics::rpl_yourhost_002(conn));
         // conn.send(irc::numerics::rpl_created_003(conn));
-
     }
+
 }
 
 void irc::server::handleActiveConnections(void)

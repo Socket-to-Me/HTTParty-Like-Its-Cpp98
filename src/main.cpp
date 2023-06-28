@@ -22,7 +22,7 @@
 int main(int ac, char** av) {
 	
 
-	irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search("CAP");
+	// irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search("CAP");
 
 	// if (maker) {
 

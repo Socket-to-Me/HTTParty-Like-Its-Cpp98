@@ -60,6 +60,8 @@ bool irc::connection::receive(void) {
 	// check if POLLIN event occured
 	if (_pfd.revents & POLLIN) {
 
+		std::cout << "read into buffer" << std::endl;
+
 		// declare buffer
 		char buffer[BUFFER_SIZE];
 
