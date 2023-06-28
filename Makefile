@@ -157,7 +157,7 @@ DEFINES  ?=
 # -- T A R G E T S ------------------------------------------------------------
 
 # project name
-PROJECT = webserv
+PROJECT = ircserv
 
 # main executable
 NAME = $(PROJECT)

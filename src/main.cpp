@@ -75,7 +75,7 @@ int main(int ac, char** av) {
 
 	irc::server& server = irc::server::instance();
 
-	server.start("127.0.0.1", 5052);
+	server.start("127.0.0.1", PORT);
 
 	return 0;
 

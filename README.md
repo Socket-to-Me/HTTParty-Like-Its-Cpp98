@@ -1,5 +1,7 @@
 # BanterBot-3000
 
+g++ -I/opt/homebrew/Cellar/boost/1.82.0_1/include -std=c++11 proxy.cpp
+
 --- S T E P S ---
 
 Define the irc Protocol: Start by understanding and defining the irc protocol specifications. Determine the format of irc messages, commands, and their parameters. This will serve as the foundation for implementing the server and handling client interactions.
