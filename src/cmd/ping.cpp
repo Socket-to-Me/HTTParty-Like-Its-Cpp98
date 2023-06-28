@@ -4,7 +4,16 @@
 irc::ping::ping(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
 	std::cout << "ping command created" << std::endl;
-    return;
+
+	if (msg.get_params().size() != 1) {
+
+		irc::out<2>::print("ping error: wrong number of parameters");
+
+		return;
+	}
+
+	std::string param = "PONG " + msg.get_params()[0] + "\r\n";
+	conn.send(param);
 }
 
 /* destructor */

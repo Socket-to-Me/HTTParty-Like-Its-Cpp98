@@ -56,9 +56,7 @@ bool irc::connection::operator==(const irc::connection& other) const
 /* receive bytes */
 bool irc::connection::receive(void) {
 
-	if (check_crlf()) {
-		return true;
-	}
+	if (check_crlf()) { return true; }
 
 	// check if POLLIN event occured
 	if (_pfd.revents & POLLIN) {

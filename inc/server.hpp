@@ -18,6 +18,8 @@
 # include "socket.hpp"
 # include "channel.hpp"
 # include "numerics.hpp"
+#include "output.hpp"
+
 
 // -- N A M E S P A C E  I R C ------------------------------------------------
 
@@ -95,6 +97,8 @@ namespace irc {
 			// TODO = change to socket object
 			int	_socket;
 
+			bool _is_running;
+
 			// struct pollfd {
 			//     int fd;         // File descriptor to monitor
 			//     short events;   // Events to monitor (input/output/error events)
@@ -112,7 +116,7 @@ namespace irc {
 			const std::string		_channelmodes;
 			const std::string		_channelmodeswithparams;
 			const std::time_t		_creation;
- 
+
 			// -- P R I V A T E  M E T H O D S ----------------------------------
 
 			void setupSocket(const std::string& ip, int port);
