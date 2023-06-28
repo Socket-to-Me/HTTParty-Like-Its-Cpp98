@@ -1,6 +1,5 @@
 #include "connection.hpp"
 
-
 // -- C O N N E C T I O N -----------------------------------------------------
 
 
@@ -94,20 +93,23 @@ bool irc::connection::read(void) {
 /* send bytes */
 ssize_t irc::connection::send(const std::string& message) {
 
-	ssize_t bytesSent = ::send(_pfd.fd, message.c_str(), message.size(), 0);
+	std::cout << std::endl << "----- S E N D I N G (" + getnick() + ") -----" << std::endl << std::endl;
+	std::cout << message.c_str() << std::endl;
+
+	ssize_t bytesSent = ::send(getfd(), message.c_str(), message.size(), 0);
 	if (bytesSent == -1) {
-		std::cout << std::endl << "Error sending response to client" << std::endl;
+		std::cout << std::endl << "Error sending response to client: " << strerror(errno) << std::endl;
 	}
 	return bytesSent;
 }
 
 /* close connection */
 void irc::connection::close(void) {
-	// check fd validity
-	if (_pfd.fd != -1) {
-		// close fd
-		::close(_pfd.fd);
-	}
+	// // check fd validity
+	// if (_pfd.fd != -1) {
+	// 	// close fd
+	// 	::close(_pfd.fd);
+	// }
 }
 
 /* extract message */

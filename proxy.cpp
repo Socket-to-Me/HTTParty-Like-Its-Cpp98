@@ -119,7 +119,7 @@ int main() {
     boost::asio::io_context ioContext;
 
     // Create a proxy server and start it
-    ProxyServer proxyServer(ioContext, "127.0.0.1", 4243, 8080);  // Specify the IRC address, IRC port, and proxy port
+    ProxyServer proxyServer(ioContext, "127.0.0.1", 5052, 8080);  // Specify the IRC address, IRC port, and proxy port
     proxyServer.start();
 
     // Run the IO context

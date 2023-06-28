@@ -8,7 +8,7 @@
 #include <cstring>
 #include <vector>
 #include <poll.h>
-
+#include <errno.h>
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
 

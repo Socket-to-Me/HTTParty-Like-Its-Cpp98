@@ -279,16 +279,9 @@ void irc::server::accept_new_connection(void) {
 
         addPollfd(clientSocket);
         irc::connection conn(_pollfds.back());
-        _connections.insert(std::make_pair("new", conn));
-        conn.send(irc::numerics::rpl_welcome_001(conn));
-        conn.send(irc::numerics::rpl_yourhost_002(conn));
-        conn.send(irc::numerics::rpl_created_003(conn));
-
 
 		conn.read();
-
 		std::string msg;
-
 
 		do {
 
@@ -306,8 +299,13 @@ void irc::server::accept_new_connection(void) {
 				}
 			}
 
-
 		} while (msg.size() > 0);
+
+        _connections.insert(std::make_pair(conn.getnick(), conn));
+        conn.send(irc::numerics::rpl_welcome_001(conn));
+        conn.send(irc::numerics::rpl_yourhost_002(conn));
+        conn.send(irc::numerics::rpl_created_003(conn));
+
     }
 
     //if (_connections.find("new") != _connections.end() && _connections.find("new")->second.receive()) {

@@ -16,35 +16,34 @@ irc::nick::~nick(void) {
 /* execute command */
 bool irc::nick::execute(void) {
 
-    // _conn.setnick(_nick);
+    _conn.setnick(_nick);
     return true;
 }
 
 /* evaluate command */
 bool irc::nick::evaluate(void) {
 
-    // std::vector<irc::token>& params = _data.getparams();
+    if (_msg.have_params() == false) {
+        _conn.send(irc::numerics::err_nonicknamegiven_431(_conn));
+        return false;
+    }
 
-    // if (params.size() == 0) {
-    //     _conn.send(irc::numerics::err_nonicknamegiven_431(conn));
-    //     return false;
-    // }
-    // else if (params.size() != 1) {
-    //     return false;
-    // }
+    const std::vector<std::string>& params = _msg.get_params();
+    if (params.size() != 1) {
+        return false;
+    }
 
-    // std::string nick = params[0].getstr();
+    std::string nick = params[0];
+    if (!isValidNick(nick)) {
+        _conn.send(irc::numerics::err_erroneusnickname_432(_conn));
+        return false;
+    }
+    else if (irc::server::instance().isNickInUse(nick)) {
+        _conn.send(irc::numerics::err_nicknameinuse_433(_conn));
+        return false;
+    }
 
-    // if (!isValidNick(nick)) {
-    //     _conn.send(irc::numerics::err_erroneusnickname_432(conn));
-    //     return false;
-    // }
-    // else if (irc::server::isNickInUse(nick)) {
-    //     _conn.send(irc::numerics::err_nicknameinuse_433(_conn));
-    //     return false;
-    // }
-
-    // _nick = nick;
+    _nick = nick;
     return true;
 }
 

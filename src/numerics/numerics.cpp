@@ -97,7 +97,7 @@
 
 const std::string& irc::numerics::rpl_welcome_001(irc::connection& conn) {
    
-    conn.setmsg("001 " + conn.getnick() + ":Welcome to the Internet Relay Network " + conn.getnick());
+    conn.setmsg("001 " + conn.getnick() + " :Welcome to the Internet Relay Network " + conn.getnick());
     return conn.getmsg();
 }
 
@@ -120,7 +120,8 @@ const std::string& irc::numerics::rpl_myinfo_004(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_isupport_005(irc::connection& conn) {
-    conn.setmsg("N/A");
+    
+    conn.setmsg("005 " + conn.getnick() + " :are supported by this server");
     return conn.getmsg();
 }
 
