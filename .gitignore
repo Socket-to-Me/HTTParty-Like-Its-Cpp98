@@ -23,3 +23,4 @@ webserv.dSYM/
 # ignore all .DS_Store files recursively
 **/.DS_Store
 
+ircserv
