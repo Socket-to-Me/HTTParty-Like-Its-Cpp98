@@ -20,9 +20,9 @@ irc::server::server(void)
 : _is_running(false),
   _networkname("httparty.like.its.98"),
   _version("1.1"),
-  _usermodes("oOiwscrknfbghexzSjFI"),
-  _channelmodes("itlkob"),
-  _channelmodeswithparams("bkohv"),
+  _usermodes("o"),
+  _channelmodes("itkol"),
+  _channelmodeswithparams(""),
   _creation(std::time(nullptr)) {
 }
 
@@ -166,6 +166,12 @@ bool	irc::server::isChannelExist(const std::string& channel) const {
         }
     }
     return false;
+}
+
+void	irc::server::newChannel(const std::string& name) {
+
+    irc::channel    channel(name, "TBD");
+    _channels.insert(std::make_pair(name, channel));
 }
 
 
@@ -326,7 +332,7 @@ void irc::server::handle_active_connections(void) {
 
         if (it->second.receive()) {
 
-			std::cout << "receive active connection" << std::endl;
+			// std::cout << "receive active connection" << std::endl;
             std::string msg = it->second.extract_message();
 
 			irc::msg message = irc::parser::parse(msg);

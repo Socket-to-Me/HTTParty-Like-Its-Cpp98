@@ -306,7 +306,7 @@ const std::string& irc::numerics::rpl_listend_323(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_channelmodeis_324(irc::connection& conn) {
-    conn.setmsg("324 " + conn.getnick() + conn.getchannelname() + " " + irc::server::instance().getchannel(conn.getchannelname()).getmode() + "\r\n");
+    conn.setmsg("324 " + conn.getnick() + " " + conn.getchannelname() + " " + irc::server::instance().getchannel(conn.getchannelname()).getmode() + "\r\n");
     return conn.getmsg();
 }
 
@@ -326,7 +326,7 @@ const std::string& irc::numerics::rpl_notopic_331(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_topic_332(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("332 " + conn.getnick() + " " + conn.getchannelname() + " :" + irc::server::instance().getchannel(conn.getchannelname()).gettopic() + "\r\n");
     return conn.getmsg();
 }
 
@@ -381,12 +381,12 @@ const std::string& irc::numerics::rpl_version_351(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_namreply_353(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("353 " + conn.getnick() + " " + conn.getchannelname() + " :" + irc::server::instance().getchannel(conn.getchannelname()).getconnectionsasstr() + "\r\n");
     return conn.getmsg();
 }
 
 const std::string& irc::numerics::rpl_endofnames_366(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("366 " + conn.getnick() + " " + conn.getchannelname() + " :End of /NAMES list" + "\r\n");
     return conn.getmsg();
 }
 
@@ -571,7 +571,7 @@ const std::string& irc::numerics::err_notregistered_451(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_needmoreparams_461(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("461 " + conn.getnick() + " " + conn.gettarget() + " :Not enough parameters" + "\r\n");
     return conn.getmsg();
 }
 
@@ -591,7 +591,7 @@ const std::string& irc::numerics::err_yourebannedcreep_465(irc::connection& conn
 }
 
 const std::string& irc::numerics::err_channelisfull_471(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("471 " + conn.gettarget() + " :Bad Channel Mask" + "\r\n");
     return conn.getmsg();
 }
 
@@ -646,7 +646,7 @@ const std::string& irc::numerics::err_umodeunknownflag_501(irc::connection& conn
 }
 
 const std::string& irc::numerics::err_usersdontmatch_502(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("502 " + conn.getnick() + " " + " :Cant change mode for other users" + "\r\n");
     return conn.getmsg();
 }
 

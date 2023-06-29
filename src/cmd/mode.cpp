@@ -28,7 +28,7 @@ bool irc::mode::execute(void) {
         else {
             std::string modestring = params[1];
             channel.setmode(_conn, modestring);
-            _conn.send(":" + irc::server::instance().getname() + " MODE " + _target + " " + modestring);
+            _conn.send(":" + irc::server::instance().getname() + " MODE " + _target + " " + modestring + "\r\n");
         }
     }
     else { //target is a nickname

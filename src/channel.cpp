@@ -38,6 +38,23 @@ const std::vector<irc::connection>&  irc::channel::getconnections(void) const {
 	return _connections;
 }
 
+std::string  irc::channel::getconnectionsasstr(void) const {
+
+	std::string result;
+
+	for (std::vector<irc::connection>::const_iterator it = _connections.begin(); it != _connections.end(); ++it) {
+		if (isOperator(*it)) {
+			result += "@";
+		}
+		result += it->getnick();
+		if (it != _connections.end() - 1) {
+			result += " ";
+		}
+	}
+
+	return result;
+}
+
 // -- public methods ----------------------------------------------
 
 const std::string irc::channel::getmode(void) const {
@@ -128,6 +145,23 @@ void  irc::channel::setkey(const irc::connection& op, const std::string& str) {
 		_key = str;
 	}
 	return;
+}
+
+void irc::channel::addUser(irc::connection& conn) {
+
+	_connections.push_back(conn);
+}
+
+void irc::channel::removeUser(irc::connection& conn) {
+
+	std::vector<irc::connection>::iterator	it;
+
+	for (it=_connections.begin(); it!=_connections.end(); it++) {
+		if (*it == conn) {
+			_connections.erase(it);
+			break;
+		}
+	}
 }
 
 

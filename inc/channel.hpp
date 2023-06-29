@@ -1,8 +1,11 @@
 #ifndef CHANNEL_HEADER
 # define CHANNEL_HEADER
 
+# include <sstream>
+# include <iterator>
 # include <string>
 # include <vector>
+
 # include "connection.hpp"
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
@@ -35,11 +38,16 @@ namespace irc {
             const std::vector<irc::connection>&  getoperators(void) const;
             const std::vector<irc::connection>&  getconnections(void) const;
 
+            std::string  getconnectionsasstr(void) const;
+
 			// -- public methods ----------------------------------------------
             void  setname(const irc::connection& op, const std::string& str);
             void  settopic(const irc::connection& op, const std::string& str);
             void  setmode(const irc::connection& op, const std::string& str);
             void  setkey(const irc::connection& op, const std::string& str);
+
+			void addUser(irc::connection& conn);
+			void removeUser(irc::connection& conn);
 
 			void kick(const irc::connection& op, irc::connection& conn);
 			void invite(const irc::connection& op, irc::connection& conn);

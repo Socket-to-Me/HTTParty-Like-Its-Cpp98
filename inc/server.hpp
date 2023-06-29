@@ -60,6 +60,7 @@ namespace irc {
 			// bool	isConnRegistered(const irc::connection& conn) const;
 			bool	isNickInUse(const std::string& nick) const;
 			bool	isChannelExist(const std::string& channel) const;
+			void	newChannel(const std::string& channel);
 
 			// -- G E T T E R S ---------------------
 
@@ -69,7 +70,7 @@ namespace irc {
 			const std::string&	getversion(void) const;
 			const std::string&	getusermodes(void) const;
 			const std::string&	getchannelmodes(void) const;
-			std::string	getcreation(void) const;
+			std::string			getcreation(void) const;
 
 			// -- P U B L I C  S T A T I C  M E T H O D S ---------------------
 
