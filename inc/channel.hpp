@@ -35,8 +35,8 @@ namespace irc {
             const std::string&  getname(void) const;
             const std::string&  gettopic(void) const;
             const std::string  	getmode(void) const;
-            const std::vector<irc::connection>&  getoperators(void) const;
-            const std::vector<irc::connection>&  getconnections(void) const;
+            const std::vector<irc::connection*>&  getoperators(void) const;
+            const std::vector<irc::connection*>&  getconnections(void) const;
 
             std::string  getconnectionsasstr(void) const;
             bool  checkPassword(const std::string& password) const;
@@ -60,11 +60,13 @@ namespace irc {
 			void broadcast(const std::string& msg);
 			void send(const std::string& nick, const std::string& msg);
 
+			bool isConnection(const irc::connection& op) const;
+			bool isOperator(const irc::connection& op) const;
+		
 		private:
 
 			// -- private methods ----------------------------------------------
             const std::string&  getkey(void) const;
-			bool isOperator(const irc::connection& op) const;
 
 			/* default constructor */
             channel(void);
@@ -78,8 +80,8 @@ namespace irc {
 			std::string						_name;
 			std::string						_topic;
 			std::string						_key;
-			std::vector<irc::connection>	_operators;
-			std::vector<irc::connection>	_connections;
+			std::vector<irc::connection*>	_operators;
+			std::vector<irc::connection*>	_connections;
 
 			// -- modes -----------------------------------------------------
 

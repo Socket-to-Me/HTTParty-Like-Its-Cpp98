@@ -18,7 +18,29 @@ bool irc::topic::execute(void) {
 
 /* evaluate command */
 bool irc::topic::evaluate(void) {
-    return false;
+    
+    if (_msg.have_params() == false) {
+        return false;
+    }
+
+    const std::vector<std::string>& params = _msg.get_params();
+
+    std::string channel = params[0];
+    if (irc::server::instance().isChannelExist(channel) == false) {
+        _conn.settarget(channel);
+        _conn.send(irc::numerics::err_nosuchchannel_403(_conn));
+        return false;
+    }
+
+    // irc::channel& chan = irc::server::instance().getchannel(channel);
+    // if (chan.is) {
+    //     _conn.settarget(channel);
+    //     _conn.send(irc::numerics::err_nosuchchannel_403(_conn));
+    //     return false;
+    // }
+
+    _channel = channel;
+    return true;
 }
 
 /* create command */

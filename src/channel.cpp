@@ -30,23 +30,24 @@ const std::string&  irc::channel::gettopic(void) const {
 	return _topic;
 }
 
-const std::vector<irc::connection>&  irc::channel::getoperators(void) const {
+const std::vector<irc::connection*>&  irc::channel::getoperators(void) const {
 	return _operators;
 }
 
-const std::vector<irc::connection>&  irc::channel::getconnections(void) const {
+const std::vector<irc::connection*>&  irc::channel::getconnections(void) const {
 	return _connections;
 }
 
 std::string  irc::channel::getconnectionsasstr(void) const {
 
+	std::vector<irc::connection*>::const_iterator it;
 	std::string result;
 
-	for (std::vector<irc::connection>::const_iterator it = _connections.begin(); it != _connections.end(); ++it) {
-		if (isOperator(*it)) {
+	for (it = _connections.begin(); it != _connections.end(); ++it) {
+		if (isOperator(**it)) {
 			result += "@";
 		}
-		result += it->getnick();
+		result += (*it)->getnick();
 		if (it != _connections.end() - 1) {
 			result += " ";
 		}
@@ -159,20 +160,20 @@ bool  irc::channel::checkPassword(const std::string& password) const {
 
 void irc::channel::addOperator(irc::connection& conn) {
 
-	_operators.push_back(conn);
+	_operators.push_back(&conn);
 }
 
 void irc::channel::addUser(irc::connection& conn) {
 
-	_connections.push_back(conn);
+	_connections.push_back(&conn);
 }
 
 void irc::channel::removeUser(irc::connection& conn) {
 
-	std::vector<irc::connection>::iterator	it;
+	std::vector<irc::connection*>::iterator	it;
 
-	for (it=_connections.begin(); it!=_connections.end(); it++) {
-		if (*it == conn) {
+	for (it=_connections.begin(); it!=_connections.end(); ++it) {
+		if (*it == &conn) {
 			_connections.erase(it);
 			break;
 		}
@@ -181,10 +182,10 @@ void irc::channel::removeUser(irc::connection& conn) {
 
 void irc::channel::removeOperator(irc::connection& conn) {
 
-	std::vector<irc::connection>::iterator	it;
+	std::vector<irc::connection*>::iterator	it;
 
-	for (it=_operators.begin(); it!=_operators.end(); it++) {
-		if (*it == conn) {
+	for (it=_operators.begin(); it!=_operators.end(); ++it) {
+		if (*it == &conn) {
 			_operators.erase(it);
 			break;
 		}
@@ -227,20 +228,20 @@ void irc::channel::takeOperatorPrivilege(const irc::connection& op, irc::connect
 
 void irc::channel::broadcast(const std::string& msg) {
 
-	std::vector<irc::connection>::iterator	it;
+	std::vector<irc::connection*>::iterator	it;
 
-	for (it=_connections.begin(); it!=_connections.end(); it++) {
-		it->send(msg);
+	for (it=_connections.begin(); it!=_connections.end(); ++it) {
+		(*it)->send(msg);
 	}
 }
 
 void irc::channel::send(const std::string& nick, const std::string& msg) {
 
-	std::vector<irc::connection>::iterator	it;
+	std::vector<irc::connection*>::iterator	it;
 
-	for (it=_connections.begin(); it!=_connections.end(); it++) {
-		if (it->getnick() == nick) {
-			it->send(msg);
+	for (it=_connections.begin(); it!=_connections.end(); ++it) {
+		if ((*it)->getnick() == nick) {
+			(*it)->send(msg);
 			break;
 		}
 	}
@@ -258,8 +259,10 @@ const std::string&  irc::channel::getkey(void) const {
 
 bool irc::channel::isOperator(const irc::connection& op) const {
 
-    for (std::vector<irc::connection>::const_iterator it=_operators.begin(); it!=_operators.end(); it++) {
-        if (*it == op) {
+	std::vector<irc::connection*>::const_iterator	it;
+
+    for (it=_operators.begin(); it!=_operators.end(); it++) {
+        if (**it == op) {
             return true;
         }
     }

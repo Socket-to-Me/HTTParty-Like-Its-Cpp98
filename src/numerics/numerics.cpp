@@ -321,7 +321,7 @@ const std::string& irc::numerics::rpl_whoisaccount_330(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_notopic_331(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("331 " + conn.getnick() + " " + conn.getchannelname() + " :No topic is set" + "\r\n");
     return conn.getmsg();
 }
 
