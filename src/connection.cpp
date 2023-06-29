@@ -46,6 +46,8 @@ irc::connection& irc::connection::operator=(const irc::connection& other) {
 		_msg = other.getmsg();
 		_nick = other.getnick();
 		_user = other.getuser();
+		_password = other.getpassword();
+		_channelname = other.getchannelname();
 
 	}
 	return *this;
@@ -60,7 +62,8 @@ bool irc::connection::operator==(const irc::connection& other) const
 		&& _buffer == other.getbuffer()
 		&& _msg == other.getmsg()
 		&& _nick == other.getnick()
-		&& _user == other.getuser();
+		&& _password == other.getpassword()
+		&& _channelname = other.getchannelname();
 }
 
 // -- public methods ----------------------------------------------------------
@@ -107,8 +110,8 @@ bool irc::connection::read(void) {
 /* send bytes */
 ssize_t irc::connection::send(const std::string& message) {
 
-	std::cout << std::endl << "----- S E N D I N G (" + getnick() + ") -----" << std::endl << std::endl;
-	std::cout << message.c_str() << std::endl;
+	// std::cout << std::endl << "----- S E N D I N G (" + getnick() + ") -----" << std::endl << std::endl;
+	// std::cout << message.c_str() << std::endl;
 
 	ssize_t bytesSent = ::send(getfd(), message.c_str(), message.size(), 0);
 	if (bytesSent == -1) {
