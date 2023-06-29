@@ -7,7 +7,7 @@
 
 /* pollfd reference constructor */
 irc::connection::connection(struct pollfd& pfd)
-: _pfd(pfd), 
+: _pfd(pfd),
   _buffer(""),
   _msg(""),
   _nick(""),
@@ -19,7 +19,7 @@ irc::connection::connection(struct pollfd& pfd)
 
 /* copy constructor */
 irc::connection::connection(const irc::connection& other)
-: _pfd(other._pfd), 
+: _pfd(other._pfd),
   _buffer(other._buffer),
   _msg(other._msg),
   _nick(other._nick),
@@ -38,24 +38,22 @@ irc::connection::~connection(void) {
 
 /* copy assignment operator */
 irc::connection& irc::connection::operator=(const irc::connection& other) {
-
-	if (this != &other) // not a self-assignment
-	{
-		_pfd = other.getpfd();
-		_buffer = other.getbuffer();
-		_msg = other.getmsg();
-		_nick = other.getnick();
-		_user = other.getuser();
-		_password = other.getpassword();
+	// check for self-assignment
+	if (this != &other) {
+		// assign members
+		        _pfd = other.getpfd();
+		     _buffer = other.getbuffer();
+		        _msg = other.getmsg();
+		       _nick = other.getnick();
+		       _user = other.getuser();
+		   _password = other.getpassword();
 		_channelname = other.getchannelname();
-
-	}
+	} // return self-reference
 	return *this;
 }
 
 /* == operator */
-bool irc::connection::operator==(const irc::connection& other) const
-{
+bool irc::connection::operator==(const irc::connection& other) const {
     return _pfd.fd == other.getfd()
 		&& _pfd.events == other.getevents()
 		&& _pfd.revents == other.getrevents()
@@ -63,7 +61,7 @@ bool irc::connection::operator==(const irc::connection& other) const
 		&& _msg == other.getmsg()
 		&& _nick == other.getnick()
 		&& _password == other.getpassword()
-		&& _channelname = other.getchannelname();
+		&& _channelname == other.getchannelname();
 }
 
 // -- public methods ----------------------------------------------------------
