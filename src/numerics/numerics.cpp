@@ -146,7 +146,7 @@ const std::string& irc::numerics::rpl_statsuptime_242(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_umodeis_221(irc::connection& conn) {
-    conn.setmsg("N/A");
+    conn.setmsg("221 " + conn.getnick() + "\r\n");
     return conn.getmsg();
 }
 
@@ -306,7 +306,7 @@ const std::string& irc::numerics::rpl_listend_323(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_channelmodeis_324(irc::connection& conn) {
-    conn.setmsg("N/A");
+    conn.setmsg("324 " + conn.getnick() + conn.getchannelname() + " " + irc::server::instance().getchannel(conn.getchannelname()).getmode() + "\r\n");
     return conn.getmsg();
 }
 

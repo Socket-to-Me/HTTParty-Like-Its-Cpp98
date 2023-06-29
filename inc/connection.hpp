@@ -1,14 +1,14 @@
 #ifndef CONNECTION_HEADER
-#define CONNECTION_HEADER
+# define CONNECTION_HEADER
 
-#include <iostream>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <cstring>
-#include <vector>
-#include <poll.h>
-#include <errno.h>
+# include <iostream>
+# include <sys/socket.h>
+# include <arpa/inet.h>
+# include <unistd.h>
+# include <cstring>
+# include <vector>
+# include <poll.h>
+# include <errno.h>
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
 
@@ -64,11 +64,13 @@ namespace irc {
             const std::string&  getmsg(void) const;
             const std::string&  getbuffer(void) const;
             const std::string&  getpassword(void) const;
+            const std::string&  getchannelname(void) const;
 
             void  setnick(const std::string& str);
             void  setuser(const std::string& str);
             void  setmsg(const std::string& str);
             void  setpassword(const std::string& str);
+            void  setchannelname(const std::string& str);
 
 			/* copy assignment operator */
 			connection& operator=(const connection& other);
@@ -88,6 +90,8 @@ namespace irc {
             std::string             _nick;
             std::string             _user;
             std::string             _password;
+
+            std::string             _channelname;
 
     };
 }

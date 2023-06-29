@@ -162,6 +162,10 @@ bool	irc::server::isChannelExist(const std::string& channel) const {
 
 // -- G E T T E R S ---------------------
 
+irc::channel&	irc::server::getchannel(const std::string& channel) {
+    return _channels.find(channel)->second;
+}
+
 const std::string&	irc::server::getname(void) const {
     return _networkname;
 }
@@ -274,14 +278,18 @@ void irc::server::accept_new_connection(void) {
 				if (maker) {
 					irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
 					if (cmd->evaluate() == true) {
-						executed = cmd->execute();
+						cmd->execute();
 					}
+                    else {
+                        std::cout << "Error during registration." << std::endl;
+                        return;
+                    }
 				}
 			}
 
 		} while (msg.size() > 0);
 
-        if (conn.getnick().size()) {
+        if (conn.getnick().length()) {
 
             _connections.insert(std::make_pair(conn.getnick(), conn));
             conn.send(irc::numerics::rpl_welcome_001(conn));

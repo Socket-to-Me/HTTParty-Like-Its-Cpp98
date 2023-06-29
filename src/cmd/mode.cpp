@@ -14,12 +14,70 @@ irc::mode::~mode(void) {
 
 /* execute command */
 bool irc::mode::execute(void) {
-    return false;
+
+    const std::vector<std::string>& params = _msg.get_params();
+
+    if (_ischannel) { //target is a channel
+
+        _conn.setchannelname(_target);
+        irc::channel&   channel = irc::server::instance().getchannel(_target);
+
+        if (params.size() == 1) {
+            _conn.send(irc::numerics::rpl_channelmodeis_324(_conn));
+        }
+        else {
+            std::string modestring = params[1];
+            channel.setmode(_conn, modestring);
+            _conn.send(":" + irc::server::instance().getname() + " MODE " + _target + " " + modestring);
+        }
+    }
+    else { //target is a nickname
+
+        if (params.size() == 1) {
+            _conn.send(irc::numerics::rpl_umodeis_221(_conn));
+        }
+        // no modes for users
+    }
+
+    return true;
 }
 
 /* evaluate command */
 bool irc::mode::evaluate(void) {
-    return false;
+
+    if (_msg.have_params() == false) {
+        _conn.send(irc::numerics::err_nonicknamegiven_431(_conn));
+        return false;
+    }
+
+    const std::vector<std::string>& params = _msg.get_params();
+    std::string target = params[0];
+
+    if (target[0] == '#') { //target is a channel
+
+        if (irc::server::instance().isChannelExist(target) == false) {
+            _conn.send(irc::numerics::err_nosuchchannel_403(_conn));
+            return false;
+        }
+
+        _ischannel = true;
+    }
+    else { //target is a nickname
+
+        if (irc::server::instance().isNickInUse(target) == false) {
+            _conn.send(irc::numerics::err_nosuchnick_401(_conn));
+            return false;
+        }
+        else if (_conn.getnick() != target) {
+            _conn.send(irc::numerics::err_usersdontmatch_502(_conn));
+            return false;
+        }
+
+        _ischannel = false;
+    }
+
+    _target = target;
+    return true;
 }
 
 /* create command */

@@ -56,6 +56,10 @@ bool irc::connection::operator==(const irc::connection& other) const
 /* receive bytes */
 bool irc::connection::receive(void) {
 
+	if (check_crlf()) {
+		return true;
+	}
+
 	// check if POLLIN event occured
 	if (_pfd.revents & POLLIN) {
 		return read();
@@ -187,6 +191,11 @@ const std::string&  irc::connection::getpassword(void) const
 	return _password;
 }
 
+const std::string&   irc::connection::getchannelname(void) const
+{
+	return _channelname;
+}
+
 // S E T T E R S ---------
 
 void  irc::connection::setnick(const std::string& str)
@@ -210,6 +219,12 @@ void  irc::connection::setmsg(const std::string& str)
 void  irc::connection::setpassword(const std::string& str)
 {
 	_password = str;
+	return;
+}
+
+void  irc::connection::setchannelname(const std::string& str)
+{
+	_channelname = str;
 	return;
 }
 
