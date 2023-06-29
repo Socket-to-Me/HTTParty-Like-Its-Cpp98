@@ -17,30 +17,30 @@ irc::user::~user(void) {
 /* execute command */
 bool irc::user::execute(void) {
 
-    // _conn.setuser(_user);
+    _conn.setuser(_user);
     return false;
 }
 
 /* evaluate command */
 bool irc::user::evaluate(void) {
 
-    // std::vector<irc::token>& params = _data.getparams();
-    // std::string name = _data.gettrailing();
+    const std::vector<std::string>&   params = _msg.get_params();
+    std::string user = params.back();
 
-    // if (params.size() == 0 || name.size() == 0) {
-    //     _conn.send(irc::numerics::err_needmoreparams_461(conn));
-    //     return false;
-    // }
-    // else if (params.size() != 3) {
-    //     return false;
-    // }
+    if (params.size() == 0 || user.length() == 0) {
+        _conn.send(irc::numerics::err_needmoreparams_461(_conn));
+        return false;
+    }
+    else if (params.size() != 3) {
+        return false;
+    }
 
-    // if (_conn.getuser().size() != 0) {
-    //     _conn.send(irc::numerics::err_alreadyregistered_462(_conn));
-    //     return false;
-    // }
+    if (_conn.getuser().length()) {
+        _conn.send(irc::numerics::err_alreadyregistered_462(_conn));
+        return false;
+    }
 
-    // _user = user;
+    _user = user;
     return true;
 }
 
