@@ -147,6 +147,21 @@ void  irc::channel::setkey(const irc::connection& op, const std::string& str) {
 	return;
 }
 
+bool  irc::channel::checkPassword(const std::string& password) const {
+
+	if (getkey().length()) {
+		if (password != getkey()) {
+			return false;
+		}
+	}
+	return true;
+}
+
+void irc::channel::addOperator(irc::connection& conn) {
+
+	_operators.push_back(conn);
+}
+
 void irc::channel::addUser(irc::connection& conn) {
 
 	_connections.push_back(conn);
@@ -164,61 +179,50 @@ void irc::channel::removeUser(irc::connection& conn) {
 	}
 }
 
+void irc::channel::removeOperator(irc::connection& conn) {
+
+	std::vector<irc::connection>::iterator	it;
+
+	for (it=_operators.begin(); it!=_operators.end(); it++) {
+		if (*it == conn) {
+			_operators.erase(it);
+			break;
+		}
+	}
+}
 
 void irc::channel::kick(const irc::connection& op, irc::connection& conn) {
 
 	if (isOperator(op)) {
 
-		std::vector<irc::connection>::iterator	it;
-		
-		for (it=_operators.begin(); it!=_operators.end(); it++) {
-			if (*it == conn) {
-				_operators.erase(it);
-				break;
-			}
-		}
-
-		for (it=_connections.begin(); it!=_connections.end(); it++) {
-			if (*it == conn) {
-				_connections.erase(it);
-				break;
-			}
-		}
+		removeOperator(conn);
+		removeUser(conn);
 
 	}
-	return;
 }
 
 void irc::channel::invite(const irc::connection& op, irc::connection& conn) {
 
 	if (isOperator(op)) {
 
-		_connections.push_back(conn);
+		addUser(conn);
 	}
-	return;
 }
 
 void irc::channel::giveOperatorPrivilege(const irc::connection& op, irc::connection& conn) {
 
 	if (isOperator(op)) {
 
-		_operators.push_back(conn);
+		addOperator(conn);
 	}
-	return;
 }
 
 void irc::channel::takeOperatorPrivilege(const irc::connection& op, irc::connection& conn) {
 
 	if (isOperator(op)) {
 
-		for (std::vector<irc::connection>::iterator it=_operators.begin(); it!=_operators.end(); it++) {
-			if (*it == conn) {
-				_operators.erase(it);
-				break;
-			}
-		}
+		removeOperator(conn);
 	}
-	return;
 }
 
 

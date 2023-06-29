@@ -34,11 +34,12 @@ namespace irc {
 			// -- public accessors --------------------------------------------
             const std::string&  getname(void) const;
             const std::string&  gettopic(void) const;
-            const std::string  getmode(void) const;
+            const std::string  	getmode(void) const;
             const std::vector<irc::connection>&  getoperators(void) const;
             const std::vector<irc::connection>&  getconnections(void) const;
 
             std::string  getconnectionsasstr(void) const;
+            bool  checkPassword(const std::string& password) const;
 
 			// -- public methods ----------------------------------------------
             void  setname(const irc::connection& op, const std::string& str);
@@ -46,8 +47,10 @@ namespace irc {
             void  setmode(const irc::connection& op, const std::string& str);
             void  setkey(const irc::connection& op, const std::string& str);
 
+			void addOperator(irc::connection& conn);
 			void addUser(irc::connection& conn);
 			void removeUser(irc::connection& conn);
+			void removeOperator(irc::connection& conn);
 
 			void kick(const irc::connection& op, irc::connection& conn);
 			void invite(const irc::connection& op, irc::connection& conn);

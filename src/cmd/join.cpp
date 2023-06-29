@@ -21,16 +21,22 @@ bool irc::join::execute(void) {
     }
 
     irc::channel&   channel = irc::server::instance().getchannel(_channel);
-    channel.addUser(_conn);
 
-    _conn.setchannelname(_channel);
-    _conn.send(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
-    _conn.send(irc::numerics::rpl_topic_332(_conn));
-    _conn.send(irc::numerics::rpl_namreply_353(_conn));
-    _conn.send(irc::numerics::rpl_endofnames_366(_conn));
+    if (channel.checkPassword(_password)) {
+
+        channel.addUser(_conn);
+        channel.addOperator(_conn);
+
+        _conn.setchannelname(_channel);
+        _conn.send(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
+        _conn.send(irc::numerics::rpl_topic_332(_conn));
+        _conn.send(irc::numerics::rpl_namreply_353(_conn));
+        _conn.send(irc::numerics::rpl_endofnames_366(_conn));
+    }
 
     // Leave all channels
     if (_channel == "0") {
+        // TODO
     }
 
     return true;
