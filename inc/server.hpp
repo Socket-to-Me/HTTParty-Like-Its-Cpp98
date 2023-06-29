@@ -63,7 +63,7 @@ namespace irc {
 			// -- G E T T E R S ---------------------
 
 			irc::channel&	getchannel(const std::string& channel);
-			
+
 			const std::string&	getname(void) const;
 			const std::string&	getversion(void) const;
 			const std::string&	getusermodes(void) const;

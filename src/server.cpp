@@ -51,6 +51,13 @@ void irc::server::start(const std::string &ip, int port) {
 
 	_is_running = true;
 
+	// print server info
+	irc::out<4>::print("Starting server...");
+	irc::out<3>::print(_networkname);
+	irc::out<2>::print("version: " + _version);
+	irc::out<5>::print("usermodes: " + _usermodes);
+	irc::out<6>::print("channelmodes: " + _channelmodes);
+	irc::out<7>::print("created: " + getcreation());
 
     while (_is_running) {
 
