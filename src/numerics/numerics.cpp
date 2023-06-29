@@ -471,7 +471,7 @@ const std::string& irc::numerics::err_unknownerror_400(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_nosuchnick_401(irc::connection& conn) {
-    conn.setmsg("401 " + conn.getnick() + " " + irc::server::instance().getname() + " :Cannot send to channel" + "\r\n");
+    conn.setmsg("401 " + conn.getnick() + " " + conn.gettarget() + " :No such nick/channel" + "\r\n");
     return conn.getmsg();
 }
 
@@ -481,7 +481,7 @@ const std::string& irc::numerics::err_nosuchserver_402(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_nosuchchannel_403(irc::connection& conn) {
-    conn.setmsg("403 " + conn.getnick() + " " + irc::server::instance().getname() + " :Cannot send to channel" + "\r\n");
+    conn.setmsg("403 " + conn.getnick() + " " + conn.gettarget() + " :Cannot send to channel" + "\r\n");
     return conn.getmsg();
 }
 

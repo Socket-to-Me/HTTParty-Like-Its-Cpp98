@@ -65,12 +65,14 @@ namespace irc {
             const std::string&  getbuffer(void) const;
             const std::string&  getpassword(void) const;
             const std::string&  getchannelname(void) const;
+            const std::string&  gettarget(void) const;
 
             void  setnick(const std::string& str);
             void  setuser(const std::string& str);
             void  setmsg(const std::string& str);
             void  setpassword(const std::string& str);
             void  setchannelname(const std::string& str);
+            void  settarget(const std::string& str);
 
 			/* copy assignment operator */
 			connection& operator=(const connection& other);
@@ -92,6 +94,7 @@ namespace irc {
             std::string             _password;
 
             std::string             _channelname;
+            std::string             _target;
 
     };
 }

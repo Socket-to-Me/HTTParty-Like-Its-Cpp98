@@ -63,7 +63,7 @@ bool irc::connection::operator==(const irc::connection& other) const
 		&& _msg == other.getmsg()
 		&& _nick == other.getnick()
 		&& _password == other.getpassword()
-		&& _channelname = other.getchannelname();
+		&& _channelname == other.getchannelname();
 }
 
 // -- public methods ----------------------------------------------------------
@@ -209,6 +209,11 @@ const std::string&   irc::connection::getchannelname(void) const
 	return _channelname;
 }
 
+const std::string&   irc::connection::gettarget(void) const
+{
+	return _target;
+}
+
 // S E T T E R S ---------
 
 void  irc::connection::setnick(const std::string& str)
@@ -238,6 +243,12 @@ void  irc::connection::setpassword(const std::string& str)
 void  irc::connection::setchannelname(const std::string& str)
 {
 	_channelname = str;
+	return;
+}
+
+void  irc::connection::settarget(const std::string& str)
+{
+	_target = str;
 	return;
 }
 
