@@ -13,7 +13,9 @@ irc::connection::connection(struct pollfd& pfd)
   _nick(""),
   _user(""),
   _password(""),
-  _channelname("") {
+  _channelname(""),
+  _registered(false),
+  _alive(pfd.fd) {
 	return;
 }
 
@@ -25,7 +27,9 @@ irc::connection::connection(const irc::connection& other)
   _nick(other._nick),
   _user(other._user),
   _password(other._password),
-  _channelname(other._channelname) {
+  _channelname(other._channelname),
+  _registered(other._registered),
+  _alive(other._alive) {
 	return;
 }
 
@@ -35,6 +39,8 @@ irc::connection::~connection(void) {
 	close();
 }
 
+
+// -- public assignment operators ---------------------------------------------
 
 /* copy assignment operator */
 irc::connection& irc::connection::operator=(const irc::connection& other) {
@@ -48,11 +54,16 @@ irc::connection& irc::connection::operator=(const irc::connection& other) {
 		       _user = other.getuser();
 		   _password = other.getpassword();
 		_channelname = other.getchannelname();
+		 _registered = other.is_registered();
+		     _alive = other._alive;
 	} // return self-reference
 	return *this;
 }
 
-/* == operator */
+
+// -- public comparison operators ---------------------------------------------
+
+/* equality operator */
 bool irc::connection::operator==(const irc::connection& other) const {
     return _pfd.fd == other.getfd()
 		&& _pfd.events == other.getevents()
@@ -64,17 +75,16 @@ bool irc::connection::operator==(const irc::connection& other) const {
 		&& _channelname == other.getchannelname();
 }
 
+
 // -- public methods ----------------------------------------------------------
 
 /* receive bytes */
 bool irc::connection::receive(void) {
-
+	// check for complete message in buffer
 	if (check_crlf()) { return true; }
-
-	// check if POLLIN event occured
-	if (_pfd.revents & POLLIN) {
-		return read();
-	}
+	// check for POLLIN event
+	if (_pfd.revents & POLLIN) { return read(); }
+	// else return false
 	return false;
 }
 
@@ -100,18 +110,17 @@ bool irc::connection::read(void) {
 	// append to buffer
 	_buffer.append(buffer, readed);
 
-	if (check_crlf()) { return true; }
-
-	return false;
+	// check for complete message in buffer
+	return check_crlf();
 }
 
 /* send bytes */
-ssize_t irc::connection::send(const std::string& message) {
+ssize_t irc::connection::send(const std::string& message) const {
 
 	std::cout << std::endl << "----- S E N D I N G (" + getnick() + ") -----" << std::endl << std::endl;
 	std::cout << message.c_str() << std::endl;
 
-	ssize_t bytesSent = ::send(getfd(), message.c_str(), message.size(), 0);
+	ssize_t bytesSent = ::send(_pfd.fd, message.c_str(), message.size(), 0);
 	if (bytesSent == -1) {
 		std::cout << std::endl << "Error sending response to client: " << strerror(errno) << std::endl;
 	}
@@ -151,13 +160,21 @@ std::string irc::connection::extract_message(void) {
 	return "";
 }
 
+/* init alive */
+void irc::connection::init_alive(const std::string& server_name) {
+	_alive.set_server_name(server_name);
+}
+
+/* pong */
+void irc::connection::pong(void) {
+	_alive.pong();
+}
+
 
 // -- public accessors --------------------------------------------------------
 
-// G E T T E R S ---------
-
-const struct pollfd& irc::connection::getpfd(void) const
-{
+/* get pollfd reference */
+const struct pollfd& irc::connection::getpfd(void) const {
 	return _pfd;
 }
 
@@ -212,7 +229,23 @@ const std::string&   irc::connection::gettarget(void) const
 	return _target;
 }
 
+/* is registered */
+bool irc::connection::is_registered(void) const {
+	return _registered;
+}
+
+/* is alive */
+bool irc::connection::is_alive(void) {
+	return _alive.is_alive();
+}
+
+
 // S E T T E R S ---------
+
+/* register client */
+void irc::connection::register_client(void) {
+	_registered = true;
+}
 
 void  irc::connection::setnick(const std::string& str)
 {

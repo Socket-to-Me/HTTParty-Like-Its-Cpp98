@@ -1,15 +1,16 @@
-#ifndef NUMERICS_HPP
-# define NUMERICS_HPP
+#ifndef NUMERICS_HEADER
+# define NUMERICS_HEADER
 
 # include <string>
 # include "server.hpp"
-# include "connection.hpp"
+
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
 
 namespace irc {
 
-	// -- N U M E R I C S  N A M E S P A C E -------------------------------------------
+
+	// -- N U M E R I C S  N A M E S P A C E ----------------------------------
 
 	namespace numerics {
 

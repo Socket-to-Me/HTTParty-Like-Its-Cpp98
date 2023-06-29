@@ -3,15 +3,15 @@
 // ----------------------------
 // https://defs.ircdocs.horse/defs/numerics.html
 // ----------------------------
-// 
+//
 // Registration process
-// 
-// RPL_WELCOME (001) 
-// RPL_YOURHOST (002) 
-// RPL_CREATED (003) 
+//
+// RPL_WELCOME (001)
+// RPL_YOURHOST (002)
+// RPL_CREATED (003)
 // RPL_MYINFO (004)
 // RPL_ISUPPORT (005)
-// 
+//
 // --- errors ---
 // ERR_NOMOTD (422)
 // ----------------------------
@@ -22,7 +22,7 @@
 // --- errors ---
 //
 // ----------------------------
-// 
+//
 // Command: PASS
 // Parameters: <password>
 //
@@ -51,58 +51,58 @@
 // -----------------------------
 //
 // Command: INVITE
-// 
+//
 // -----------------------------
 //
 // Command: JOIN
-// 
+//
 // -----------------------------
 //
 // Command: KICK
-// 
+//
 // -----------------------------
 //
 // Command: LIST
-// 
+//
 // -----------------------------
 //
 // Command: MODE
-// 
+//
 // -----------------------------
 //
 // Command: PART
-// 
+//
 // -----------------------------
 //
 // Command: PASS
-// 
+//
 // -----------------------------
 //
 // Command: PING
-// 
+//
 // -----------------------------
 //
 // Command: PRIVMSG
-// 
+//
 // -----------------------------
 //
 // Command: QUIT
-// 
+//
 // -----------------------------
 //
 // Command: TOPIC
-// 
+//
 // -----------------------------
 
 
 const std::string& irc::numerics::rpl_welcome_001(irc::connection& conn) {
-   
+
     conn.setmsg("001 " + conn.getnick() + " :Welcome to the Internet Relay Network " + conn.getnick() + "\r\n");
     return conn.getmsg();
 }
 
 const std::string& irc::numerics::rpl_yourhost_002(irc::connection& conn) {
-     
+
     conn.setmsg("002 " + conn.getnick() + " :Your host is " + irc::server::instance().getname() + ", running version " + irc::server::instance().getversion() + "\r\n");
     return conn.getmsg();
 }
@@ -110,7 +110,7 @@ const std::string& irc::numerics::rpl_yourhost_002(irc::connection& conn) {
 const std::string& irc::numerics::rpl_created_003(irc::connection& conn) {
 
     conn.setmsg("003 " + conn.getnick() + " :This server was created " + irc::server::instance().getcreation() + "\r\n");
-    return conn.getmsg();  
+    return conn.getmsg();
 }
 
 const std::string& irc::numerics::rpl_myinfo_004(irc::connection& conn) {
@@ -120,7 +120,7 @@ const std::string& irc::numerics::rpl_myinfo_004(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_isupport_005(irc::connection& conn) {
-    
+
     conn.setmsg("005 " + conn.getnick() + " :are supported by this server" + "\r\n");
     return conn.getmsg();
 }

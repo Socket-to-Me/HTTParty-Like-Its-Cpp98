@@ -29,8 +29,7 @@ irc::server::server(void)
 /* destructor */
 irc::server::~server(void) {
 	// vector size type
-	typedef std::vector<struct pollfd>::size_type vec_size;
-
+	typedef pollfd_vector::size_type vec_size;
 	// loop over all pollfds and close them
 	for (vec_size i = 0; i < _pollfds.size(); ++i) {
 		if (_pollfds[i].fd != -1) {
@@ -46,7 +45,7 @@ irc::server::~server(void) {
 void irc::server::start(const std::string &ip, int port) {
 
     setupSocket(ip, port);
-    addPollfd(_socket);
+    add_pollfd(_socket);
 
 	_is_running = true;
 
@@ -77,8 +76,10 @@ void irc::server::start(const std::string &ip, int port) {
             std::cout << "irc::server > poll timeout" << std::endl;
             continue; }
 
-        // check server socket for new connections
-        accept_new_connection();
+		// check server listening socket for recent events
+		if (_pollfds[0].revents & POLLIN) {
+			accept_new_connection();
+		}
 
         // check client sockets for new events
         handle_active_connections();
@@ -86,7 +87,7 @@ void irc::server::start(const std::string &ip, int port) {
     }
 
 
-	irc::out<3>::print("irc::server", " > server stopped");
+	irc::out<3>::print("server stopped");
 
 }
 
@@ -96,29 +97,6 @@ void irc::server::stop(void) {
 	_is_running = false;
 }
 
-/* restart server */
-void irc::server::restart(void)
-{
-    // TODO
-}
-
-/* subscribe client */
-void irc::server::subscribe(const irc::connection &conn)
-{
-    // TODO
-}
-
-/* unsubscribe client */
-void irc::server::unsubscribe(const irc::connection &conn)
-{
-    // TODO
-}
-
-/* send message to all clients */
-void irc::server::broadcast(const std::string &message)
-{
-    // TODO
-}
 
 /* send message to one client */
 void irc::server::send(irc::connection &conn, const std::string &message)
@@ -247,83 +225,82 @@ void irc::server::setupSocket(const std::string &ip, int port)
     }
 }
 
-/* add new fd to back of pollfds vector */
-void irc::server::addPollfd(int fd)
-{
-    if (fd != -1)
-    {
-        pollfd pfd;
-
-        pfd.fd = fd;
-        pfd.events = POLLIN;
-        pfd.revents = 0;
-
-        _pollfds.push_back(pfd);
-    }
-    else
-    {
+/* add new pollfd connection */
+void irc::server::add_pollfd(const int fd) {
+	// check for fd validity
+    if (fd == -1) {
         std::cout << "Not a valid socket to build pollfd." << std::endl;
-        // throw std::exception("Not a valid socket to build pollfd.");
-    }
+		return; }
+	// instantiate new pollfd struct
+	pollfd pfd = { fd, POLLIN, 0 };
+	// add new pollfd to vector
+	_pollfds.push_back(pfd);
 }
+
+/* remove pollfd connection */
+void irc::server::remove_pollfd(const int fd) {
+	// declare iterator
+	for (pollfd_vector::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
+		// continue if fd doesn't match
+		if (it->fd != fd) { continue; }
+		// remove pollfd from vector
+		_pollfds.erase(it); break;
+	}
+}
+
 
 /* accept new pollfd connection */
 void irc::server::accept_new_connection(void) {
 
+	sockaddr_in client;
+	socklen_t clientSize = sizeof(client);
+	int clientSocket = accept(_socket, (sockaddr *)&client, &clientSize);
 
-    // check server listening socket for recent events
-    if (_pollfds[0].revents & POLLIN) {
+	// check if accept() failed
+	if (clientSocket == -1) {
+		std::cout << "Failed to accept client connection." << std::endl;
+	}
+	else {
+		std::cout << "\x1b[32m" << "New client connected." << "\x1b[0m" << std::endl;
+	}
 
+	add_pollfd(clientSocket);
+	irc::connection conn(_pollfds.back());
 
-        sockaddr_in client;
-        socklen_t clientSize = sizeof(client);
-        int clientSocket = accept(_socket, (sockaddr *)&client, &clientSize);
+	conn.read();
+	std::string msg;
 
-		// check if accept() failed
-		if (clientSocket == -1) {
-			std::cout << "Failed to accept client connection." << std::endl;
-		}
-		else {
-			std::cout << "\x1b[32m" << "New client connected." << "\x1b[0m" << std::endl;
-		}
+	do {
 
-        addPollfd(clientSocket);
-        irc::connection conn(_pollfds.back());
+		msg = conn.extract_message();
 
-		conn.read();
-		std::string msg;
+		irc::msg message = irc::parser::parse(msg);
 
-		do {
-
-			msg = conn.extract_message();
-
-			irc::msg message = irc::parser::parse(msg);
-
-			if (message.have_command()) {
-				irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
-				if (maker) {
-					irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
-					if (cmd->evaluate() == true) {
-						cmd->execute();
-					}
-					else {
-						std::cout << "Error during registration." << std::endl;
-                        return;
-                    }
+		if (message.have_command()) {
+			irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
+			if (maker) {
+				irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
+				if (cmd->evaluate() == true) {
+					cmd->execute();
+				}
+				else {
+					std::cout << "Error during registration." << std::endl;
+					return;
 				}
 			}
-
-		} while (msg.size() > 0);
-
-        if (conn.getnick().length()) {
-
-            _connections.insert(std::make_pair(conn.getnick(), conn));
-            conn.send(irc::numerics::rpl_welcome_001(conn));
-            conn.send(irc::numerics::rpl_yourhost_002(conn));
-            conn.send(irc::numerics::rpl_created_003(conn));
 		}
 
-    }
+	} while (msg.size() > 0);
+
+
+	if (conn.getnick().length()) {
+		conn.init_alive(_networkname);
+		_connections.insert(std::make_pair(conn.getnick(), conn));
+		conn.send(irc::numerics::rpl_welcome_001(conn));
+		conn.send(irc::numerics::rpl_yourhost_002(conn));
+		conn.send(irc::numerics::rpl_created_003(conn));
+	}
+
 }
 
 void irc::server::handle_active_connections(void) {
@@ -350,8 +327,17 @@ void irc::server::handle_active_connections(void) {
 					}
 				}
 			}
-
-
         }
     }
+
+	// check for dead connections
+	for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
+
+		if (it->second.is_alive() == false) {
+			std::cout << "Connection " << it->first << " is dead." << std::endl;
+			remove_pollfd(it->second.getfd());
+			_connections.erase(it);
+			break;
+		}
+	}
 }

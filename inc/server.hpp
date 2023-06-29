@@ -11,7 +11,7 @@
 # include <ctime>
 
 //#include "msg.hpp"
-#include "cmd_factory.hpp"
+# include "cmd_factory.hpp"
 # include "parser.hpp"
 # include "cmd.hpp"
 # include "connection.hpp"
@@ -26,45 +26,36 @@
 
 namespace irc {
 
-	// -- S E R V E R  C L A S S ----------------------------------------------
+
+	// -- S E R V E R ---------------------------------------------------------
 
 	class server {
 
+
 		public:
 
-			// -- P U B L I C  M E T H O D S ----------------------------------
+			// -- public methods ----------------------------------------------
 
 			/* start server */
-			void	start(const std::string& ip, int port);
+			void start(const std::string&, int);
 
 			/* stop server */
-			void	stop(void);
-
-			/* restart server */
-			void	restart(void);
-
-			/* subscribe client */
-			void	subscribe(const irc::connection& conn);
-
-			/* unsubscribe client */
-			void	unsubscribe(const irc::connection& conn);
-
-			/* send message to all clients */
-			void	broadcast(const std::string& msg);
+			void stop(void);
 
 			/* send message to a client */
-			void	send(irc::connection& conn, const std::string& message);
+			void send(irc::connection&, const std::string&);
+
 
 			// -- C O M M A N D  U T I L S ---------------------
 
 			// bool	isConnRegistered(const irc::connection& conn) const;
-			bool	isNickInUse(const std::string& nick) const;
-			bool	isChannelExist(const std::string& channel) const;
-			void	newChannel(const std::string& channel);
+			void newChannel(const std::string&);
+			bool isNickInUse(const std::string&) const;
+			bool isChannelExist(const std::string&) const;
 
 			// -- G E T T E R S ---------------------
 
-			irc::channel&		getchannel(const std::string& channel);
+			irc::channel& getchannel(const std::string&);
 			irc::connection&	getconnection(const std::string& nick);
 
 			const std::string&	getname(void) const;
@@ -73,7 +64,9 @@ namespace irc {
 			const std::string&	getchannelmodes(void) const;
 			std::string			getcreation(void) const;
 
-			// -- P U B L I C  S T A T I C  M E T H O D S ---------------------
+
+
+			// -- public static methods ---------------------------------------
 
 			/* get singleton instance */
 			static server&	instance(void);
@@ -81,7 +74,22 @@ namespace irc {
 
 		private:
 
-			// -- P R I V A T E  C O N S T R U C T O R S ----------------------
+			// -- private types -----------------------------------------------
+
+			/* pollfd type */
+			typedef struct pollfd	pollfd;
+
+			/* connection map type */
+			typedef std::map<std::string, irc::connection> connection_map;
+
+			/* channel map type */
+			typedef std::map<std::string, irc::channel> channel_map;
+
+			/* pollfd vector type */
+			typedef std::vector<pollfd> pollfd_vector;
+
+
+			// -- private constructors ----------------------------------------
 
 			/* default constructor */
 			server(void);
@@ -89,45 +97,75 @@ namespace irc {
 			/* destructor */
 			~server(void);
 
-			// -- P R I V A T E  S T A T I C  M E M B E R S -------------------
+
+			// -- private static members --------------------------------------
 
 			/* singleton instance */
-			static server	_instance;
+			static server _instance;
 
-			// -- P R I V A T E  M E M B E R S --------------------------------
+
+			// -- private members ---------------------------------------------
 
 			/* server socket */
-			// TODO = change to socket object
 			int	_socket;
 
+			/* server running flag */
 			bool _is_running;
 
-			// struct pollfd {
-			//     int fd;         // File descriptor to monitor
-			//     short events;   // Events to monitor (input/output/error events)
-			//     short revents;  // Events that occurred (filled by the kernel)
-			// };
+			/* pollfds */
+			pollfd_vector _pollfds;
 
-			std::vector<struct pollfd>				_pollfds;
+			/* connection map */ // [nick, connection]
+			connection_map _connections;
 
-			std::map<std::string, irc::connection>	_connections;	// NICK as key
-			std::map<std::string, irc::channel>		_channels;		// name as key
+			/* channel map */ // [name, channel]
+			channel_map _channels;
 
-			const std::string		_networkname;
-			const std::string		_version;
-			const std::string		_usermodes;
-			const std::string		_channelmodes;
-			const std::string		_channelmodeswithparams;
-			const std::time_t		_creation;
+			/* network name */
+			const std::string _networkname;
 
-			// -- P R I V A T E  M E T H O D S ----------------------------------
+			/* version */
+			const std::string _version;
 
-			void setupSocket(const std::string& ip, int port);
-			void addPollfd(int fd);
+			/* user modes */
+			const std::string _usermodes;
+
+			/* channel modes */
+			const std::string _channelmodes;
+
+			/* channel modes with params */
+			const std::string _channelmodeswithparams;
+
+			/* creation time */
+			const std::time_t _creation;
+
+
+			// -- private methods ---------------------------------------------
+
+			/* setup server socket */
+			void setupSocket(const std::string&, int);
+
+			/* add new pollfd */
+			void add_pollfd(const int);
+
+			/* remove pollfd */
+			void remove_pollfd(const int);
+
+			/* accept new connection */
 			void accept_new_connection(void);
+
+			/* handle active connections */
 			void handle_active_connections(void);
 
 	};
+
+
+	/* struct pollfd {
+	 *     int fd;         // File descriptor to monitor
+	 *     short events;   // Events to monitor (input/output/error events)
+	 *     short revents;  // Events that occurred (filled by the kernel)
+	 * };
+	 */
 
 }
 

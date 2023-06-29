@@ -1,12 +1,15 @@
 #ifndef CMD_FACTORY_HEADER
 #define CMD_FACTORY_HEADER
 
-#include "cmd.hpp"
-#include "join.hpp"
-#include "auto_ptr.hpp"
 
+// c++ standard headers
+#include <vector>
 #include <string>
 #include <map>
+
+// local headers
+#include "cmd.hpp"
+#include "auto_ptr.hpp"
 
 #include "invite.hpp"
 #include "join.hpp"
@@ -21,7 +24,7 @@
 #include "quit.hpp"
 #include "topic.hpp"
 #include "user.hpp"
-#include <vector>
+
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
 
