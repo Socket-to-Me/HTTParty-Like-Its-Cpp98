@@ -296,7 +296,7 @@ void irc::server::accept_new_connection(void) {
             conn.send(irc::numerics::rpl_welcome_001(conn));
             conn.send(irc::numerics::rpl_yourhost_002(conn));
             conn.send(irc::numerics::rpl_created_003(conn));
-        //}
+		}
 
     }
 }
