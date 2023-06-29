@@ -19,11 +19,11 @@ bool irc::privmsg::execute(void) {
     if (_ischannel) {
 
         irc::channel&   channel = irc::server::instance().getchannel(_target);
-        channel.broadcast(":" + _conn.getnick() + " PRIVMSG " + _target + " :" + _str + "\r\n");
+        channel.broadcast(":" + _conn.getnick() + " PRIVMSG " + _target + " " + _str + "\r\n");
     }
     else {
 
-        irc::server::instance().getconnection(_target).send(":" + _conn.getnick() + " PRIVMSG " + _target + " :" + _str + "\r\n");
+        irc::server::instance().getconnection(_target).send(":" + _conn.getnick() + " PRIVMSG " + _target + " " + _str + "\r\n");
     }
 
     return true;
@@ -41,7 +41,7 @@ bool irc::privmsg::evaluate(void) {
     const std::vector<std::string>&     params = _msg.get_params();
     std::string target = params[0];
     std::string str = params.back();
-
+    
     if (target[0] == '#') { //target is a channel
 
         if (irc::server::instance().isChannelExist(target) == false) {

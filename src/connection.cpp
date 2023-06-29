@@ -108,8 +108,8 @@ bool irc::connection::read(void) {
 /* send bytes */
 ssize_t irc::connection::send(const std::string& message) {
 
-	// std::cout << std::endl << "----- S E N D I N G (" + getnick() + ") -----" << std::endl << std::endl;
-	// std::cout << message.c_str() << std::endl;
+	std::cout << std::endl << "----- S E N D I N G (" + getnick() + ") -----" << std::endl << std::endl;
+	std::cout << message.c_str() << std::endl;
 
 	ssize_t bytesSent = ::send(getfd(), message.c_str(), message.size(), 0);
 	if (bytesSent == -1) {
