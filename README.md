@@ -1,4 +1,4 @@
-# BanterBot-3000
+# README
 
 g++ -I/opt/homebrew/Cellar/boost/1.82.0_1/include -std=c++11 proxy.cpp
 
