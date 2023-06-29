@@ -7,57 +7,67 @@
 irc::server irc::server::_instance = irc::server();
 
 /* get singleton instance */
-irc::server &irc::server::instance(void)
-{
+irc::server &irc::server::instance(void) {
     // return singleton instance
     return _instance;
 }
+
 
 // -- P R I V A T E  C O N S T R U C T O R S ----------------------------------
 
 /* default constructor */
 irc::server::server(void)
-: _networkname("httparty.like.its.98"),
+: _is_running(false),
+  _networkname("httparty.like.its.98"),
   _version("1.1"),
   _usermodes("oOiwscrknfbghexzSjFI"),
   _channelmodes("itlkob"),
   _channelmodeswithparams("bkohv"),
   _creation(std::time(nullptr)) {
-    return;
 }
 
 /* destructor */
-irc::server::~server(void)
-{
-    return;
+irc::server::~server(void) {
+	// vector size type
+	typedef std::vector<struct pollfd>::size_type vec_size;
+
+
+	// loop over all pollfds and close them
+	for (vec_size i = 0; i < _pollfds.size(); ++i) {
+		if (_pollfds[i].fd != -1) {
+			close(_pollfds[i].fd);
+		}
+	}
 }
+
 
 // -- P U B L I C  M E T H O D S ----------------------------------------------
 
 /* start server */
-void irc::server::start(const std::string &ip, int port)
-{
+void irc::server::start(const std::string &ip, int port) {
 
     setupSocket(ip, port);
     addPollfd(_socket);
 
-    while (true)
-    {
+	_is_running = true;
+
+
+    while (_is_running) {
 
         // pollCount = # fds where events were detected
         // (ptr to array of pollfd strcuts, # elem in array, timeout of 60s)
         int pollCount = poll(&_pollfds[0], _pollfds.size(), 60000);
 
-        if (pollCount == -1)
-        {
-            std::cout << "Poll error" << std::endl;
-            exit(1);
-        }
-        else if (pollCount == 0)
-        {
-            std::cout << "Poll timed out" << std::endl;
-            continue;
-        }
+        if (pollCount == -1) {
+			if (errno == EINTR) { break; }
+			else {
+				std::cout << "irc::server > poll error" << std::endl;
+				break;
+			}
+		}
+        if (pollCount == 0) {
+            std::cout << "irc::server > poll timeout" << std::endl;
+            continue; }
 
         // check server socket for new connections
         accept_new_connection();
@@ -66,25 +76,16 @@ void irc::server::start(const std::string &ip, int port)
         handle_active_connections();
 
     }
+
+
+	irc::out<3>::print("irc::server", " > server stopped");
+
 }
 
 /* stop server */
-void irc::server::stop(void)
-{
-    // std::vector<struct pollfd>::iterator iter = _pollfds.begin();
-    // typedef std::vector<irc::connection>::size_type conn_size;
-    // while (iter != _pollfds.end())
-    // {
-    //     close(iter->fd);
-    // }
-    // (void)_pollfds.empty();
-
-    typedef std::map<std::string, irc::connection>::iterator map_iter;
-
-    for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
-        it->second.close();
-    }
-    _connections.clear();
+void irc::server::stop(void) {
+	// set running flag to false
+	_is_running = false;
 }
 
 /* restart server */
@@ -280,8 +281,8 @@ void irc::server::accept_new_connection(void) {
 					if (cmd->evaluate() == true) {
 						cmd->execute();
 					}
-                    else {
-                        std::cout << "Error during registration." << std::endl;
+					else {
+						std::cout << "Error during registration." << std::endl;
                         return;
                     }
 				}
@@ -295,7 +296,7 @@ void irc::server::accept_new_connection(void) {
             conn.send(irc::numerics::rpl_welcome_001(conn));
             conn.send(irc::numerics::rpl_yourhost_002(conn));
             conn.send(irc::numerics::rpl_created_003(conn));
-        }
+		}
 
     }
 }
