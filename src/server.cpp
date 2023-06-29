@@ -31,7 +31,6 @@ irc::server::~server(void) {
 	// vector size type
 	typedef std::vector<struct pollfd>::size_type vec_size;
 
-
 	// loop over all pollfds and close them
 	for (vec_size i = 0; i < _pollfds.size(); ++i) {
 		if (_pollfds[i].fd != -1) {
@@ -51,13 +50,15 @@ void irc::server::start(const std::string &ip, int port) {
 
 	_is_running = true;
 
+	irc::print_logo();
+
 	// print server info
-	irc::out<4>::print("Starting server...");
+	irc::out<4>::print("\nStarting server...");
 	irc::out<3>::print(_networkname);
 	irc::out<2>::print("version: " + _version);
 	irc::out<5>::print("usermodes: " + _usermodes);
 	irc::out<6>::print("channelmodes: " + _channelmodes);
-	irc::out<7>::print("created: " + getcreation());
+	irc::out<7>::print("created: ", getcreation(), '\n');
 
     while (_is_running) {
 
@@ -183,6 +184,13 @@ const std::string&	irc::server::getversion(void) const {
 }
 
 std::string	irc::server::getcreation(void) const {
+
+	std::tm* ptm = std::localtime(&_creation);
+	char buffer[32];
+	// Format: Mo, 15.06.2009 20:20:00
+	std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm);
+	return std::string(buffer);
+
     std::string str;
     std::stringstream ss;
     ss << _creation;

@@ -19,6 +19,7 @@
 # include "channel.hpp"
 # include "numerics.hpp"
 #include "output.hpp"
+#include "logo.hpp"
 
 
 // -- N A M E S P A C E  I R C ------------------------------------------------
