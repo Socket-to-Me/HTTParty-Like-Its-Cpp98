@@ -1,10 +1,13 @@
 #include "server.hpp"
 #include "sstream"
 
-// -- S I N G L E T O N  I N S T A N C E --------------------------------------
+// -- private static members --------------------------------------------------
 
 /* singleton instance */
 irc::server irc::server::_instance = irc::server();
+
+
+// -- public static methods ---------------------------------------------------
 
 /* get singleton instance */
 irc::server &irc::server::instance(void) {
@@ -13,7 +16,7 @@ irc::server &irc::server::instance(void) {
 }
 
 
-// -- P R I V A T E  C O N S T R U C T O R S ----------------------------------
+// -- private constructors ----------------------------------------------------
 
 /* default constructor */
 irc::server::server(void)
@@ -48,7 +51,8 @@ irc::server::~server(void) {
 }
 
 
-// -- P U B L I C  M E T H O D S ----------------------------------------------
+
+// -- public methods ----------------------------------------------------------
 
 /* start server */
 void irc::server::start(const std::string &ip, int port) {
@@ -251,6 +255,7 @@ void irc::server::remove_pollfd(const int fd) {
 /* accept new pollfd connection */
 void irc::server::accept_new_connection(void) {
 
+	irc::log::add_line("\n");
 	sockaddr_in client;
 	socklen_t clientSize = sizeof(client);
 	int clientSocket = accept(_socket, (sockaddr *)&client, &clientSize);
@@ -307,6 +312,7 @@ void irc::server::accept_new_connection(void) {
 		conn.send(irc::numerics::rpl_myinfo_004(conn));
 	}
 
+	irc::log::add_line("\n");
 }
 
 void irc::server::handle_active_connections(void) {

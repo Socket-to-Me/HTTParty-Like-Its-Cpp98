@@ -38,7 +38,6 @@ void irc::log::refresh(const std::string& server_name,
 
 	buffer.clear();
 
-
 	// clear screen
 	buffer.append("\033[2J", 4);
 	// move cursor to top left
@@ -51,16 +50,36 @@ void irc::log::refresh(const std::string& server_name,
 	buffer.append("\033[0m\n", 5);
 
 	// print server name
-	buffer.append("\x1b[33m" + server_name + "\x1b[0m\n");
+	buffer.append(
+			"\x1b[31m"
+			+ std::string("server: ")
+			+ "\x1b[33m"
+			+ server_name +
+			"\x1b[0m\n");
 
 	// print server version
-	buffer.append("\x1b[33m" + server_version + "\x1b[0m\n");
+	buffer.append(
+			"\x1b[31m"
+			+ std::string("version: ")
+			+ "\x1b[33m"
+			+ server_version
+			+ "\x1b[0m\n");
 
 	// print server creation time
-	buffer.append("\x1b[33m" + server_creation + "\x1b[0m\n");
+	buffer.append(
+			"\x1b[31m"
+			+ std::string("creation: ")
+			+ "\x1b[33m"
+			+ server_creation
+			+ "\x1b[0m\n");
 
 	// print number of connections
-	buffer.append("\x1b[33m" + std::to_string(num_connections) + " connections\x1b[0m\n");
+	buffer.append(
+			"\x1b[31m"
+			+ std::string("clients: ")
+			+ "\x1b[33m"
+			+ std::to_string(num_connections)
+			+ " connections\x1b[0m\n\n");
 
 
 	std::size_t i;
