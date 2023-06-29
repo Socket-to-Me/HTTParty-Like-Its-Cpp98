@@ -3,7 +3,12 @@
 /* parametric constructor */
 irc::ping::ping(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[ping] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "ping"
+			+ irc::color::reset()
+			+ "] command received");
 }
 
 /* destructor */

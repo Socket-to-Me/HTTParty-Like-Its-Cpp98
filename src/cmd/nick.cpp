@@ -4,7 +4,12 @@
 /* parametric constructor */
 irc::nick::nick(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[nick] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "nick"
+			+ irc::color::reset()
+			+ "] command received");
 }
 
 /* destructor */

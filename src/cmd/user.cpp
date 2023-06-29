@@ -4,7 +4,12 @@
 /* parametric constructor */
 irc::user::user(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[user] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "user"
+			+ irc::color::reset()
+			+ "] command received");
     return;
 }
 

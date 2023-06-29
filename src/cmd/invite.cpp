@@ -3,7 +3,12 @@
 /* parametric constructor */
 irc::invite::invite(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[invite] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "invite"
+			+ irc::color::reset()
+			+ "] command received");
     return;
 }
 

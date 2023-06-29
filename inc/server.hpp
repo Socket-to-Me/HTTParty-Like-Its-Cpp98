@@ -11,6 +11,7 @@
 # include <ctime>
 
 //#include "msg.hpp"
+# include "time.hpp"
 # include "cmd_factory.hpp"
 # include "parser.hpp"
 # include "cmd.hpp"
@@ -18,9 +19,9 @@
 # include "socket.hpp"
 # include "channel.hpp"
 # include "numerics.hpp"
-#include "output.hpp"
-#include "logo.hpp"
-#include "log.hpp"
+# include "output.hpp"
+# include "logo.hpp"
+# include "log.hpp"
 
 
 // -- N A M E S P A C E  I R C ------------------------------------------------
@@ -47,23 +48,36 @@ namespace irc {
 			void send(irc::connection&, const std::string&);
 
 
-			// -- C O M M A N D  U T I L S ---------------------
+			// -- public methods ----------------------------------------------
 
 			// bool	isConnRegistered(const irc::connection& conn) const;
 			void newChannel(const std::string&);
 			bool isNickInUse(const std::string&) const;
 			bool isChannelExist(const std::string&) const;
 
-			// -- G E T T E R S ---------------------
 
-			irc::channel& 		getchannel(const std::string&);
-			irc::connection&	getconnection(const std::string& nick);
+			// -- public accessors --------------------------------------------
 
-			const std::string&	getname(void) const;
+			/* get channel */
+			irc::channel& getchannel(const std::string&);
+
+			/* get connection */
+			irc::connection& getconnection(const std::string& nick);
+
+			/* get server name */
+			const std::string& getname(void) const;
+
+			/* get server version */
 			const std::string&	getversion(void) const;
-			const std::string&	getusermodes(void) const;
-			const std::string&	getchannelmodes(void) const;
-			std::string			getcreation(void) const;
+
+			/* get server user modes */
+			const std::string& getusermodes(void) const;
+
+			/* get server channel modes */
+			const std::string& getchannelmodes(void) const;
+
+			/* get server creation time */
+			std::string getcreation(void) const;
 
 
 
@@ -138,7 +152,7 @@ namespace irc {
 			const std::string _channelmodeswithparams;
 
 			/* creation time */
-			const std::time_t _creation;
+			const std::string _creation;
 
 
 			// -- private methods ---------------------------------------------

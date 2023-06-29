@@ -3,7 +3,12 @@
 /* parametric constructor */
 irc::topic::topic(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[topic] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "topic"
+			+ irc::color::reset()
+			+ "] command received");
 }
 
 /* destructor */

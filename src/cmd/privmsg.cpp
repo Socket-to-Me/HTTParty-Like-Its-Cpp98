@@ -4,7 +4,12 @@
 /* parametric constructor */
 irc::privmsg::privmsg(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[privmsg] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "privmsg"
+			+ irc::color::reset()
+			+ "] command received");
 }
 
 /* destructor */
@@ -30,7 +35,7 @@ bool irc::privmsg::execute(void) {
 
 /* evaluate command */
 bool irc::privmsg::evaluate(void) {
-    
+
     if (!_msg.have_params()) {
         _conn.settarget(_msg.get_command());
         _conn.send(irc::numerics::err_needmoreparams_461(_conn));
@@ -40,7 +45,7 @@ bool irc::privmsg::evaluate(void) {
     const std::vector<std::string>&     params = _msg.get_params();
     std::string target = params[0];
     std::string str = params.back();
-    
+
     if (target[0] == '#') { //target is a channel
 
         if (irc::server::instance().isChannelExist(target) == false) {

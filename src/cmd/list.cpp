@@ -4,7 +4,12 @@
 /* parametric constructor */
 irc::list::list(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[list] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "list"
+			+ irc::color::reset()
+			+ "] command received");
     return;
 }
 

@@ -3,7 +3,12 @@
 /* parametric constructor */
 irc::mode::mode(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[mode] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "mode"
+			+ irc::color::reset()
+			+ "] command received");
     return;
 }
 

@@ -9,7 +9,12 @@
 /* parametric constructor */
 irc::pass::pass(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[pass] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "pass"
+			+ irc::color::reset()
+			+ "] command received");
 }
 
 /* destructor */

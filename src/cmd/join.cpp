@@ -3,7 +3,12 @@
 /* parametric constructor */
 irc::join::join(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[join] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "join"
+			+ irc::color::reset()
+			+ "] command received");
     return;
 }
 

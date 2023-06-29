@@ -3,7 +3,12 @@
 /* parametric constructor */
 irc::pong::pong(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[pong] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "pong"
+			+ irc::color::reset()
+			+ "] command received");
 }
 
 /* destructor */

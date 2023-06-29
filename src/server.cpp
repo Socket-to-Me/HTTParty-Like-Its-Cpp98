@@ -17,13 +17,13 @@ irc::server &irc::server::instance(void) {
 
 /* default constructor */
 irc::server::server(void)
-: _is_running(false),
+: _is_running(true),
   _networkname("httparty.like.its.98"),
   _version("1.1"),
   _usermodes("o"),
   _channelmodes("itkol"),
   _channelmodeswithparams(""),
-  _creation(std::time(nullptr)) {
+  _creation(irc::now()) {
 }
 
 /* destructor */
@@ -36,8 +36,6 @@ irc::server::~server(void) {
 	for (; it != _connections.end(); ++it) {
 		irc::quit::send(it->second);
 	}
-
-
 
 	// vector size type
 	typedef pollfd_vector::size_type vec_size;
@@ -55,27 +53,20 @@ irc::server::~server(void) {
 /* start server */
 void irc::server::start(const std::string &ip, int port) {
 
+	// setup server socket
     if (setupSocket(ip, port) != 0) { return; }
-    add_pollfd(_socket);
-
-	_is_running = true;
 
 
-	// print server info
-	//irc::out<4>::print("\nStarting server...");
-	//irc::out<3>::print(_networkname);
-	//irc::out<2>::print("version: " + _version);
-	//irc::out<5>::print("usermodes: " + _usermodes);
-	//irc::out<6>::print("channelmodes: " + _channelmodes);
-	//irc::out<7>::print("created: ", getcreation(), '\n');
-
+	// init logger
 	irc::log::init();
 
-	std::size_t i = 0;
-
+	// main server loop
     while (_is_running) {
 
-		irc::log::refresh(_networkname, _pollfds.size() - 1);
+		irc::log::refresh(_networkname,
+						  _version,
+						  _creation,
+						  _pollfds.size() - 1);
 
         // pollCount = # fds where events were detected
         // (ptr to array of pollfd strcuts, # elem in array, timeout of 60s)
@@ -101,7 +92,6 @@ void irc::server::start(const std::string &ip, int port) {
         // check client sockets for new events
         handle_active_connections();
 
-		//std::cout << i++ << std::endl;
 		usleep(100000);
     }
 
@@ -192,18 +182,7 @@ const std::string&	irc::server::getversion(void) const {
 }
 
 std::string	irc::server::getcreation(void) const {
-
-	std::tm* ptm = std::localtime(&_creation);
-	char buffer[32];
-	// Format: Mo, 15.06.2009 20:20:00
-	std::strftime(buffer, 32, "%a, %d.%m.%Y %H:%M:%S", ptm);
-	return std::string(buffer);
-
-    std::string str;
-    std::stringstream ss;
-    ss << _creation;
-    ss >> str;
-    return str;
+	return _creation;
 }
 
 const std::string&	irc::server::getusermodes(void) const {
@@ -240,6 +219,8 @@ int irc::server::setupSocket(const std::string &ip, int port)
         std::cout << "Failed to listen." << std::endl;
 		return -1;
     }
+
+    add_pollfd(_socket);
 	return 0;
 }
 

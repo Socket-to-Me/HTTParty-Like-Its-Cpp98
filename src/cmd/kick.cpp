@@ -4,7 +4,12 @@
 /* parametric constructor */
 irc::kick::kick(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[kick] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "kick"
+			+ irc::color::reset()
+			+ "] command received");
     return;
 }
 

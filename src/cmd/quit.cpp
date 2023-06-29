@@ -4,7 +4,12 @@
 /* parametric constructor */
 irc::quit::quit(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[quit] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "quit"
+			+ irc::color::reset()
+			+ "] command received");
 }
 
 /* destructor */

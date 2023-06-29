@@ -3,7 +3,12 @@
 /* parametric constructor */
 irc::part::part(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line("[part] command received");
+	irc::log::add_line(
+			"["
+			+ irc::color::green()
+			+ "part"
+			+ irc::color::reset()
+			+ "] command received");
     return;
 }
 
