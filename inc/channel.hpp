@@ -57,6 +57,9 @@ namespace irc {
 			void giveOperatorPrivilege(const irc::connection& op, irc::connection& conn);
 			void takeOperatorPrivilege(const irc::connection& op, irc::connection& conn);
 
+			void broadcast(const std::string& msg);
+			void send(const std::string& nick, const std::string& msg);
+
 		private:
 
 			// -- private methods ----------------------------------------------

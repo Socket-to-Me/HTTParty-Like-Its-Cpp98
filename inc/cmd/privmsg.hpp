@@ -48,9 +48,11 @@ namespace irc {
 
 			// -- M E M B E R S --------------------------
 
-			const irc::msg& _msg;
-
-			irc::connection& _conn;
+			const irc::msg&		_msg;
+			irc::connection&	_conn;
+			std::string			_target;
+			std::string			_str;
+			bool				_ischannel;
 
 	};
 

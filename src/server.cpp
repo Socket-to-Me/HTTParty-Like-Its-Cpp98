@@ -181,6 +181,10 @@ irc::channel&	irc::server::getchannel(const std::string& channel) {
     return _channels.find(channel)->second;
 }
 
+irc::connection&	irc::server::getconnection(const std::string& nick) {
+    return _connections.find(nick)->second;
+}
+
 const std::string&	irc::server::getname(void) const {
     return _networkname;
 }
