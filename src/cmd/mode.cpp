@@ -46,7 +46,7 @@ bool irc::mode::execute(void) {
 bool irc::mode::evaluate(void) {
 
     if (_msg.have_params() == false) {
-        _conn.send(irc::numerics::err_nonicknam/JOegiven_431(_conn));
+        _conn.send(irc::numerics::err_nonicknamegiven_431(_conn));
         return false;
     }
 
