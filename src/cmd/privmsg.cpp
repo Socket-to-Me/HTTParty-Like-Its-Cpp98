@@ -19,11 +19,11 @@ bool irc::privmsg::execute(void) {
     if (_ischannel) {
 
         irc::channel&   channel = irc::server::instance().getchannel(_target);
-        channel.broadcast(":" + _conn.getnick() + " PRIVMSG " + _target + " :" + _str);
+        channel.broadcast(":" + _conn.getnick() + " PRIVMSG " + _target + " :" + _str + "\r\n");
     }
     else {
 
-        irc::server::instance().getconnection(_target).send(":" + _conn.getnick() + " PRIVMSG " + _target + " :" + _str);
+        irc::server::instance().getconnection(_target).send(":" + _conn.getnick() + " PRIVMSG " + _target + " :" + _str + "\r\n");
     }
 
     return true;
