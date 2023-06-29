@@ -7,14 +7,26 @@
 
 /* pollfd reference constructor */
 irc::connection::connection(struct pollfd& pfd)
-: _pfd(pfd), _buffer("") {
-	// nothing to do...
+: _pfd(pfd), 
+  _buffer(""),
+  _msg(""),
+  _nick(""),
+  _user(""),
+  _password(""),
+  _channelname("") {
+	return;
 }
 
 /* copy constructor */
-irc::connection::connection(const irc::connection& conn)
-: _pfd(conn._pfd), _buffer(conn._buffer) {
-	// nothing to do...
+irc::connection::connection(const irc::connection& other)
+: _pfd(other._pfd), 
+  _buffer(other._buffer),
+  _msg(other._msg),
+  _nick(other._nick),
+  _user(other._user),
+  _password(other._password),
+  _channelname(other._channelname) {
+	return;
 }
 
 /* destructor */

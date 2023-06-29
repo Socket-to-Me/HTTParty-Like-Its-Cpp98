@@ -31,9 +31,9 @@ bool irc::user::evaluate(void) {
         _conn.send(irc::numerics::err_needmoreparams_461(_conn));
         return false;
     }
-    else if (params.size() != 3) {
-        return false;
-    }
+    // else if (params.size() != 2) {
+    //     return false;
+    // }
 
     if (_conn.getuser().length()) {
         _conn.send(irc::numerics::err_alreadyregistered_462(_conn));
