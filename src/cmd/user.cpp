@@ -4,7 +4,7 @@
 /* parametric constructor */
 irc::user::user(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "user command created" << std::endl;
+	irc::log::add_line("[user] command received");
     return;
 }
 

@@ -3,7 +3,7 @@
 /* parametric constructor */
 irc::part::part(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "part command created" << std::endl;
+	irc::log::add_line("[part] command received");
     return;
 }
 

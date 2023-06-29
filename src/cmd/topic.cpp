@@ -3,8 +3,7 @@
 /* parametric constructor */
 irc::topic::topic(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "topic command created" << std::endl;
-    return;
+	irc::log::add_line("[topic] command received");
 }
 
 /* destructor */

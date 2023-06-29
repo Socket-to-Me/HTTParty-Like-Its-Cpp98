@@ -4,6 +4,7 @@
 # include <ctime>
 # include <string>
 # include <sys/socket.h>
+# include "log.hpp"
 
 
 // -- I R C  N A M E S P A C E ------------------------------------------------

@@ -9,8 +9,7 @@
 /* parametric constructor */
 irc::pass::pass(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "pass command created" << std::endl;
-	return;
+	irc::log::add_line("[pass] command received");
 }
 
 /* destructor */

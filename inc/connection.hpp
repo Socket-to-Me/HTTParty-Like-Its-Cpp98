@@ -11,6 +11,8 @@
 # include <errno.h>
 # include "alive.hpp"
 
+# include "log.hpp"
+
 
 // -- I R C  N A M E S P A C E ------------------------------------------------
 

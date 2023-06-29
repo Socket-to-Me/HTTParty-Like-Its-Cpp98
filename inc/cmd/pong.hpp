@@ -40,7 +40,7 @@ namespace irc {
 			// -- N O N - C O P Y A B L E  C L A S S --------------------------
 
 			/* copy constructor */
-			pong(const ping&);
+			pong(const pong&);
 
 			/* copy assignment operator */
 			pong& operator=(const pong&);

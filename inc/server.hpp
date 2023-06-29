@@ -20,6 +20,7 @@
 # include "numerics.hpp"
 #include "output.hpp"
 #include "logo.hpp"
+#include "log.hpp"
 
 
 // -- N A M E S P A C E  I R C ------------------------------------------------
@@ -143,7 +144,7 @@ namespace irc {
 			// -- private methods ---------------------------------------------
 
 			/* setup server socket */
-			void setupSocket(const std::string&, int);
+			int setupSocket(const std::string&, int);
 
 			/* add new pollfd */
 			void add_pollfd(const int);

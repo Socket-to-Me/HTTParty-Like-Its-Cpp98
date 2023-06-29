@@ -3,8 +3,7 @@
 /* parametric constructor */
 irc::ping::ping(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "ping command created" << std::endl;
-
+	irc::log::add_line("[ping] command received");
 }
 
 /* destructor */

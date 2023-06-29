@@ -4,7 +4,7 @@
 /* parametric constructor */
 irc::kick::kick(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "kick command created" << std::endl;
+	irc::log::add_line("[kick] command received");
     return;
 }
 

@@ -4,7 +4,7 @@
 /* parametric constructor */
 irc::list::list(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "list command created" << std::endl;
+	irc::log::add_line("[list] command received");
     return;
 }
 

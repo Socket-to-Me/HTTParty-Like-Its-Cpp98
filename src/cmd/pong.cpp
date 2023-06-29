@@ -3,8 +3,7 @@
 /* parametric constructor */
 irc::pong::pong(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "pong command created" << std::endl;
-
+	irc::log::add_line("[pong] command received");
 }
 
 /* destructor */
@@ -29,17 +28,23 @@ bool irc::pong::evaluate(void) {
 	irc::server& server = irc::server::instance();
 
 
+	/*
+	std::cout << _msg.get_params()[0] << std::endl;
+	std::cout << server.getname() << std::endl;
+	*/
+
+	/*
 	if (_msg.get_params()[0] != server.getname()) {
 		// send error message
 		std::cout << "INVALID PONG" << std::endl;
 		return false;
-	}
+	}*/
 
 	return true;
 }
 
 /* create command */
 irc::auto_ptr<irc::cmd> irc::pong::create(const irc::msg& msg, irc::connection& conn) {
-	// create ping command
+	// create pong command
     return irc::auto_ptr<irc::cmd>(new irc::pong(msg, conn));
 }

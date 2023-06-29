@@ -3,7 +3,7 @@
 /* parametric constructor */
 irc::mode::mode(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "mode command created" << std::endl;
+	irc::log::add_line("[mode] command received");
     return;
 }
 

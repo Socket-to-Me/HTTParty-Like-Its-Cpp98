@@ -4,8 +4,7 @@
 /* parametric constructor */
 irc::nick::nick(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "nick command created" << std::endl;
-	return;
+	irc::log::add_line("[nick] command received");
 }
 
 /* destructor */

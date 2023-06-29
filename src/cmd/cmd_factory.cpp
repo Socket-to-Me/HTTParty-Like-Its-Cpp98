@@ -15,6 +15,7 @@ std::map<std::string, irc::cmd_factory::cmd_maker>	init(void) {
 	_cmds.insert(pair("PART", irc::part::create));
 	_cmds.insert(pair("PASS", irc::pass::create));
 	_cmds.insert(pair("PING", irc::ping::create));
+	_cmds.insert(pair("PONG", irc::pong::create));
 	_cmds.insert(pair("PRIVMSG", irc::privmsg::create));
 	_cmds.insert(pair("QUIT", irc::quit::create));
 	_cmds.insert(pair("TOPIC", irc::topic::create));

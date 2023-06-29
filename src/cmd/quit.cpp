@@ -4,8 +4,7 @@
 /* parametric constructor */
 irc::quit::quit(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "quit command created" << std::endl;
-    return;
+	irc::log::add_line("[quit] command received");
 }
 
 /* destructor */
@@ -21,6 +20,16 @@ bool irc::quit::execute(void) {
 /* evaluate command */
 bool irc::quit::evaluate(void) {
     return false;
+}
+
+/* send */
+void irc::quit::send(irc::connection& conn) {
+
+	irc::server& serv = irc::server::instance();
+
+	// send quit message
+	conn.send(":" + serv.getname()
+			+ " QUIT :Server shutting down\r\n");
 }
 
 /* create command */

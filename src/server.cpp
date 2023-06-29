@@ -28,6 +28,17 @@ irc::server::server(void)
 
 /* destructor */
 irc::server::~server(void) {
+
+	// declare iterator type
+	connection_map::iterator it = _connections.begin();
+
+	// loop over all connections and send quit message
+	for (; it != _connections.end(); ++it) {
+		irc::quit::send(it->second);
+	}
+
+
+
 	// vector size type
 	typedef pollfd_vector::size_type vec_size;
 	// loop over all pollfds and close them
@@ -44,37 +55,43 @@ irc::server::~server(void) {
 /* start server */
 void irc::server::start(const std::string &ip, int port) {
 
-    setupSocket(ip, port);
+    if (setupSocket(ip, port) != 0) { return; }
     add_pollfd(_socket);
 
 	_is_running = true;
 
-	irc::print_logo();
 
 	// print server info
-	irc::out<4>::print("\nStarting server...");
-	irc::out<3>::print(_networkname);
-	irc::out<2>::print("version: " + _version);
-	irc::out<5>::print("usermodes: " + _usermodes);
-	irc::out<6>::print("channelmodes: " + _channelmodes);
-	irc::out<7>::print("created: ", getcreation(), '\n');
+	//irc::out<4>::print("\nStarting server...");
+	//irc::out<3>::print(_networkname);
+	//irc::out<2>::print("version: " + _version);
+	//irc::out<5>::print("usermodes: " + _usermodes);
+	//irc::out<6>::print("channelmodes: " + _channelmodes);
+	//irc::out<7>::print("created: ", getcreation(), '\n');
+
+	irc::log::init();
+
+	std::size_t i = 0;
 
     while (_is_running) {
 
+		irc::log::refresh(_networkname, _pollfds.size() - 1);
+
         // pollCount = # fds where events were detected
         // (ptr to array of pollfd strcuts, # elem in array, timeout of 60s)
-        int pollCount = poll(&_pollfds[0], _pollfds.size(), 60000);
+        int pollCount = poll(&_pollfds[0], _pollfds.size(), 0);
 
         if (pollCount == -1) {
 			if (errno == EINTR) { break; }
 			else {
-				std::cout << "irc::server > poll error" << std::endl;
+				irc::log::add_line("server poll error");
 				break;
 			}
 		}
-        if (pollCount == 0) {
-            std::cout << "irc::server > poll timeout" << std::endl;
-            continue; }
+
+        //if (pollCount == 0) {
+          //  std::cout << "irc::server > poll timeout" << std::endl;
+           // continue; }
 
 		// check server listening socket for recent events
 		if (_pollfds[0].revents & POLLIN) {
@@ -84,8 +101,11 @@ void irc::server::start(const std::string &ip, int port) {
         // check client sockets for new events
         handle_active_connections();
 
+		//std::cout << i++ << std::endl;
+		usleep(100000);
     }
 
+	irc::log::exit();
 
 	irc::out<3>::print("server stopped");
 
@@ -197,14 +217,13 @@ const std::string&	irc::server::getchannelmodes(void) const {
 // -- P R I V A T E  M E T H O D S ----------------------------------------------
 
 /* setup socket */
-void irc::server::setupSocket(const std::string &ip, int port)
+int irc::server::setupSocket(const std::string &ip, int port)
 {
 
     _socket = ::socket(AF_INET, SOCK_STREAM, 0);
-    if (_socket == -1)
-    {
+    if (_socket == -1) {
         std::cout << "Failed to create socket." << std::endl;
-        // throw std::exception("Failed to create socket.");
+		return -1;
     }
 
     sockaddr_in hint;
@@ -212,24 +231,23 @@ void irc::server::setupSocket(const std::string &ip, int port)
     hint.sin_port = htons(port);
     inet_pton(AF_INET, ip.c_str(), &(hint.sin_addr));
 
-    if (bind(_socket, (sockaddr *)&hint, sizeof(hint)) == -1)
-    {
+    if (bind(_socket, (sockaddr *)&hint, sizeof(hint)) == -1) {
         std::cout << "Failed to bind to IP/Port." << std::endl;
-        // throw std::exception("Failed to bind to IP/Port.");
+		return -1;
     }
 
-    if (listen(_socket, SOMAXCONN) == -1)
-    {
+    if (listen(_socket, SOMAXCONN) == -1) {
         std::cout << "Failed to listen." << std::endl;
-        // throw std::exception("Failed to listen.");
+		return -1;
     }
+	return 0;
 }
 
 /* add new pollfd connection */
 void irc::server::add_pollfd(const int fd) {
 	// check for fd validity
     if (fd == -1) {
-        std::cout << "Not a valid socket to build pollfd." << std::endl;
+		irc::log::add_line("Not a valid socket to build pollfd.");
 		return; }
 	// instantiate new pollfd struct
 	pollfd pfd = { fd, POLLIN, 0 };
@@ -258,10 +276,10 @@ void irc::server::accept_new_connection(void) {
 
 	// check if accept() failed
 	if (clientSocket == -1) {
-		std::cout << "Failed to accept client connection." << std::endl;
+		irc::log::add_line("Failed to accept client connection.");
 	}
 	else {
-		std::cout << "\x1b[32m" << "New client connected." << "\x1b[0m" << std::endl;
+		irc::log::add_line("New client connected.");
 	}
 
 	add_pollfd(clientSocket);
@@ -276,24 +294,30 @@ void irc::server::accept_new_connection(void) {
 
 		irc::msg message = irc::parser::parse(msg);
 
-		if (message.have_command()) {
-			irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
-			if (maker) {
-				irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
-				if (cmd->evaluate() == true) {
-					cmd->execute();
-				}
-				else {
-					std::cout << "Error during registration." << std::endl;
-					return;
-				}
-			}
-		}
+		if (message.have_command() == false) { continue; }
+
+		irc::log::add_line("msg: " + msg);
+
+		// search for command
+		irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
+
+		// check for invalid command
+		if (!maker) { irc::log::add_line("Command not found."); continue; }
+
+		// instantiate new command
+		irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
+
+		// evaluate command
+		if (cmd->evaluate() == false) { irc::log::add_line("Command evaluation failed."); return; }
+
+		// execute command
+		cmd->execute();
 
 	} while (msg.size() > 0);
 
 
 	if (conn.getnick().length()) {
+		irc::log::add_line("New connection: " + conn.getnick());
 		conn.init_alive(_networkname);
 		_connections.insert(std::make_pair(conn.getnick(), conn));
 		conn.send(irc::numerics::rpl_welcome_001(conn));
@@ -311,30 +335,30 @@ void irc::server::handle_active_connections(void) {
     /* loop over all connections */
     for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
 
-        if (it->second.receive()) {
+		// check if connection is active
+		if (it->second.receive() == false) { continue; }
 
-			// std::cout << "receive active connection" << std::endl;
-            std::string msg = it->second.extract_message();
+		irc::log::add_line("receive active connection");
+		std::string msg = it->second.extract_message();
 
-			irc::msg message = irc::parser::parse(msg);
+		irc::msg message = irc::parser::parse(msg);
 
-			if (message.have_command()) {
-				irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
-				if (maker) {
-					irc::auto_ptr<irc::cmd> cmd = maker(message, it->second);
-					if (cmd->evaluate() == true) {
-						cmd->execute();
-					}
+		if (message.have_command()) {
+			irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
+			if (maker) {
+				irc::auto_ptr<irc::cmd> cmd = maker(message, it->second);
+				if (cmd->evaluate() == true) {
+					cmd->execute();
 				}
 			}
-        }
+		}
     }
 
 	// check for dead connections
 	for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
 
 		if (it->second.is_alive() == false) {
-			std::cout << "Connection " << it->first << " is dead." << std::endl;
+			irc::log::add_line("Connection " + it->first + " is dead.");
 			remove_pollfd(it->second.getfd());
 			_connections.erase(it);
 			break;

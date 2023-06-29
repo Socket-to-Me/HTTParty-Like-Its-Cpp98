@@ -99,11 +99,11 @@ bool irc::connection::read(void) {
 
 	// check for error
 	if (readed == -1) {
-		std::cout << "\nError sending response to client" << std::endl;
+		irc::log::add_line("Error sending response to client");
 		return false;
 	}
 	else if (readed == 0) {
-		std::cout << "\nEmpty response from client" << std::endl;
+		irc::log::add_line("Empty response from client");
 		return false;
 	}
 
@@ -122,7 +122,7 @@ ssize_t irc::connection::send(const std::string& message) const {
 
 	ssize_t bytesSent = ::send(_pfd.fd, message.c_str(), message.size(), 0);
 	if (bytesSent == -1) {
-		std::cout << std::endl << "Error sending response to client: " << strerror(errno) << std::endl;
+		irc::log::add_line("Error sending response to client: " + std::string(strerror(errno)));
 	}
 	return bytesSent;
 }

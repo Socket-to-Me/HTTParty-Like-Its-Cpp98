@@ -4,8 +4,7 @@
 /* parametric constructor */
 irc::privmsg::privmsg(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "privmsg command created" << std::endl;
-    return;
+	irc::log::add_line("[privmsg] command received");
 }
 
 /* destructor */

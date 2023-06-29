@@ -3,7 +3,7 @@
 /* parametric constructor */
 irc::invite::invite(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "invite command created" << std::endl;
+	irc::log::add_line("[invite] command received");
     return;
 }
 

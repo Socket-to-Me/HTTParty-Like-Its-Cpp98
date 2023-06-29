@@ -1,7 +1,8 @@
 #ifndef LOGO_HEADER
 #define LOGO_HEADER
 
-#include "output.hpp"
+
+#include <string>
 
 
 // -- N A M E S P A C E  I R C ------------------------------------------------
@@ -9,25 +10,21 @@
 namespace irc {
 
 
-	/* print logo */
-	inline void print_logo(void) {
+	class logo {
 
-		const char* lines[] = {
-			"",
-			"      ::::::::::: :::::::::   ::::::::          ::::::::  :::::::::: :::::::::  :::     ::: :::::::::: :::::::::",
-			"         :+:     :+:    :+: :+:    :+:        :+:    :+: :+:        :+:    :+: :+:     :+: :+:        :+:    :+:",
-			"        +:+     +:+    +:+ +:+               +:+        +:+        +:+    +:+ +:+     +:+ +:+        +:+    +:+",
-			"       +#+     +#++:++#:  +#+               +#++:++#++ +#++:++#   +#++:++#:  +#+     +:+ +#++:++#   +#++:++#:",
-			"      +#+     +#+    +#+ +#+                      +#+ +#+        +#+    +#+  +#+   +#+  +#+        +#+    +#+",
-			"     #+#     #+#    #+# #+#    #+#        #+#    #+# #+#        #+#    #+#   #+#+#+#   #+#        #+#    #+#",
-			"########### ###    ###  ########          ########  ########## ###    ###     ###     ########## ###    ###",
-			static_cast<const char*>(0)
-		};
+		private:
 
-		for (int i = 0; lines[i]; ++i) {
-			irc::out<1>::print(lines[i]);
-		}
-	}
+			/* init logo */
+			static std::string init_logo(void);
+
+			static const std::string _logo;
+
+		public:
+
+			static const std::string& get(void);
+
+
+	};
 
 
 }

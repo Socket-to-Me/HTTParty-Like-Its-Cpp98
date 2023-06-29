@@ -3,7 +3,7 @@
 /* parametric constructor */
 irc::join::join(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	std::cout << "join command created" << std::endl;
+	irc::log::add_line("[join] command received");
     return;
 }
 
@@ -62,7 +62,7 @@ bool irc::join::evaluate(void) {
     }
 
     // Check channel name correct
-    
+
     _channel = channel;
     if (params.size() == 2) {
         _password = params[1];

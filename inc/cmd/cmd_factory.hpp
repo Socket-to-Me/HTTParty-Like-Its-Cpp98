@@ -12,6 +12,7 @@
 #include "auto_ptr.hpp"
 
 #include "invite.hpp"
+#include "pong.hpp"
 #include "join.hpp"
 #include "kick.hpp"
 #include "list.hpp"
