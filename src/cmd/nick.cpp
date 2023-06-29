@@ -35,10 +35,12 @@ bool irc::nick::evaluate(void) {
 
     std::string nick = params[0];
     if (!isValidNick(nick)) {
+        _conn.settarget(nick);
         _conn.send(irc::numerics::err_erroneusnickname_432(_conn));
         return false;
     }
     else if (irc::server::instance().isNickInUse(nick)) {
+        _conn.settarget(nick);
         _conn.send(irc::numerics::err_nicknameinuse_433(_conn));
         return false;
     }

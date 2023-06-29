@@ -536,12 +536,12 @@ const std::string& irc::numerics::err_nonicknamegiven_431(irc::connection& conn)
 }
 
 const std::string& irc::numerics::err_erroneusnickname_432(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("432 " + conn.getnick() + " " + conn.gettarget() + " :Erroneus nickname" + "\r\n");
     return conn.getmsg();
 }
 
 const std::string& irc::numerics::err_nicknameinuse_433(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("433 " + conn.getnick() + " " + conn.gettarget() + " :Nickname is already in use" + "\r\n");
     return conn.getmsg();
 }
 
