@@ -78,6 +78,8 @@ bool irc::join::execute(void) {
     _conn.send(irc::numerics::rpl_namreply_353(_conn));
     _conn.send(irc::numerics::rpl_endofnames_366(_conn));
 
+    // need to broadcast to all connections when new join ? -- TODO
+
     return true;
 }
 
