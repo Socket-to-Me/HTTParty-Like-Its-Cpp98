@@ -24,7 +24,7 @@ namespace irc {
 			// -- public constructors -----------------------------------------
 
 			/* parametric constructor */
-            channel(const std::string& name, const std::string& topic);
+            channel(const std::string& name);
 
 			/* copy constructor */
 			channel(const channel& other);

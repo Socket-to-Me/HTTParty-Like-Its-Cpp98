@@ -3,8 +3,8 @@
 // -- public constructors -----------------------------------------
 
 /* parametric constructor */
-irc::channel::channel(const std::string& name, const std::string& topic)
-: _name(name), _topic(topic) {
+irc::channel::channel(const std::string& name)
+: _name(name) {
 
 	return;
 }
