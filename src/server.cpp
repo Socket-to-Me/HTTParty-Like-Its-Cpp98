@@ -121,17 +121,6 @@ void irc::server::send(irc::connection &conn, const std::string &message)
 
 // -- C O M M A N D  U T I L S ---------------------
 
-// bool	irc::server::isConnRegistered(const irc::connection& conn) const {
-
-//     if (!_connections.empty()) {
-
-//         if(std::find(_connections.begin(), _connections.end(), conn) != _connections.end()) {
-//             return true;
-//         }
-//     }
-//     return false;
-// }
-
 bool	irc::server::isNickInUse(const std::string& nick) const {
 
     // iterator typedef
@@ -311,22 +300,37 @@ void irc::server::accept_new_connection(void) {
 		irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
 
 		// evaluate command
-		if (cmd->evaluate() == false) { irc::log::add_line("Command evaluation failed."); return; }
+		if (cmd->evaluate() == true) { 
+			
+			// execute command
+			cmd->execute();
 
-		// execute command
-		cmd->execute();
+		} else {
+
+			irc::log::add_line("Command evaluation failed.");
+		}
 
 	} while (msg.size() > 0);
 
 
-	if (conn.getnick().length()) {
-		irc::log::add_line("New connection: " + conn.getnick());
+	if (conn.getnick().length() && conn.getuser().length()) {
+
+		irc::log::print("New connection: " + conn.getnick());
+		
+		// Add to connection map
 		conn.init_alive(_networkname);
 		_connections.insert(std::make_pair(conn.getnick(), conn));
+
+		// Registration greeting
 		conn.send(irc::numerics::rpl_welcome_001(conn));
 		conn.send(irc::numerics::rpl_yourhost_002(conn));
 		conn.send(irc::numerics::rpl_created_003(conn));
 		conn.send(irc::numerics::rpl_myinfo_004(conn));
+
+	} else { // Failure to set up new connection with unique nick
+
+		close(clientSocket);
+		_pollfds.pop_back();
 	}
 }
 

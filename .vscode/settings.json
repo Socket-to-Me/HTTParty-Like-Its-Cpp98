@@ -74,6 +74,7 @@
 		"mutex": "cpp",
 		"ratio": "cpp",
 		"variant": "cpp",
-		"list": "cpp"
+		"list": "cpp",
+		"queue": "cpp"
 	}
 }

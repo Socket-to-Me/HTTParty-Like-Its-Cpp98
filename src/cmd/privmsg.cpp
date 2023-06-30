@@ -23,11 +23,16 @@ bool irc::privmsg::execute(void) {
     if (_ischannel) {
 
         irc::channel&   channel = irc::server::instance().getchannel(_target);
-        channel.broadcast(":" + _conn.getnick() + " PRIVMSG " + _target + " " + _str + "\r\n");
+        if (!channel.broadcast(":" + _conn.getnick() + " PRIVMSG " + _target + " " + _str + "\r\n")) {
+            _conn.settarget(_target);
+            _conn.send(irc::numerics::err_cannotsendtochan_404(_conn));
+            return false;
+        }
     }
     else {
 
-        irc::server::instance().getconnection(_target).send(":" + _conn.getnick() + " PRIVMSG " + _target + " " + _str + "\r\n");
+        irc::connection&    user = irc::server::instance().getconnection(_target);
+        user.send(":" + _conn.getnick() + " PRIVMSG " + _target + " " + _str + "\r\n");
     }
 
     return true;
@@ -43,12 +48,13 @@ bool irc::privmsg::evaluate(void) {
     }
 
     const std::vector<std::string>&     params = _msg.get_params();
-    std::string target = params[0];
-    std::string str = params.back();
+    std::string                         target = params.front();
+    std::string                         str = params.back();
 
     if (target[0] == '#') { //target is a channel
 
         if (irc::server::instance().isChannelExist(target) == false) {
+            _conn.settarget(target);
             _conn.send(irc::numerics::err_nosuchchannel_403(_conn));
             return false;
         }
@@ -58,6 +64,7 @@ bool irc::privmsg::evaluate(void) {
     else { //target is a nickname
 
         if (irc::server::instance().isNickInUse(target) == false) {
+            _conn.settarget(target);
             _conn.send(irc::numerics::err_nosuchnick_401(_conn));
             return false;
         }
@@ -65,8 +72,15 @@ bool irc::privmsg::evaluate(void) {
         _ischannel = false;
     }
 
+    // Extract trailing str after ':'
+    std::size_t pos = str.find(":");
+    if (pos != std::string::npos) {
+        str = str.substr(pos);
+    }
+
     _target = target;
     _str = str;
+
     return true;
 }
 

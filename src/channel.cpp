@@ -226,25 +226,31 @@ void irc::channel::takeOperatorPrivilege(const irc::connection& op, irc::connect
 	}
 }
 
-void irc::channel::broadcast(const std::string& msg) {
+bool irc::channel::broadcast(const std::string& msg) {
 
 	std::vector<irc::connection*>::iterator	it;
 
 	for (it=_connections.begin(); it!=_connections.end(); ++it) {
-		(*it)->send(msg);
+		if ((*it)->send(msg) <= 0) {
+			return false;
+		}
 	}
+	return true;
 }
 
-void irc::channel::send(const std::string& nick, const std::string& msg) {
+bool irc::channel::send(const std::string& nick, const std::string& msg) {
 
 	std::vector<irc::connection*>::iterator	it;
 
 	for (it=_connections.begin(); it!=_connections.end(); ++it) {
 		if ((*it)->getnick() == nick) {
-			(*it)->send(msg);
+			if ((*it)->send(msg) <= 0) {
+				return false;
+			}
 			break;
 		}
 	}
+	return true;
 }
 
 /* default constructor */

@@ -58,8 +58,8 @@ namespace irc {
 			void giveOperatorPrivilege(const irc::connection& op, irc::connection& conn);
 			void takeOperatorPrivilege(const irc::connection& op, irc::connection& conn);
 
-			void broadcast(const std::string& msg);
-			void send(const std::string& nick, const std::string& msg);
+			bool broadcast(const std::string& msg);
+			bool send(const std::string& nick, const std::string& msg);
 
 			bool isConnection(const irc::connection& op) const;
 			bool isOperator(const irc::connection& op) const;

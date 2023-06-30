@@ -33,6 +33,9 @@ namespace irc {
 			/* add line to log */
 			static void add_line(const std::string&);
 
+			/* print */
+			static void	print(const std::string& str);
+
 			/* refresh log */
 			static void refresh(
 					const std::string&, // server name

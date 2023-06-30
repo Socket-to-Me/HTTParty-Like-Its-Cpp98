@@ -37,6 +37,16 @@ void irc::log::add_line(const std::string& line) {
 	_logs.push_back(line);
 }
 
+/* print */
+void irc::log::print(const std::string& str) {
+    irc::log::add_line(
+        "["
+        + irc::color::red()
+        + "log"
+        + irc::color::reset()
+        + "] " + str);
+}
+
 /* refresh log */
 void irc::log::refresh(const std::string& server_name,
 					   const std::string& server_version,

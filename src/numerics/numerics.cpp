@@ -481,12 +481,12 @@ const std::string& irc::numerics::err_nosuchserver_402(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_nosuchchannel_403(irc::connection& conn) {
-    conn.setmsg("403 " + conn.getnick() + " " + conn.gettarget() + " :Cannot send to channel" + "\r\n");
+    conn.setmsg("403 " + conn.getnick() + " " + conn.gettarget() + " :No such channel" + "\r\n");
     return conn.getmsg();
 }
 
 const std::string& irc::numerics::err_cannotsendtochan_404(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("404 " + conn.getnick() + " " + conn.gettarget() + " :Cannot send to channel" + "\r\n");
     return conn.getmsg();
 }
 
