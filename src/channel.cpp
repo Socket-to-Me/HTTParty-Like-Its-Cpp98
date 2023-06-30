@@ -263,6 +263,15 @@ bool irc::channel::is_mode_channel_key(void) {
 	return _mode_channel_key;
 }
 
+std::string irc::channel::getsymbol(void) const {
+
+	if (_mode_channel_key) {
+		return "*";
+	} else {
+		return "=";
+	}
+}
+
 /* default constructor */
 irc::channel::channel(void) {
 	return;

@@ -381,12 +381,12 @@ const std::string& irc::numerics::rpl_version_351(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_namreply_353(irc::connection& conn) {
-    conn.setmsg("353 " + conn.getnick() + " " + conn.gettarget() + " :" + irc::server::instance().getchannel(conn.gettarget()).getconnectionsasstr() + "\r\n");
+    conn.setmsg("353 " + conn.getnick() + " " + irc::server::instance().getchannel(conn.getchannelname()).getsymbol() + " " + conn.getchannelname() + " :" + irc::server::instance().getchannel(conn.getchannelname()).getconnectionsasstr() + "\r\n");
     return conn.getmsg();
 }
 
 const std::string& irc::numerics::rpl_endofnames_366(irc::connection& conn) {
-    conn.setmsg("366 " + conn.getnick() + " " + conn.gettarget() + " :End of /NAMES list" + "\r\n");
+    conn.setmsg("366 " + conn.getnick() + " " + conn.getchannelname() + " :End of /NAMES list" + "\r\n");
     return conn.getmsg();
 }
 

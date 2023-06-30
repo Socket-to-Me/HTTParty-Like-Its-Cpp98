@@ -151,7 +151,7 @@ bool	irc::server::isChannelExist(const std::string& channel) const {
 
 void irc::server::newChannel(const std::string& name) {
 
-    irc::channel channel(name, "TBD");
+    irc::channel channel(name, "new");
     _channels.insert(std::make_pair(name, channel));
 }
 

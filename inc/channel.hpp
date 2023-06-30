@@ -67,6 +67,8 @@ namespace irc {
 			void set_mode_channel_key(bool val);
 			bool is_mode_channel_key(void);
 
+			std::string getsymbol(void) const;
+
 		private:
 
 			// -- private methods ----------------------------------------------
