@@ -253,6 +253,16 @@ bool irc::channel::send(const std::string& nick, const std::string& msg) {
 	return true;
 }
 
+void irc::channel::set_mode_channel_key(bool val) {
+
+	_mode_channel_key = val;
+}
+
+bool irc::channel::is_mode_channel_key(void) {
+
+	return _mode_channel_key;
+}
+
 /* default constructor */
 irc::channel::channel(void) {
 	return;

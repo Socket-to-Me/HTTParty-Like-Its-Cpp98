@@ -65,6 +65,9 @@ namespace irc {
 
 			// -- public accessors --------------------------------------------
 
+			/* get channels */
+			std::map<std::string, irc::channel>& getchannels(void);
+
 			/* get channel */
 			irc::channel& getchannel(const std::string&);
 

@@ -158,6 +158,11 @@ void irc::server::newChannel(const std::string& name) {
 
 // -- public accessors --------------------------------------------------------
 
+/* get channels */
+irc::server::channel_map& irc::server::getchannels(void) {
+    return _channels;
+}
+
 
 /* get channel */
 irc::channel& irc::server::getchannel(const std::string& channel) {

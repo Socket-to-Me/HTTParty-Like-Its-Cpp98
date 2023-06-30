@@ -39,8 +39,8 @@ namespace irc {
             const std::vector<irc::connection*>&  getoperators(void) const;
             const std::vector<irc::connection*>&  getconnections(void) const;
 
-            std::string  getconnectionsasstr(void) const;
-            bool  checkPassword(const std::string& password) const;
+            std::string  	getconnectionsasstr(void) const;
+            bool  			checkPassword(const std::string& password) const;
 
 			// -- public methods ----------------------------------------------
             void  setname(const irc::connection& op, const std::string& str);
@@ -63,6 +63,9 @@ namespace irc {
 
 			bool isConnection(const irc::connection& op) const;
 			bool isOperator(const irc::connection& op) const;
+
+			void set_mode_channel_key(bool val);
+			bool is_mode_channel_key(void);
 
 		private:
 
@@ -103,10 +106,6 @@ namespace irc {
 
 			// +b (Ban): The ban mode allows channel operators to ban specific clients from the channel. Banned clients are prevented from joining the channel until the ban is lifted.
 			bool	_mode_ban;
-
-
-
-
 
     };
 }

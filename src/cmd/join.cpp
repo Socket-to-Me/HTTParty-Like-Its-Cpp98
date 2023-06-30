@@ -20,28 +20,63 @@ irc::join::~join(void) {
 /* execute command */
 bool irc::join::execute(void) {
 
+    // Leave all channels
+    if (_channel == "0") {
+
+        std::map<std::string, irc::channel>&   cmap = irc::server::instance().getchannels();
+
+        for (std::map<std::string, irc::channel>::iterator it=cmap.begin(); it!=cmap.end(); ++it) {
+         
+            it->second.removeUser(_conn);
+            it->second.removeOperator(_conn);
+        }
+    }
+
     if (irc::server::instance().isChannelExist(_channel) == false) { //new channel
 
         irc::server::instance().newChannel(_channel);
-    }
-
-    irc::channel&   channel = irc::server::instance().getchannel(_channel);
-
-    if (channel.checkPassword(_password)) {
+        irc::channel&   channel = irc::server::instance().getchannel(_channel);
 
         channel.addUser(_conn);
         channel.addOperator(_conn);
 
-        _conn.setchannelname(_channel);
+        if (_password.length()) { //set password
+
+            channel.set_mode_channel_key(true);
+            channel.setkey(_conn, _password);
+        }
+
+    } else { // ---------------------------------------------------- existing channel
+
+        irc::channel&   channel = irc::server::instance().getchannel(_channel);
+
+        if (channel.is_mode_channel_key()) {              //private --------------
+
+            if (channel.checkPassword(_password)) {
+
+                channel.addUser(_conn);
+
+            } else { //wrong password
+
+                _conn.settarget(_channel);
+                _conn.send(irc::numerics::err_badchannelkey_475(_conn));
+                return false;
+            }
+
+        } else {                                        //public --------------
+
+            channel.addUser(_conn);
+
+        }
+
+        //replies
+        _conn.settarget(_channel);
         _conn.send(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
-        _conn.send(irc::numerics::rpl_topic_332(_conn));
+        if (channel.gettopic().length()) {
+            _conn.send(irc::numerics::rpl_topic_332(_conn));
+        }
         _conn.send(irc::numerics::rpl_namreply_353(_conn));
         _conn.send(irc::numerics::rpl_endofnames_366(_conn));
-    }
-
-    // Leave all channels
-    if (_channel == "0") {
-        // TODO
     }
 
     return true;
