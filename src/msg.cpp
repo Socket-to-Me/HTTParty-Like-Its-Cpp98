@@ -124,3 +124,17 @@ const irc::msg::host& irc::msg::get_host(void) const {
 	return _host;
 }
 
+
+// -- swap --------------------------------------------------------------------
+
+/* swap */
+void irc::msg::swap(irc::msg& msg) {
+	   _tags.swap(msg._tags);
+	 _source.swap(msg._source);
+	_command.swap(msg._command);
+	 _params.swap(msg._params);
+	   _nick.swap(msg._nick);
+	   _user.swap(msg._user);
+	   _host.swap(msg._host);
+}
+

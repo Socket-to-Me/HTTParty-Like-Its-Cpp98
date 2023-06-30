@@ -1,5 +1,9 @@
 #include "quit.hpp"
 
+// -- Q U I T -----------------------------------------------------------------
+
+
+// -- public constructors -----------------------------------------------------
 
 /* parametric constructor */
 irc::quit::quit(const irc::msg& msg, irc::connection& conn)
@@ -9,22 +13,45 @@ irc::quit::quit(const irc::msg& msg, irc::connection& conn)
 			+ irc::color::green()
 			+ "quit"
 			+ irc::color::reset()
-			+ "] command received");
+			+ "] command received from: "
+			+ irc::color::blue()
+			+ _conn.getnick()
+			+ irc::color::reset());
 }
+
+/* copy constructor */
+irc::quit::quit(const quit& other)
+: _msg(other._msg), _conn(other._conn) {}
+
 
 /* destructor */
 irc::quit::~quit(void) {
     return;
 }
 
+
+// -- public assignment operators ---------------------------------------------
+
+/* copy assignment operator */
+irc::quit& irc::quit::operator=(const quit& other) {
+	// do nothing
+	return *this;
+}
+
 /* execute command */
 bool irc::quit::execute(void) {
-    return false;
+
+	irc::server& serv = irc::server::instance();
+
+	// add to remove queue
+	serv.add_to_remove_queue(_conn);
+
+    return true;
 }
 
 /* evaluate command */
 bool irc::quit::evaluate(void) {
-    return false;
+    return true;
 }
 
 /* send */

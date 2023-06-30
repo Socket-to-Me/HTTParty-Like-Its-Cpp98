@@ -8,12 +8,13 @@
 
 # include "connection.hpp"
 
+
 // -- I R C  N A M E S P A C E ------------------------------------------------
 
 namespace irc {
 
 
-	// -- C H A N N E L -------------------------------------------------
+	// -- C H A N N E L -------------------------------------------------------
 
     class channel {
 
@@ -62,7 +63,7 @@ namespace irc {
 
 			bool isConnection(const irc::connection& op) const;
 			bool isOperator(const irc::connection& op) const;
-		
+
 		private:
 
 			// -- private methods ----------------------------------------------

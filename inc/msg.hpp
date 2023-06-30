@@ -110,6 +110,12 @@ namespace irc {
 			const host& get_host(void) const;
 
 
+			// -- swap --------------------------------------------------------
+
+			/* swap */
+			void swap(msg&);
+
+
 		private:
 
 			// -- private members ---------------------------------------------

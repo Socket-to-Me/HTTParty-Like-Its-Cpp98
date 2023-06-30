@@ -3,6 +3,7 @@
 
 # include <algorithm>
 # include <vector>
+# include <queue>
 # include <map>
 # include <string>
 # include <cstdlib>
@@ -55,6 +56,12 @@ namespace irc {
 			bool isNickInUse(const std::string&) const;
 			bool isChannelExist(const std::string&) const;
 
+			/* unsubscribe client connection */
+			void unsubscribe(const irc::connection&);
+
+			/* add to remove queue */
+			void add_to_remove_queue(irc::connection&);
+
 
 			// -- public accessors --------------------------------------------
 
@@ -77,14 +84,14 @@ namespace irc {
 			const std::string& getchannelmodes(void) const;
 
 			/* get server creation time */
-			std::string getcreation(void) const;
+			const std::string& getcreation(void) const;
 
 
 
 			// -- public static methods ---------------------------------------
 
 			/* get singleton instance */
-			static server&	instance(void);
+			static server& instance(void);
 
 
 		private:
@@ -136,6 +143,9 @@ namespace irc {
 			/* channel map */ // [name, channel]
 			channel_map _channels;
 
+			/* remove queue */
+			std::queue<irc::connection*> _remove_queue;
+
 			/* network name */
 			const std::string _networkname;
 
@@ -159,6 +169,9 @@ namespace irc {
 
 			/* setup server socket */
 			int setupSocket(const std::string&, int);
+
+			/* setup client socket */
+			int setup_client_socket(void) const;
 
 			/* add new pollfd */
 			void add_pollfd(const int);

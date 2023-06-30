@@ -160,39 +160,47 @@ bool	irc::server::isChannelExist(const std::string& channel) const {
     return false;
 }
 
-void	irc::server::newChannel(const std::string& name) {
+void irc::server::newChannel(const std::string& name) {
 
-    irc::channel    channel(name, "TBD");
+    irc::channel channel(name, "TBD");
     _channels.insert(std::make_pair(name, channel));
 }
 
 
-// -- G E T T E R S ---------------------
+// -- public accessors --------------------------------------------------------
 
-irc::channel&	irc::server::getchannel(const std::string& channel) {
+
+/* get channel */
+irc::channel& irc::server::getchannel(const std::string& channel) {
     return _channels.find(channel)->second;
 }
 
-irc::connection&	irc::server::getconnection(const std::string& nick) {
+/* get connection */
+irc::connection& irc::server::getconnection(const std::string& nick) {
     return _connections.find(nick)->second;
 }
 
-const std::string&	irc::server::getname(void) const {
+/* get server name */
+const std::string& irc::server::getname(void) const {
     return _networkname;
 }
 
-const std::string&	irc::server::getversion(void) const {
+/* get server version */
+const std::string& irc::server::getversion(void) const {
     return _version;
 }
 
-std::string	irc::server::getcreation(void) const {
+/* get server creation time */
+const std::string& irc::server::getcreation(void) const {
 	return _creation;
 }
 
-const std::string&	irc::server::getusermodes(void) const {
+/* get server user modes */
+const std::string& irc::server::getusermodes(void) const {
     return _usermodes;
 }
 
+/* get server channel modes */
 const std::string&	irc::server::getchannelmodes(void) const {
     return _channelmodes;
 }
@@ -242,6 +250,7 @@ void irc::server::add_pollfd(const int fd) {
 
 /* remove pollfd connection */
 void irc::server::remove_pollfd(const int fd) {
+
 	// declare iterator
 	for (pollfd_vector::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
 		// continue if fd doesn't match
@@ -251,22 +260,30 @@ void irc::server::remove_pollfd(const int fd) {
 	}
 }
 
+/* setup client socket */
+int irc::server::setup_client_socket(void) const {
+	sockaddr_in client;
+	socklen_t size = sizeof(client);
+	int socket = ::accept(_socket, (sockaddr *)&client, &size);
+	// check for accept failure
+	if (socket == -1) { irc::log::add_line("Failed to accept client connection."); }
+	// check for already connected
+	for (pollfd_vector::const_iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
+		if (it->fd == socket) { return -1; }
+	}
+	// return socket
+	return socket;
+}
 
 /* accept new pollfd connection */
 void irc::server::accept_new_connection(void) {
 
-	irc::log::add_line("\n");
-	sockaddr_in client;
-	socklen_t clientSize = sizeof(client);
-	int clientSocket = accept(_socket, (sockaddr *)&client, &clientSize);
+	int clientSocket = setup_client_socket();
 
-	// check if accept() failed
-	if (clientSocket == -1) {
-		irc::log::add_line("Failed to accept client connection.");
-	}
-	else {
-		irc::log::add_line("New client connected.");
-	}
+	// check for valid socket
+	if (clientSocket == -1) { return; };
+
+	irc::log::add_line("New client connected.");
 
 	add_pollfd(clientSocket);
 	irc::connection conn(_pollfds.back());
@@ -311,8 +328,6 @@ void irc::server::accept_new_connection(void) {
 		conn.send(irc::numerics::rpl_created_003(conn));
 		conn.send(irc::numerics::rpl_myinfo_004(conn));
 	}
-
-	irc::log::add_line("\n");
 }
 
 void irc::server::handle_active_connections(void) {
@@ -321,12 +336,13 @@ void irc::server::handle_active_connections(void) {
     typedef std::map<std::string, irc::connection>::iterator map_iter;
 
     /* loop over all connections */
-    for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
+    for (map_iter it = _connections.begin(); it != _connections.end(); ++it) {
 
 		// check if connection is active
 		if (it->second.receive() == false) { continue; }
 
-		irc::log::add_line("receive active connection");
+		irc::log::add_line("receive activity from: " + it->first);
+
 		std::string msg = it->second.extract_message();
 
 		irc::msg message = irc::parser::parse(msg);
@@ -342,14 +358,45 @@ void irc::server::handle_active_connections(void) {
 		}
     }
 
+	// check for connections to remove
+	while (_remove_queue.empty() == false) {
+		irc::connection* conn = _remove_queue.front();
+		_remove_queue.pop();
+		unsubscribe(*conn);
+	}
+
 	// check for dead connections
 	for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
 
 		if (it->second.is_alive() == false) {
 			irc::log::add_line("Connection " + it->first + " is dead.");
-			remove_pollfd(it->second.getfd());
-			_connections.erase(it);
+			unsubscribe(it->second);
 			break;
 		}
 	}
 }
+
+
+/* unsubscribe client connection */
+void irc::server::unsubscribe(const irc::connection& conn) {
+
+	// remove pollfd
+	remove_pollfd(conn.getfd());
+
+	// close socket
+	close(conn.getfd());
+
+	// search for connection in map
+	connection_map::iterator it = _connections.find(conn.getnick());
+
+	// check if connection was found
+	if (it != _connections.end()) { _connections.erase(it); }
+
+}
+
+/* add to remove queue */
+void irc::server::add_to_remove_queue(irc::connection& conn) {
+	_remove_queue.push(&conn);
+}
+
+
