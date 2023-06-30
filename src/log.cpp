@@ -1,5 +1,14 @@
 #include "log.hpp"
 
+#include <sstream>
+
+template <class T>
+std::string to_string(const T& value) {
+	std::stringstream stream;
+	stream << value;
+	return stream.str();
+}
+
 
 // -- L O G -------------------------------------------------------------------
 
@@ -78,7 +87,7 @@ void irc::log::refresh(const std::string& server_name,
 			"\x1b[31m"
 			+ std::string("clients: ")
 			+ "\x1b[33m"
-			+ std::to_string(num_connections)
+			+ to_string(num_connections)
 			+ " connections\x1b[0m\n\n");
 
 
@@ -94,7 +103,7 @@ void irc::log::refresh(const std::string& server_name,
 
 	for (std::size_t j = i; j < _logs.size(); j++) {
 		// transform index to string with leading zeros
-		std::string index = std::to_string(j);
+		std::string index = to_string(j);
 		while (index.size() < 4) {
 			index.insert(0, "0");
 		}

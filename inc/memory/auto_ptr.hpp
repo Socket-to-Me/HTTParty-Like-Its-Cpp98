@@ -44,7 +44,7 @@ namespace irc {
 
 			/* pointer constructor */
 			auto_ptr(const T* data) : _data(data) { }
-			
+
 			/* pointer constructor */
 			template <class U>
 			auto_ptr(U* data) : _data(data) { }
