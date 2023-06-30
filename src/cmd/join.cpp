@@ -40,7 +40,7 @@ bool irc::join::execute(void) {
         channel.addUser(_conn);
         channel.addOperator(_conn);
 
-        if (_password.length()) { //set password
+        if (!_password.empty()) { //set password
 
             channel.set_mode_channel_key(true);
             channel.setkey(_conn, _password);
@@ -72,7 +72,7 @@ bool irc::join::execute(void) {
         //replies
         _conn.settarget(_channel);
         _conn.send(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
-        if (channel.gettopic().length()) {
+        if (channel.gettopic().empty()) {
             _conn.send(irc::numerics::rpl_topic_332(_conn));
         }
         _conn.send(irc::numerics::rpl_namreply_353(_conn));
