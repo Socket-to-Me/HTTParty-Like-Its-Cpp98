@@ -14,9 +14,10 @@
 int main(int ac, char** av) {
 
 	/*
-	std::string message = "PRIVMSG #abc hooo :Hello World!";
+	std::string message = "PRIVMSG #abc hooo :Hello  World!";
 
 	irc::msg msg = irc::parser::parse(message);
+	std::cout << "Raw: " << msg.get_raw() << std::endl;
 
 
 	if (msg.have_command()) { std::cout << "Command: " << msg.get_command() << std::endl; }

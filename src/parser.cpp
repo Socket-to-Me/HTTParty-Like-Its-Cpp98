@@ -27,10 +27,7 @@ static bool not_space(int ch) {
 
 // -- public static methods ---------------------------------------------------
 
-/* parse */
 irc::msg irc::parser::parse(const std::string& raw) {
-	/*
-
 	msg message;
 	std::stringstream ss(raw);
 	std::string item;
@@ -60,14 +57,15 @@ irc::msg irc::parser::parse(const std::string& raw) {
 	// Parse command
 	std::getline(ss, message._command, ' ');
 
-	// Parse parameters
+	// Parse parameters and trailing
 	while (std::getline(ss, item, ' ')) {
-		// If the first character of the item is ':', this is the last parameter
+		std::cout << "Item: " << item << std::endl;
+
 		if (item[0] == ':') {
-			// Remove ':', and rest of the line is the last parameter
+			//message._params.push_back(item.substr(1));  // Push back first word after ':'
+			// Get the rest of the line, which is the trailing
 			std::getline(ss, item);
-			//message._params.push_back(item.substr(1) + " " + item);
-			message._trailing = item.substr(1) + " " + item;
+			message._trailing = message._params.back() + " " + item; // Include first word after ':' and the rest
 			break;
 		}
 		else {
@@ -76,54 +74,5 @@ irc::msg irc::parser::parse(const std::string& raw) {
 	}
 
 	return message;
-	*/
-
-
-	msg message;
-	std::stringstream ss(raw);
-	std::string item;
-
-	// set raw
-	message._raw = raw;
-
-	// Parse tags
-	if (raw[0] == '@') {
-		std::getline(ss, item, ' ');
-		item = item.substr(1); // Remove '@'
-		std::stringstream tagss(item);
-		std::string tagitem;
-		while (std::getline(tagss, tagitem, ';')) {
-			std::string key = tagitem.substr(0, tagitem.find('='));
-			std::string value = tagitem.substr(tagitem.find('=') + 1);
-			message._tags.push_back(std::make_pair(key, value));
-		}
-	}
-
-	// Parse source
-	if (ss.peek() == ':') {
-		ss.get(); // Remove ':'
-		std::getline(ss, message._source, ' ');
-	}
-
-	// Parse command
-	std::getline(ss, message._command, ' ');
-
-	// Parse parameters
-while (std::getline(ss, item, ' ')) {
-    // If the first character of the item is ':', this is the trailing
-    if (item[0] == ':') {
-        // Append the rest of the line to item and assign it to trailing
-        std::string rest_of_line;
-        std::getline(ss, rest_of_line);
-        message._trailing = item.substr(1) + rest_of_line;
-        break;
-    }
-    else {
-        message._params.push_back(item);
-    }
 }
 
-
-	return message;
-
-}
