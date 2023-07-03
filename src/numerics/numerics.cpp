@@ -121,7 +121,7 @@ const std::string& irc::numerics::rpl_myinfo_004(irc::connection& conn) {
 
 const std::string& irc::numerics::rpl_isupport_005(irc::connection& conn) {
 
-    conn.setmsg("005 " + conn.getnick() + " :are supported by this server" + "\r\n");
+    conn.setmsg("005 " + conn.getnick() + " CASEMAPPING=ascii NICKLEN=15 CHANTYPES=# :are supported by this server" + "\r\n");
     return conn.getmsg();
 }
 
@@ -596,7 +596,7 @@ const std::string& irc::numerics::err_channelisfull_471(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_unknownmode_472(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("472 " + conn.getnick() + " " + conn.gettarget() + " :is unknown mode char to me" + "\r\n");
     return conn.getmsg();
 }
 
@@ -641,12 +641,12 @@ const std::string& irc::numerics::err_nooperhost_491(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_umodeunknownflag_501(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("501 " + conn.getnick() + " :Unknown MODE flag" + "\r\n");
     return conn.getmsg();
 }
 
 const std::string& irc::numerics::err_usersdontmatch_502(irc::connection& conn) {
-    conn.setmsg("502 " + conn.getnick() + " " + " :Cant change mode for other users" + "\r\n");
+    conn.setmsg("502 " + conn.getnick() + " :Cant change mode for other users" + "\r\n");
     return conn.getmsg();
 }
 

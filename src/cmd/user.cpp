@@ -13,6 +13,7 @@ irc::user::user(const irc::msg& msg, irc::connection& conn)
 			+ irc::color::blue()
 			+ _conn.getnick()
 			+ irc::color::reset());
+	irc::log::print(msg.get_raw());
     return;
 }
 

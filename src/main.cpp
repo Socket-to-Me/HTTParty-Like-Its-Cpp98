@@ -9,7 +9,6 @@
 
 int main(int ac, char** av) {
 
-
 	irc::server& server = irc::server::instance();
 
 	irc::signal signal;

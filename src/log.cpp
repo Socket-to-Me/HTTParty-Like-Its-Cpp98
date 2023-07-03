@@ -39,6 +39,7 @@ void irc::log::add_line(const std::string& line) {
 	// write to file
 	std::ofstream out("log.txt", std::ios_base::app);
     out << line;
+    out << "\n";
     out.close(); 
 }
 

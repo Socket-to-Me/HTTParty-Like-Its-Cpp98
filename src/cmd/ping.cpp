@@ -3,15 +3,16 @@
 /* parametric constructor */
 irc::ping::ping(const irc::msg& msg, irc::connection& conn)
 : _msg(msg), _conn(conn) {
-	irc::log::add_line(
-			"["
-			+ irc::color::green()
-			+ "ping"
-			+ irc::color::reset()
-			+ "] command received from: "
-			+ irc::color::blue()
-			+ _conn.getnick()
-			+ irc::color::reset());
+	// irc::log::add_line(
+	// 		"["
+	// 		+ irc::color::green()
+	// 		+ "ping"
+	// 		+ irc::color::reset()
+	// 		+ "] command received from: "
+	// 		+ irc::color::blue()
+	// 		+ _conn.getnick()
+	// 		+ irc::color::reset());
+	// irc::log::print(msg.get_raw());
 	return;
 }
 

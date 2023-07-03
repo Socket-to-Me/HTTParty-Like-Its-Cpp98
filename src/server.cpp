@@ -331,6 +331,7 @@ void irc::server::accept_new_connection(void) {
 		conn.send(irc::numerics::rpl_yourhost_002(conn));
 		conn.send(irc::numerics::rpl_created_003(conn));
 		conn.send(irc::numerics::rpl_myinfo_004(conn));
+		conn.send(irc::numerics::rpl_isupport_005(conn));
 
 	} else { // Failure to set up new connection with unique nick
 
@@ -350,7 +351,7 @@ void irc::server::handle_active_connections(void) {
 		// check if connection is active
 		if (it->second.receive() == false) { continue; }
 
-		irc::log::add_line("receive activity from: " + it->first);
+		// irc::log::add_line("receive activity from: " + it->first);
 
 		std::string msg = it->second.extract_message();
 

@@ -13,6 +13,7 @@ irc::nick::nick(const irc::msg& msg, irc::connection& conn)
 			+ irc::color::blue()
 			+ _conn.getnick()
 			+ irc::color::reset());
+	irc::log::print(msg.get_raw());
     return;
 }
 
@@ -58,6 +59,11 @@ bool irc::nick::evaluate(void) {
 }
 
 bool	irc::nick::isValidNick(const std::string& nick) const {
+
+    // less than 15 characters
+    if (nick.length() > 15) {
+        return false;
+    }
 
     // no leading character (# & :)
     if (nick.find("#") == 0 || nick.find("&") == 0 || nick.find(":") == 0) {

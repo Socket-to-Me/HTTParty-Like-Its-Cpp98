@@ -124,6 +124,10 @@ const irc::msg::host& irc::msg::get_host(void) const {
 	return _host;
 }
 
+/* get original msg */
+const std::string& irc::msg::get_raw(void) const {
+	return _raw;
+}
 
 // -- swap --------------------------------------------------------------------
 

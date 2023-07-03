@@ -12,6 +12,7 @@ irc::mode::mode(const irc::msg& msg, irc::connection& conn)
 			+ irc::color::blue()
 			+ _conn.getnick()
 			+ irc::color::reset());
+	irc::log::print(msg.get_raw());
     return;
 }
 
@@ -32,8 +33,8 @@ bool irc::mode::execute(void) {
 
         if (params.size() == 1) {
             _conn.send(irc::numerics::rpl_channelmodeis_324(_conn));
-        }
-        else {
+
+        } else {
             std::string modestring = params[1];
             channel.setmode(_conn, modestring);
             _conn.send(":" + irc::server::instance().getname() + " MODE " + _target + " " + modestring + "\r\n");
@@ -43,8 +44,11 @@ bool irc::mode::execute(void) {
 
         if (params.size() == 1) {
             _conn.send(irc::numerics::rpl_umodeis_221(_conn));
+
+        } else {  // no modes allowed for users
+            _conn.settarget(params.back());
+            _conn.send(irc::numerics::err_unknownmode_472(_conn));
         }
-        // no modes for users
     }
 
     return true;
