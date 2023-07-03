@@ -45,6 +45,9 @@ namespace irc {
 			/* host type */
 			typedef std::string host;
 
+			/* trailing type */
+			typedef std::string trailing;
+
 
 			// -- public constructors -----------------------------------------
 
@@ -109,6 +112,9 @@ namespace irc {
 			/* get host */
 			const host& get_host(void) const;
 
+			/* get trailing */
+			const trailing& get_trailing(void) const;
+
 			/* get original msg */
 			const std::string& get_raw(void) const;
 
@@ -146,6 +152,9 @@ namespace irc {
 
 			/* raw */
 			std::string _raw;
+
+			/* trailing */
+			trailing _trailing;
 
 	};
 

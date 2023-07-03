@@ -65,7 +65,8 @@ irc::msg irc::parser::parse(const std::string& raw) {
 		if (item[0] == ':') {
 			// Remove ':', and rest of the line is the last parameter
 			std::getline(ss, item);
-			message._params.push_back(item.substr(1) + " " + item);
+			//message._params.push_back(item.substr(1) + " " + item);
+			message._trailing = item.substr(1) + " " + item;
 			break;
 		}
 		else {
