@@ -35,6 +35,11 @@ void irc::log::exit(void) {
 /* add line to log */
 void irc::log::add_line(const std::string& line) {
 	_logs.push_back(line);
+
+	// write to file
+	std::ofstream out("log.txt", std::ios_base::app);
+    out << line;
+    out.close(); 
 }
 
 /* print */

@@ -9,7 +9,10 @@ irc::user::user(const irc::msg& msg, irc::connection& conn)
 			+ irc::color::green()
 			+ "user"
 			+ irc::color::reset()
-			+ "] command received");
+			+ "] command received from: "
+			+ irc::color::blue()
+			+ _conn.getnick()
+			+ irc::color::reset());
     return;
 }
 

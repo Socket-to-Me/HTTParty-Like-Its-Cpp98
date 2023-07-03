@@ -13,6 +13,7 @@ irc::nick::nick(const irc::msg& msg, irc::connection& conn)
 			+ irc::color::blue()
 			+ _conn.getnick()
 			+ irc::color::reset());
+    return;
 }
 
 /* destructor */

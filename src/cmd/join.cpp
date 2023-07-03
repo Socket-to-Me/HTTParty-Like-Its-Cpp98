@@ -8,7 +8,10 @@ irc::join::join(const irc::msg& msg, irc::connection& conn)
 			+ irc::color::green()
 			+ "join"
 			+ irc::color::reset()
-			+ "] command received");
+			+ "] command received from: "
+			+ irc::color::blue()
+			+ _conn.getnick()
+			+ irc::color::reset());
     return;
 }
 
@@ -21,7 +24,7 @@ irc::join::~join(void) {
 bool irc::join::execute(void) {
 
     // Leave all channels
-    if (_channel == "0") {
+    if (_channel == "#0") {
 
         std::map<std::string, irc::channel>&   cmap = irc::server::instance().getchannels();
 
