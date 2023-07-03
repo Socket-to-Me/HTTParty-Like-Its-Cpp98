@@ -438,26 +438,32 @@ void irc::server::leave_all_channels(irc::connection& conn) {
 /* leave all channels */
 bool irc::server::isChannelNameValid(const std::string& name) const {
 
+	irc::log::print("NAME VALID ? " + name);
+
     // not empty
-    if (name.length() > 0) {
+    if (name.empty()) {
         return false;
     }
+	irc::log::print("not empty");
 
     // has leading character (#)
     if (name[0] != '#') {
         return false;
     }
+	irc::log::print("has leading");
 
     // no ascii space
     if (name.find(" ") != std::string::npos) {
         return false;
     }
+	irc::log::print("no space");
 
     // is printable
     for (size_t i=0; i<name.length(); ++i) {
         if (!isprint(name[i]))
             return false;
 	}
+	irc::log::print("is printable");
 
 	return true;
 }
