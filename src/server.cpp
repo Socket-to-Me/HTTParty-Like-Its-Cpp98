@@ -211,6 +211,14 @@ int irc::server::setupSocket(const std::string &ip, int port)
 		return -1;
     }
 
+
+	// Enable reuse of the address.
+    int yes = 1;
+	if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+        std::cout << "Failed to set socket options." << std::endl;
+        return -1;
+    }
+
     sockaddr_in hint;
     hint.sin_family = AF_INET;
     hint.sin_port = htons(port);
@@ -376,9 +384,9 @@ void irc::server::handle_active_connections(void) {
 	}
 
 	// // check for dead connections --> is dead and deletes
-	// 
+	//
 	// for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
-	// 
+	//
 	// 	if (it->second.is_alive() == false) {
 	// 		irc::log::add_line("Connection " + it->first + " is dead.");
 	// 		unsubscribe(it->second);
@@ -419,10 +427,10 @@ void irc::server::leave_all_channels(irc::connection& conn) {
     // iterator typedef
     typedef channel_map::iterator map_iter;
 
-	
+
 
 	for (map_iter it=_channels.begin(); it != _channels.end(); ++it) {
-		
+
 		it->second.removeUser(conn);
 		it->second.removeOperator(conn);
 	}
