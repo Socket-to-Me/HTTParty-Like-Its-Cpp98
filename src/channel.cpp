@@ -283,6 +283,18 @@ const std::string&  irc::channel::getkey(void) const {
 	return _key;
 }
 
+bool irc::channel::isConnection(const irc::connection& conn) const {
+
+	std::vector<irc::connection*>::const_iterator	it;
+
+    for (it=_connections.begin(); it!=_connections.end(); it++) {
+        if (**it == conn) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool irc::channel::isOperator(const irc::connection& op) const {
 
 	std::vector<irc::connection*>::const_iterator	it;

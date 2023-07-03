@@ -61,7 +61,7 @@ namespace irc {
 			bool broadcast(const std::string& msg);
 			bool send(const std::string& nick, const std::string& msg);
 
-			bool isConnection(const irc::connection& op) const;
+			bool isConnection(const irc::connection& conn) const;
 			bool isOperator(const irc::connection& op) const;
 
 			void set_mode_channel_key(bool val);
