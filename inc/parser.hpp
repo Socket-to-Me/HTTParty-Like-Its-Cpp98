@@ -18,7 +18,7 @@ namespace irc {
 			// -- public static methods ---------------------------------------
 
 			/* parse */
-            static irc::msg parse(const std::string&);
+            static irc::msg parse(std::string&);
 
 
         private:

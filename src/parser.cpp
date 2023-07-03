@@ -27,16 +27,14 @@ static bool not_space(int ch) {
 
 // -- public static methods ---------------------------------------------------
 
-irc::msg irc::parser::parse(const std::string& raw) {
+irc::msg irc::parser::parse(std::string& raw) {
 	msg message;
-	std::stringstream ss(raw);
-	std::string item;
 
 	// set raw
 	message._raw = raw;
 
 	// Parse tags
-	if (raw[0] == '@') {
+	/*if (raw[0] == '@') {
 		std::getline(ss, item, ' ');
 		item = item.substr(1); // Remove '@'
 		std::stringstream tagss(item);
@@ -52,25 +50,26 @@ irc::msg irc::parser::parse(const std::string& raw) {
 	if (ss.peek() == ':') {
 		ss.get(); // Remove ':'
 		std::getline(ss, message._source, ' ');
+	}*/
+
+	// get last ':' substring
+	std::string::size_type pos = raw.find_last_of(':');
+	if (pos != std::string::npos) {
+		message._trailing = raw.substr(pos + 1);
+		raw = raw.substr(0, pos);
 	}
+
+	std::stringstream ss(raw);
+	std::string item;
 
 	// Parse command
 	std::getline(ss, message._command, ' ');
 
 	// Parse parameters and trailing
 	while (std::getline(ss, item, ' ')) {
-		std::cout << "Item: " << item << std::endl;
+		//std::cout << "Item: " << item << std::endl;
 
-		if (item[0] == ':') {
-			//message._params.push_back(item.substr(1));  // Push back first word after ':'
-			// Get the rest of the line, which is the trailing
-			std::getline(ss, item);
-			message._trailing = message._params.back() + " " + item; // Include first word after ':' and the rest
-			break;
-		}
-		else {
 			message._params.push_back(item);
-		}
 	}
 
 	return message;
