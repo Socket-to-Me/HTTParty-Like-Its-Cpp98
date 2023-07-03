@@ -109,6 +109,9 @@ namespace irc {
 			/* get host */
 			const host& get_host(void) const;
 
+			/* get original msg */
+			const std::string& get_raw(void) const;
+
 
 			// -- swap --------------------------------------------------------
 
@@ -140,6 +143,9 @@ namespace irc {
 
 			/* host */
 			host    _host;
+
+			/* raw */
+			std::string _raw;
 
 	};
 

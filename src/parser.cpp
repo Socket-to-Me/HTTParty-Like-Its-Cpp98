@@ -34,6 +34,9 @@ irc::msg irc::parser::parse(const std::string& raw) {
 	std::stringstream ss(raw);
 	std::string item;
 
+	// set raw
+	message._raw = raw;
+
 	// Parse tags
 	if (raw[0] == '@') {
 		std::getline(ss, item, ' ');
