@@ -101,11 +101,11 @@ bool irc::connection::read(void) {
 
 	// check for error
 	if (readed == -1) {
-		irc::log::add_line("Error sending response to client");
+		irc::log::print("Error sending response to client");
 		return false;
 	}
 	else if (readed == 0) {
-		irc::log::add_line("Empty response from client");
+		irc::log::print("Empty response from client");
 		return false;
 	}
 
@@ -120,17 +120,17 @@ bool irc::connection::read(void) {
 bool irc::connection::check_fails(void) {
 	// check for POLLHUP event
 	if (_pfd.revents & POLLHUP) {
-		irc::log::add_line("Client disconnected");
+		irc::log::print("Client disconnected");
 		return true;
 	}
 	// check for POLLERR event
 	if (_pfd.revents & POLLERR) {
-		irc::log::add_line("Error in client connection");
+		irc::log::print("Error in client connection");
 		return true;
 	}
 	// check for POLLNVAL event
 	if (_pfd.revents & POLLNVAL) {
-		irc::log::add_line("Invalid request from client");
+		irc::log::print("Invalid request from client");
 		return true;
 	}
 	// else return false
