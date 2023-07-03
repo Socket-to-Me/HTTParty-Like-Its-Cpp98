@@ -359,7 +359,7 @@ void irc::server::handle_active_connections(void) {
 		// check if connection is active
 		if (it->second.receive() == false) { continue; }
 
-		// irc::log::add_line("receive activity from: " + it->first);
+		if (it->second.check_fails() == true) { _remove_queue.push(&it->second); continue; }
 
 		std::string msg = it->second.extract_message();
 

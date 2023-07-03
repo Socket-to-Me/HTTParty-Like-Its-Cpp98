@@ -67,7 +67,6 @@ bool irc::alive::is_alive(void) {
 		std::string msg = "PING :" + _server_name + "\r\n";
 		// send ping message
 		::send(_fd, msg.c_str(), msg.length(), 0);
-		irc::log::add_line("[alive] ping sent");
 		// update last ping time
 		_last_ping = std::time(0);
 		// update wait pong flag
