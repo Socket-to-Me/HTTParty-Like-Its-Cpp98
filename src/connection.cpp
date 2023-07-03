@@ -88,6 +88,8 @@ bool irc::connection::receive(void) {
 	return false;
 }
 
+
+
 /* read bytes after new connection */
 bool irc::connection::read(void) {
 
@@ -112,6 +114,27 @@ bool irc::connection::read(void) {
 
 	// check for complete message in buffer
 	return check_crlf();
+}
+
+/* check fails */
+bool irc::connection::check_fails(void) {
+	// check for POLLHUP event
+	if (_pfd.revents & POLLHUP) {
+		irc::log::add_line("Client disconnected");
+		return true;
+	}
+	// check for POLLERR event
+	if (_pfd.revents & POLLERR) {
+		irc::log::add_line("Error in client connection");
+		return true;
+	}
+	// check for POLLNVAL event
+	if (_pfd.revents & POLLNVAL) {
+		irc::log::add_line("Invalid request from client");
+		return true;
+	}
+	// else return false
+	return false;
 }
 
 /* send bytes */

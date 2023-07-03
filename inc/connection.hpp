@@ -58,6 +58,9 @@ namespace irc {
 			/* read bytes after new connection */
 			bool read(void);
 
+			/* check fails */
+			bool check_fails(void);
+
 			/* send bytes */
             ssize_t send(const std::string& message) const;
 
