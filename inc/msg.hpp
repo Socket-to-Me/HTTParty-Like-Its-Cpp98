@@ -90,6 +90,9 @@ namespace irc {
 			/* have host */
 			bool have_host(void) const;
 
+			/* have trailing */
+			bool have_trailing(void) const;
+
 
 			/* get tags */
 			const tags& get_tags(void) const;

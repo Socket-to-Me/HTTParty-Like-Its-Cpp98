@@ -88,6 +88,11 @@ bool irc::msg::have_host(void) const {
 	return !_host.empty();
 }
 
+/* have trailing */
+bool irc::msg::have_trailing(void) const {
+	return !_trailing.empty();
+}
+
 
 /* get tags */
 const irc::msg::tags& irc::msg::get_tags(void) const {

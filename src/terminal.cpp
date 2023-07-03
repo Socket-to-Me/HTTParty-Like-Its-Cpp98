@@ -68,18 +68,11 @@ void irc::terminal::setup_raw(void) {
 
 
 	// setup new terminal structure
-	_raw.c_iflag &= ~static_cast<unsigned long>(  IXON   // disable Ctrl-S and Ctrl-Q
-										| ICRNL  // disable Ctrl-M
-	);
+	_raw.c_iflag &= ~static_cast<unsigned long>(IXON);
 
-	_raw.c_lflag &= ~static_cast<unsigned long>(  ECHO   // disable echo
-										| ICANON // non-canonical mode
-										//| ISIG   // disable Ctrl-C and Ctrl-Z
-										| IEXTEN // disable Ctrl-V and Ctrl-O
-	);
+	_raw.c_lflag &= ~static_cast<unsigned long>(ECHO | ICANON);
 
 	_raw.c_cc[VTIME] = 0;
-
 	// VMIN = Minimum number of characters to read
 	_raw.c_cc[VMIN] = 0;
 	// VTIME = Time to wait for data (tenths of seconds)
