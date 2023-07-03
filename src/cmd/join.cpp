@@ -99,13 +99,11 @@ bool irc::join::evaluate(void) {
 
     std::string channel = params[0];
 
-    if (channel[0] != '#') {
+    if (irc::server::instance().isChannelNameValid(channel) == false) {
         _conn.settarget(channel);
         _conn.send(irc::numerics::err_badchanmask_476(_conn));
         return false;
     }
-
-    // Check channel name correct TODO
 
     _channel = channel;
     if (params.size() == 2) {

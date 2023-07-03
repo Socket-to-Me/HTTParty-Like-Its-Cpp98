@@ -28,13 +28,13 @@ bool irc::kick::execute(void) {
     irc::channel&       chan = irc::server::instance().getchannel(_channel);
     irc::connection&    usr = irc::server::instance().getconnection(_user);
     
-    chan.removeUser(usr);
+    chan.kick(_conn, usr);
 
     if (_comment.empty()) { // --- kick without comment
-        user.send(":" + _conn.getnick() + " KICK " + _channel + " " + _user + "\r\n");
+        usr.send(":" + _conn.getnick() + " KICK " + _channel + " " + _user + "\r\n");
 
     } else { // ------------------ kick with comment
-        user.send(":" + _conn.getnick() + " KICK " + _channel + " " + _user + " " + _comment + "\r\n");
+        usr.send(":" + _conn.getnick() + " KICK " + _channel + " " + _user + " " + _comment + "\r\n");
     }
 
     return true;

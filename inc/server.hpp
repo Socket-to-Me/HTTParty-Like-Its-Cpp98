@@ -55,6 +55,7 @@ namespace irc {
 			void newChannel(const std::string&);
 			bool isNickInUse(const std::string&) const;
 			bool isChannelExist(const std::string&) const;
+			bool isChannelNameValid(const std::string& name) const;
 
 			/* unsubscribe client connection */
 			void unsubscribe(irc::connection&);

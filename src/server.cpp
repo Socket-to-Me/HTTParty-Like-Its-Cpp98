@@ -434,3 +434,30 @@ void irc::server::leave_all_channels(irc::connection& conn) {
 		it->second.removeUser(conn);
 	}
 }
+
+/* leave all channels */
+bool irc::server::isChannelNameValid(const std::string& name) const {
+
+    // not empty
+    if (name.length() > 0) {
+        return false;
+    }
+
+    // has leading character (#)
+    if (name[0] != '#') {
+        return false;
+    }
+
+    // no ascii space
+    if (name.find(" ") != std::string::npos) {
+        return false;
+    }
+
+    // is printable
+    for (size_t i=0; i<name.length(); ++i) {
+        if (!isprint(name[i]))
+            return false;
+	}
+
+	return true;
+}
