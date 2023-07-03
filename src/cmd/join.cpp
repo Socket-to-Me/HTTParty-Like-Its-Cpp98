@@ -32,7 +32,6 @@ bool irc::join::execute(void) {
         for (std::map<std::string, irc::channel>::iterator it=cmap.begin(); it!=cmap.end(); ++it) {
          
             it->second.removeUser(_conn);
-            it->second.removeOperator(_conn);
         }
     }
 
@@ -106,7 +105,7 @@ bool irc::join::evaluate(void) {
         return false;
     }
 
-    // Check channel name correct
+    // Check channel name correct TODO
 
     _channel = channel;
     if (params.size() == 2) {

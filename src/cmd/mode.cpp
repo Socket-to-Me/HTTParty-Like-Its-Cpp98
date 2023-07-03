@@ -77,6 +77,7 @@ bool irc::mode::evaluate(void) {
     else { //target is a nickname
 
         if (irc::server::instance().isNickInUse(target) == false) {
+            _conn.settarget(target);
             _conn.send(irc::numerics::err_nosuchnick_401(_conn));
             return false;
         }

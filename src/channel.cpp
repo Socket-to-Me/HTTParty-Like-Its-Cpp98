@@ -178,6 +178,8 @@ void irc::channel::removeUser(irc::connection& conn) {
 			break;
 		}
 	}
+
+	removeOperator(conn);
 }
 
 void irc::channel::removeOperator(irc::connection& conn) {
@@ -196,7 +198,6 @@ void irc::channel::kick(const irc::connection& op, irc::connection& conn) {
 
 	if (isOperator(op)) {
 
-		removeOperator(conn);
 		removeUser(conn);
 
 	}

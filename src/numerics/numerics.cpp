@@ -551,12 +551,12 @@ const std::string& irc::numerics::err_nickcollision_436(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_usernotinchannel_441(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("441 " + conn.getnick() + " " + conn.gettarget() + " " + conn.getchannelname() + " :They aren't on that channel" + "\r\n");
     return conn.getmsg();
 }
 
 const std::string& irc::numerics::err_notonchannel_442(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("442 " + conn.getnick() + " " + conn.gettarget() + " :You're not on that channel" + "\r\n");
     return conn.getmsg();
 }
 
@@ -626,7 +626,7 @@ const std::string& irc::numerics::err_noprivileges_481(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_chanoprivsneeded_482(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("482 " + conn.getnick() + " " + conn.gettarget() + " :You're not channel operator" + "\r\n");
     return conn.getmsg();
 }
 

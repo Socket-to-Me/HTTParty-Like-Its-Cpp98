@@ -52,6 +52,10 @@ namespace irc {
 			const irc::msg& _msg;
 
 			irc::connection& _conn;
+
+			std::string		_channel;
+			std::string		_user;
+			std::string		_comment;
 	};
 
 }

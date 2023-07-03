@@ -432,6 +432,5 @@ void irc::server::leave_all_channels(irc::connection& conn) {
 	for (map_iter it=_channels.begin(); it != _channels.end(); ++it) {
 
 		it->second.removeUser(conn);
-		it->second.removeOperator(conn);
 	}
 }

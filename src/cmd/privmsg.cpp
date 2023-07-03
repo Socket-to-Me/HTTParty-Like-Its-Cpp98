@@ -56,7 +56,7 @@ bool irc::privmsg::evaluate(void) {
     std::string                         target = params.front();
     std::string                         str = _msg.get_trailing();
 
-    if (target[0] == '#') { //target is a channel
+    if (target[0] == '#') { // --- target is a channel
 
         if (irc::server::instance().isChannelExist(target) == false) {
             _conn.settarget(target);
@@ -66,7 +66,7 @@ bool irc::privmsg::evaluate(void) {
 
         _ischannel = true;
     }
-    else { //target is a nickname
+    else { // -------------------- target is a nickname
 
         if (irc::server::instance().isNickInUse(target) == false) {
             _conn.settarget(target);
@@ -76,12 +76,6 @@ bool irc::privmsg::evaluate(void) {
 
         _ischannel = false;
     }
-
-    // // Extract trailing str after ':'
-    // std::size_t pos = str.find(":");
-    // if (pos != std::string::npos) {
-    //     str = str.substr(pos);
-    // }
 
     _target = target;
     _str = str;
