@@ -375,26 +375,30 @@ void irc::server::handle_active_connections(void) {
 		unsubscribe(*conn);
 	}
 
-	// check for dead connections
-	for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
-
-		if (it->second.is_alive() == false) {
-			irc::log::add_line("Connection " + it->first + " is dead.");
-			unsubscribe(it->second);
-			break;
-		}
-	}
+	// // check for dead connections --> is dead and deletes
+	// 
+	// for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
+	// 
+	// 	if (it->second.is_alive() == false) {
+	// 		irc::log::add_line("Connection " + it->first + " is dead.");
+	// 		unsubscribe(it->second);
+	// 		break;
+	// 	}
+	// }
 }
 
 
 /* unsubscribe client connection */
-void irc::server::unsubscribe(const irc::connection& conn) {
+void irc::server::unsubscribe(irc::connection& conn) {
 
 	// remove pollfd
 	remove_pollfd(conn.getfd());
 
 	// close socket
 	close(conn.getfd());
+
+	// remove user from channels
+	leave_all_channels(conn);
 
 	// search for connection in map
 	connection_map::iterator it = _connections.find(conn.getnick());
@@ -409,4 +413,17 @@ void irc::server::add_to_remove_queue(irc::connection& conn) {
 	_remove_queue.push(&conn);
 }
 
+/* leave all channels */
+void irc::server::leave_all_channels(irc::connection& conn) {
 
+    // iterator typedef
+    typedef channel_map::iterator map_iter;
+
+	
+
+	for (map_iter it=_channels.begin(); it != _channels.end(); ++it) {
+		
+		it->second.removeUser(conn);
+		it->second.removeOperator(conn);
+	}
+}

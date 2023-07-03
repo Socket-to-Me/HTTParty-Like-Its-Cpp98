@@ -57,11 +57,13 @@ namespace irc {
 			bool isChannelExist(const std::string&) const;
 
 			/* unsubscribe client connection */
-			void unsubscribe(const irc::connection&);
+			void unsubscribe(irc::connection&);
 
 			/* add to remove queue */
 			void add_to_remove_queue(irc::connection&);
 
+			/* leave all channels */
+			void leave_all_channels(irc::connection&);
 
 			// -- public accessors --------------------------------------------
 
