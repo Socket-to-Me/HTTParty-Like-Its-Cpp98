@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "terminal.hpp"
 #include "logo.hpp"
 
 

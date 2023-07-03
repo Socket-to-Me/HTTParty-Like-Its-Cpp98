@@ -22,6 +22,8 @@ void irc::log::init(void) {
 	std::cout.write("\033[2J", 4);
 	// move cursor to top left
 	std::cout.write("\033[H", 3);
+	// set raw terminal
+	irc::terminal::raw_terminal();
 }
 
 /* exit log */
@@ -30,6 +32,8 @@ void irc::log::exit(void) {
 	std::cout.write("\033[?25h", 6);
 	// close alternative screen buffer
 	std::cout.write("\033[?1049l", 8);
+	// restore original terminal
+	irc::terminal::restore_terminal();
 }
 
 /* add line to log */
@@ -59,6 +63,25 @@ void irc::log::refresh(const std::string& server_name,
 					   const std::string& server_creation,
 					   const std::size_t num_connections) {
 
+
+	static char buff[1024];
+	static std::size_t offset = 0;
+
+
+	int readed = read(STDIN_FILENO, &buff, 1024);
+
+	if (readed == 3) {
+		if (buff[0] == 27) {
+			if (buff[1] == '[') {
+				if (buff[2] == 'A') { offset -= !!offset; }
+				else if (buff[2] == 'B') {
+					offset += (offset < _logs.size() - 1);
+				}
+			}
+		}
+	}
+
+
 	static std::string buffer;
 
 	buffer.clear();
@@ -68,11 +91,11 @@ void irc::log::refresh(const std::string& server_name,
 	// move cursor to top left
 	buffer.append("\033[H", 3);
 	// set color to green
-	buffer.append("\033[32m", 5);
+	//buffer.append("\033[32m", 5);
 	// get logo
-	buffer.append(irc::logo::get());
+	//buffer.append(irc::logo::get());
 	// reset color
-	buffer.append("\033[0m\n", 5);
+	//buffer.append("\033[0m\n", 5);
 
 	// print server name
 	buffer.append(
@@ -107,17 +130,18 @@ void irc::log::refresh(const std::string& server_name,
 			+ " connections\x1b[0m\n\n");
 
 
-	std::size_t i;
+	std::size_t header = 5;
 
-	// print last 3 lines
-	if (_logs.size() > 20) {
-		i = _logs.size() - 20;
-	}
-	else {
-		i = 0;
-	}
+	// get terminal height
+	unsigned short height = 0;
+	unsigned short width = 0;
 
-	for (std::size_t j = i; j < _logs.size(); j++) {
+	irc::terminal::get_terminal_size(width, height);
+
+
+	for (std::size_t j = offset;
+			(j < _logs.size())
+			&& (j < offset + height - header); ++j) {
 		// transform index to string with leading zeros
 		std::string index = to_string(j);
 		while (index.size() < 4) {

@@ -1,4 +1,5 @@
 #include "server.hpp"
+#include "signal.hpp"
 #include "terminal.hpp"
 
 #if defined(__linux__)

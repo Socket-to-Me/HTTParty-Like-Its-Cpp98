@@ -305,8 +305,8 @@ void irc::server::accept_new_connection(void) {
 		irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
 
 		// evaluate command
-		if (cmd->evaluate() == true) { 
-			
+		if (cmd->evaluate() == true) {
+
 			// execute command
 			cmd->execute();
 
@@ -321,7 +321,7 @@ void irc::server::accept_new_connection(void) {
 	if (conn.getnick().length() && conn.getuser().length()) {
 
 		irc::log::print("New connection: " + conn.getnick());
-		
+
 		// Add to connection map
 		conn.init_alive(_networkname);
 		_connections.insert(std::make_pair(conn.getnick(), conn));
