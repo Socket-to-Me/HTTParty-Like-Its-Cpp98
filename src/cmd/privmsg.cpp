@@ -54,7 +54,7 @@ bool irc::privmsg::evaluate(void) {
 
     const std::vector<std::string>&     params = _msg.get_params();
     std::string                         target = params.front();
-    std::string                         str = params.back();
+    std::string                         str = _msg.get_trailing();
 
     if (target[0] == '#') { //target is a channel
 
@@ -77,11 +77,11 @@ bool irc::privmsg::evaluate(void) {
         _ischannel = false;
     }
 
-    // Extract trailing str after ':'
-    std::size_t pos = str.find(":");
-    if (pos != std::string::npos) {
-        str = str.substr(pos);
-    }
+    // // Extract trailing str after ':'
+    // std::size_t pos = str.find(":");
+    // if (pos != std::string::npos) {
+    //     str = str.substr(pos);
+    // }
 
     _target = target;
     _str = str;
