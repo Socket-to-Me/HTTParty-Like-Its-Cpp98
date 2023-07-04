@@ -23,12 +23,65 @@ irc::invite::~invite(void) {
 
 /* execute command */
 bool irc::invite::execute(void) {
-    return false;
+
+    irc::channel& chan = irc::server::instance().getchannel(_channel);
+    irc::connection& usr = irc::server::instance().getconnection(_nick);
+
+	chan.addUser(usr);
+
+    return true;
 }
 
 /* evaluate command */
 bool irc::invite::evaluate(void) {
-    return false;
+
+    const std::vector<std::string>&     params = _msg.get_params();
+
+    if (params.size() < 2) {
+        _conn.settarget(_msg.get_command());
+        _conn.send(irc::numerics::err_needmoreparams_461(_conn));
+        return false;
+    }
+
+    std::string nick = params[0];
+    if (irc::server::instance().isNickInUse(nick) == false) {
+        _conn.settarget(nick);
+        _conn.send(irc::numerics::err_nosuchnick_401(_conn));
+        return false;
+    }
+
+    std::string channel = params[1];
+    if (irc::server::instance().isChannelExist(channel) == false) {
+        _conn.settarget(channel);
+        _conn.send(irc::numerics::err_nosuchchannel_403(_conn));
+        return false;
+    }
+
+    irc::channel& chan = irc::server::instance().getchannel(channel);
+    if (chan.isConnection(_conn) == false) {
+        _conn.settarget(channel);
+        _conn.send(irc::numerics::err_notonchannel_442(_conn));
+        return false;
+    }
+    if (chan.isOperator(_conn) == false) {
+        _conn.settarget(channel);
+        _conn.send(irc::numerics::err_chanoprivsneeded_482(_conn));
+        return false;
+    }
+
+    irc::connection& usr = irc::server::instance().getconnection(nick);
+
+    if (chan.isConnection(usr) == true) {
+        _conn.settarget(nick);
+        _conn.setchannelname(channel);
+        _conn.send(irc::numerics::err_useronchannel_443(_conn));
+        return false;
+    }
+
+    _channel = channel;
+    _nick = nick;
+
+    return true;
 }
 
 /* create command */

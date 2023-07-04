@@ -65,8 +65,8 @@ bool irc::kick::evaluate(void) {
         return false;
     }
 
-    irc::channel&       chan = irc::server::instance().getchannel(_channel);
-    irc::connection&    usr = irc::server::instance().getconnection(_user);
+    irc::channel&       chan = irc::server::instance().getchannel(channel);
+    irc::connection&    usr = irc::server::instance().getconnection(user);
 
     if (chan.isConnection(usr) == false) {
         _conn.settarget(user);
