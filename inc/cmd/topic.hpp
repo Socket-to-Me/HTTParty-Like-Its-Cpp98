@@ -52,6 +52,7 @@ namespace irc {
 			irc::connection& 	_conn;
 
 			std::string			_channel;
+			std::string			_topic;
 
 	};
 
