@@ -351,7 +351,7 @@ const std::string& irc::numerics::rpl_whoisactually_338(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_inviting_341(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("341 " + conn.getnick() + " " + conn.getchannelname() + "\r\n");
     return conn.getmsg();
 }
 
@@ -591,7 +591,7 @@ const std::string& irc::numerics::err_yourebannedcreep_465(irc::connection& conn
 }
 
 const std::string& irc::numerics::err_channelisfull_471(irc::connection& conn) {
-    conn.setmsg("471 " + conn.gettarget() + " :Bad Channel Mask" + "\r\n");
+    conn.setmsg("471 " + conn.getnick() + " " + conn.gettarget() + " :Cannot join channel (+l)" + "\r\n");
     return conn.getmsg();
 }
 
@@ -616,7 +616,7 @@ const std::string& irc::numerics::err_badchannelkey_475(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_badchanmask_476(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("476 " + conn.gettarget() + " :Bad Channel Mask" + "\r\n");
     return conn.getmsg();
 }
 

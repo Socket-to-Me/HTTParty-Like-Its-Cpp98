@@ -29,6 +29,9 @@ bool irc::invite::execute(void) {
 
 	chan.addUser(usr);
 
+    _conn.send(irc::numerics::rpl_inviting_341(_conn));
+    chan.broadcast(":" + _conn.getnick() + " INVITE " + _nick + " " + _channel + "\r\n");
+
     return true;
 }
 

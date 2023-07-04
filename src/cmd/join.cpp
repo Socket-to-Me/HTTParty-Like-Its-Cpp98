@@ -21,21 +21,13 @@ bool irc::join::execute(void)
 {
 
     // Leave all channels
-    if (_channel == "#0")
-    {
-
-        std::map<std::string, irc::channel> &cmap = irc::server::instance().getchannels();
-
-        for (std::map<std::string, irc::channel>::iterator it = cmap.begin(); it != cmap.end(); ++it)
-        {
-
-            it->second.removeUser(_conn);
-        }
+    if (_channel == "#0") {
+        irc::server::instance().leave_all_channels(_conn);
     }
 
     // Join a channel
     if (irc::server::instance().isChannelExist(_channel) == false)
-    { // new channel
+    { // ------------------------------------------------------ new channel
 
         irc::server::instance().newChannel(_channel);
         irc::channel &channel = irc::server::instance().getchannel(_channel);
@@ -43,49 +35,43 @@ bool irc::join::execute(void)
         channel.addUser(_conn);
         channel.addOperator(_conn);
 
-        if (!_password.empty())
-        { // -------- set password
+        if (!_password.empty()) { // --- set password
 
             channel.set_mode_channel_key(true);
             channel.setkey(_conn, _password);
         }
-    }
-    else
-    { // ----------------------------------------------------- existing channel
+
+    } else { // ----------------------------------------------- existing channel
 
         irc::channel &channel = irc::server::instance().getchannel(_channel);
 
         if (channel.is_mode_channel_key())
-        { // ---------- private
+        { // ---------------------------------------- private channel
 
-            if (channel.checkPassword(_password))
-            {
+            if (channel.checkPassword(_password)) {
 
                 channel.addUser(_conn);
-            }
-            else
-            { // ------------- wrong password
+
+            } else { // -------------- wrong password
 
                 _conn.settarget(_channel);
                 _conn.send(irc::numerics::err_badchannelkey_475(_conn));
                 return false;
             }
-        }
-        else
-        { // -------------------------------------- public
+
+        } else { // --------------------------------- public channel
 
             channel.addUser(_conn);
         }
+
+        channel.broadcast(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
     }
 
     // replies
     _conn.setchannelname(_channel);
-    _conn.send(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
     _conn.send(irc::numerics::rpl_topic_332(_conn));
     _conn.send(irc::numerics::rpl_namreply_353(_conn));
     _conn.send(irc::numerics::rpl_endofnames_366(_conn));
-
-    // need to broadcast to all connections when new join ? -- TODO
 
     return true;
 }
