@@ -94,7 +94,7 @@ bool irc::connection::dead_routine(void) {
 		if ((std::time(0) - _last_ping) > 10) {
 			// set not alive
 			_alive = false;
-			irc::log::add_line("Connection " + std::to_string(_pfd.fd) + " is dead. 💀");
+			//irc::log::add_line("Connection " + std::to_string(_pfd.fd) + " is dead. 💀");
 			return true;
 		}
 	}
@@ -113,7 +113,7 @@ bool irc::connection::dead_routine(void) {
 
 /* reset counter */
 void irc::connection::pong(void) {
-	irc::log::add_line("Connection " + std::to_string(_pfd.fd) + " is alive. 🤖");
+	//irc::log::add_line("Connection " + std::to_string(_pfd.fd) + " is alive. 🤖");
 	_wait_pong = false;
 	_last_ping = std::time(0);
 }
