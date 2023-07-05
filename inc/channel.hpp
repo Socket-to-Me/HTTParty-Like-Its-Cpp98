@@ -45,7 +45,7 @@ namespace irc {
 			// -- public methods ----------------------------------------------
             void  setname(const irc::connection& op, const std::string& str);
             void  settopic(const irc::connection& op, const std::string& str);
-            void  setmode(const irc::connection& op, const std::vector<std::string>& params);
+            bool  setmode(const irc::connection& op, const std::vector<std::string>& params);
             void  setkey(const irc::connection& op, const std::string& str);
 
 			void addOperator(irc::connection& conn);
@@ -88,6 +88,7 @@ namespace irc {
 			std::string						_name;
 			std::string						_topic;
 			std::string						_key;
+			size_t							_limit;
 			std::vector<irc::connection*>	_operators;
 			std::vector<irc::connection*>	_connections;
 
@@ -104,12 +105,6 @@ namespace irc {
 
 			// +k (Channel key): This mode enables setting a password or key that clients must provide to join the channel. Clients without the correct key will be unable to enter.
 			bool	_mode_channel_key;
-
-			// +o (Operator privileges): This mode grants operator privileges to specific clients. Operators have elevated permissions and can perform certain administrative actions within the channel, such as kicking or banning clients.
-			bool	_mode_operator_privileges;
-
-			// +b (Ban): The ban mode allows channel operators to ban specific clients from the channel. Banned clients are prevented from joining the channel until the ban is lifted.
-			bool	_mode_ban;
 
     };
 }

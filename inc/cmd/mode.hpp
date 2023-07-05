@@ -1,7 +1,6 @@
 #ifndef MODE_HPP
 # define MODE_HPP
 
-# include "server.hpp"
 # include "numerics.hpp"
 # include "auto_ptr.hpp"
 # include "cmd.hpp"
@@ -55,6 +54,7 @@ namespace irc {
 			const irc::msg& _msg;
 			irc::connection& _conn;
 			std::string	_target;
+			std::string	_modestring;
 			bool		_ischannel;
 
 	};

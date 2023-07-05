@@ -34,8 +34,14 @@ bool irc::mode::execute(void) {
 
         } else { // -------------------- change modes
             irc::channel&   channel = irc::server::instance().getchannel(_target);
-            channel.setmode(_conn, params);
-            _conn.send(":" + _conn.getnick() + " MODE " + _target + " " + params[1] + "\r\n");
+            
+            channel.broadcast(":" + _conn.getnick() + " MODE " + _target + " " + _modestring + "\r\n");
+            
+            if (channel.setmode(_conn, params) == false) {
+                _conn.send(irc::numerics::err_umodeunknownflag_501(_conn));
+                return false;
+            }
+
         }
     }
     else { // --------------------------------- user mode
@@ -44,7 +50,7 @@ bool irc::mode::execute(void) {
             _conn.send(irc::numerics::rpl_umodeis_221(_conn));
 
         } else { // -------------------- no modes for users
-            _conn.settarget(params[1]);
+            _conn.settarget(_modestring);
             _conn.send(irc::numerics::err_unknownmode_472(_conn));
         }
     }
@@ -65,6 +71,7 @@ bool irc::mode::evaluate(void) {
     }
 
     std::string target = params[0];
+    std::string modestring;
 
     if (target[0] == '#') { //----------------- channel mode
 
@@ -73,16 +80,24 @@ bool irc::mode::evaluate(void) {
             return false;
         }
 
+        irc::channel&   channel = irc::server::instance().getchannel(_target);
+
+        if (channel.isOperator(_conn) == false) {
+            _conn.settarget(channel);
+            _conn.send(irc::numerics::err_chanoprivsneeded_482(_conn));
+            return false;
+        }
+
         if (params.size() > 1) {
             
-            irc::channel&   channel = irc::server::instance().getchannel(_target);
+            modestring = params[1];
 
-            if (channel.check_modestring(params[1]) == false) {
-                _conn.settarget(params[1]);
+            if (channel.check_modestring(modestring) == false) {
+                _conn.settarget(modestring);
                 _conn.send(irc::numerics::err_unknownmode_472(_conn));
                 return false;
             }
-
+            
         }
 
         _ischannel = true;
@@ -104,6 +119,8 @@ bool irc::mode::evaluate(void) {
     }
 
     _target = target;
+    _modestring = modestring;
+
     return true;
 }
 

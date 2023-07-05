@@ -60,7 +60,7 @@ std::string  irc::channel::getconnectionsasstr(void) const {
 
 const std::string irc::channel::getmode(void) const {
 
-    std::string mode;
+    std::string mode = "+o";
 
     if (_mode_invite_only)
         mode += "i";
@@ -70,14 +70,8 @@ const std::string irc::channel::getmode(void) const {
         mode += "l";
     if (_mode_channel_key)
         mode += "k";
-    if (_mode_operator_privileges)
-        mode += "o";
-    if (_mode_ban)
-        mode += "b";
 
-    if (mode.size())
-        return mode.insert(0, "+");
-    return "";
+    return mode;
 }
 
 void  irc::channel::setname(const irc::connection& op, const std::string& str) {
@@ -98,9 +92,10 @@ void  irc::channel::settopic(const irc::connection& op, const std::string& str) 
 	return;
 }
 
-void  irc::channel::setmode(const irc::connection& op, const std::vector<std::string>& params) {
+bool  irc::channel::setmode(const irc::connection& op, const std::vector<std::string>& params) {
     
 	std::string modestring = params[0];
+	const std::vector<std::string>& args = std::vector<std::string>(params.begin() + 1, params.end());
 
     if (isOperator(op)) {
 
@@ -127,15 +122,52 @@ void  irc::channel::setmode(const irc::connection& op, const std::vector<std::st
 						break;
 
 					case 'k':
-						_mode_channel_key = setting; //TODO WITH ARG
+
+						if (setting == false) {
+							_key.clear();
+							_mode_channel_key = false;
+						
+						} else {
+							std::string	key = args[0];
+							_key = key;
+							_mode_channel_key = true;
+
+						}
 						break;
 
 					case 'o':
-						_mode_operator_privileges = setting; //TODO WITH ARG
+						
+						for (std::vector<std::string>::const_iterator it = args.begin(); it != args.end(); ++it) {
+
+							if (irc::server::instance().isNickInUse(*it)) {
+
+								irc::connection& conn = irc::server::instance().getconnection(*it);
+								
+								if (setting == true) {
+									addOperator(conn);
+
+								} else {
+									removeOperator(conn);
+								}
+
+							} else {
+								return false;
+							}
+						}
 						break;
 
 					case 'l':
-						_mode_user_limit = setting;
+
+						if (setting == false) {
+							_limit = 0;
+							_mode_user_limit = false;
+						
+						} else {
+							std::string	limit = args[0];
+							std::istringstream iss(limit);
+							iss >> _limit;
+							_mode_user_limit = true;
+						}
 						break;
 
 					default:
@@ -146,7 +178,7 @@ void  irc::channel::setmode(const irc::connection& op, const std::vector<std::st
 
     }
 
-    return;
+    return true;
 }
 
 bool irc::channel::check_modestring(const std::string& str) const {
