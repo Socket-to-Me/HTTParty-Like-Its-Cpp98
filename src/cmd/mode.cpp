@@ -83,7 +83,7 @@ bool irc::mode::evaluate(void) {
         irc::channel&   channel = irc::server::instance().getchannel(_target);
 
         if (channel.isOperator(_conn) == false) {
-            _conn.settarget(channel);
+            _conn.settarget(_target);
             _conn.send(irc::numerics::err_chanoprivsneeded_482(_conn));
             return false;
         }

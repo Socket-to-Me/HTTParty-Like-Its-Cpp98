@@ -1,4 +1,5 @@
 #include "channel.hpp"
+#include "server.hpp"
 
 // -- public constructors -----------------------------------------
 
@@ -354,15 +355,53 @@ bool irc::channel::send(const std::string& nick, const std::string& msg) {
 	return true;
 }
 
-void irc::channel::set_mode_channel_key(bool val) {
 
-	_mode_channel_key = val;
+// --------------------------------------------------
+
+bool irc::channel::is_mode_invite_only(void) {
+
+	return _mode_invite_only;
+}
+
+bool irc::channel::is_mode_topic_restricted(void) {
+
+	return _mode_topic_restricted;
+}
+
+bool irc::channel::is_mode_user_limit(void) {
+
+	return _mode_user_limit;
 }
 
 bool irc::channel::is_mode_channel_key(void) {
 
 	return _mode_channel_key;
 }
+
+// --------------------------------------------------
+
+void irc::channel::set_mode_invite_only(bool setting) {
+
+	_mode_invite_only = setting;
+}
+
+void irc::channel::set_mode_topic_restricted(bool setting) {
+
+	_mode_topic_restricted = setting;
+}
+
+void irc::channel::set_mode_user_limit(bool setting) {
+
+	_mode_user_limit = setting;
+}
+
+void irc::channel::set_mode_channel_key(bool setting) {
+
+	_mode_channel_key = setting;
+}
+
+
+// --------------------------------------------------
 
 std::string irc::channel::getsymbol(void) const {
 

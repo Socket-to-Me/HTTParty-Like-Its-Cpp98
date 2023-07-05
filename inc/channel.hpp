@@ -64,8 +64,16 @@ namespace irc {
 			bool isConnection(const irc::connection& conn) const;
 			bool isOperator(const irc::connection& op) const;
 
-			void set_mode_channel_key(bool val);
+			bool is_mode_invite_only(void);
+			bool is_mode_topic_restricted(void);
+			bool is_mode_user_limit(void);
 			bool is_mode_channel_key(void);
+
+			void set_mode_invite_only(bool);
+			void set_mode_topic_restricted(bool);
+			void set_mode_user_limit(bool);
+			void set_mode_channel_key(bool);
+
 
 			std::string getsymbol(void) const;
 
