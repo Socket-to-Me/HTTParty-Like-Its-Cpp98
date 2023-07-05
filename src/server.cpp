@@ -72,29 +72,23 @@ void irc::server::start(const std::string &ip, int port) {
 						  _creation,
 						  _pollfds.size() - 1);
 
-        // pollCount = # fds where events were detected
-        // (ptr to array of pollfd strcuts, # elem in array, timeout of 60s)
+		// get number of events
         int pollCount = poll(&_pollfds[0], _pollfds.size(), 0);
 
-        if (pollCount == -1) {
+		if (pollCount == -1) {
 			if (errno == EINTR) { break; }
 			else {
 				irc::log::add_line("server poll error");
 				break;
 			}
 		}
+		else if (pollCount > 0) {
 
-        //if (pollCount == 0) {
-          //  std::cout << "irc::server > poll timeout" << std::endl;
-           // continue; }
-
-		// check server listening socket for recent events
-		if (_pollfds[0].revents & POLLIN) {
+			// check server listening socket for recent events
 			accept_new_connection();
+			// check client sockets for new events
+			handle_active_connections();
 		}
-
-        // check client sockets for new events
-        handle_active_connections();
 
 		usleep(100000);
     }
@@ -113,8 +107,7 @@ void irc::server::stop(void) {
 
 
 /* send message to one client */
-void irc::server::send(irc::connection &conn, const std::string &message)
-{
+void irc::server::send(irc::connection &conn, const std::string &message) {
     // TODO
 }
 
@@ -280,71 +273,80 @@ int irc::server::setup_client_socket(void) const {
 /* accept new pollfd connection */
 void irc::server::accept_new_connection(void) {
 
-	int clientSocket = setup_client_socket();
+	// check for poll errors
+	if ((_pollfds[0].revents & POLLERR)
+	 || (_pollfds[0].revents & POLLHUP)
+	 || (_pollfds[0].revents & POLLNVAL)) { return; }
 
-	// check for valid socket
-	if (clientSocket == -1) { return; };
+		if (_pollfds[0].revents & POLLIN) {
 
-	irc::log::add_line("New client connected.");
 
-	add_pollfd(clientSocket);
-	irc::connection conn(_pollfds.back());
 
-	conn.read();
-	std::string msg;
+		int clientSocket = setup_client_socket();
 
-	do {
+		// check for valid socket
+		if (clientSocket == -1) { return; };
 
-		msg = conn.extract_message();
+		irc::log::add_line("New client connected.");
 
-		irc::msg message = irc::parser::parse(msg);
+		add_pollfd(clientSocket);
+		irc::connection conn(_pollfds.back());
 
-		if (message.have_command() == false) { continue; }
+		conn.read();
+		std::string msg;
 
-		irc::log::add_line("msg: " + msg);
+		do {
 
-		// search for command
-		irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
+			msg = conn.extract_message();
 
-		// check for invalid command
-		if (!maker) { irc::log::add_line("Command not found."); continue; }
+			irc::msg message = irc::parser::parse(msg);
 
-		// instantiate new command
-		irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
+			if (message.have_command() == false) { continue; }
 
-		// evaluate command
-		if (cmd->evaluate() == true) {
+			irc::log::add_line("msg: " + msg);
 
-			// execute command
-			cmd->execute();
+			// search for command
+			irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
 
-		} else {
+			// check for invalid command
+			if (!maker) { irc::log::add_line("Command not found."); continue; }
 
-			irc::log::add_line("Command evaluation failed.");
+			// instantiate new command
+			irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
+
+			// evaluate command
+			if (cmd->evaluate() == true) {
+
+				// execute command
+				cmd->execute();
+
+			} else {
+
+				irc::log::add_line("Command evaluation failed.");
+			}
+
+		} while (msg.size() > 0);
+
+
+		if (conn.getnick().length() && conn.getuser().length()) {
+
+			irc::log::print("New connection: " + conn.getnick());
+
+			// Add to connection map
+			_connections.insert(std::make_pair(conn.getnick(), conn));
+
+			// Registration greeting
+			conn.send(irc::numerics::rpl_welcome_001(conn));
+			conn.send(irc::numerics::rpl_yourhost_002(conn));
+			conn.send(irc::numerics::rpl_created_003(conn));
+			conn.send(irc::numerics::rpl_myinfo_004(conn));
+			conn.send(irc::numerics::rpl_isupport_005(conn));
+
+		} else { // Failure to set up new connection with unique nick
+
+			close(clientSocket);
+			_pollfds.pop_back();
 		}
-
-	} while (msg.size() > 0);
-
-
-	if (conn.getnick().length() && conn.getuser().length()) {
-
-		irc::log::print("New connection: " + conn.getnick());
-
-		// Add to connection map
-		conn.init_alive(_networkname);
-		_connections.insert(std::make_pair(conn.getnick(), conn));
-
-		// Registration greeting
-		conn.send(irc::numerics::rpl_welcome_001(conn));
-		conn.send(irc::numerics::rpl_yourhost_002(conn));
-		conn.send(irc::numerics::rpl_created_003(conn));
-		conn.send(irc::numerics::rpl_myinfo_004(conn));
-		conn.send(irc::numerics::rpl_isupport_005(conn));
-
-	} else { // Failure to set up new connection with unique nick
-
-		close(clientSocket);
-		_pollfds.pop_back();
 	}
 }
 
@@ -356,10 +358,12 @@ void irc::server::handle_active_connections(void) {
     /* loop over all connections */
     for (map_iter it = _connections.begin(); it != _connections.end(); ++it) {
 
+		if (it->second.check_fails()  == true
+		 || it->second.dead_routine() == true) { _remove_queue.push(&it->second); continue; }
+
 		// check if connection is active
 		if (it->second.receive() == false) { continue; }
 
-		if (it->second.check_fails() == true) { _remove_queue.push(&it->second); continue; }
 
 		std::string msg = it->second.extract_message();
 
@@ -383,16 +387,15 @@ void irc::server::handle_active_connections(void) {
 		unsubscribe(*conn);
 	}
 
-	// // check for dead connections --> is dead and deletes
-	//
-	// for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
-	//
-	// 	if (it->second.is_alive() == false) {
-	// 		irc::log::add_line("Connection " + it->first + " is dead.");
-	// 		unsubscribe(it->second);
-	// 		break;
-	// 	}
-	// }
+	// check for dead connections --> is dead and deletes
+	//for (map_iter it=_connections.begin(); it!=_connections.end(); ++it) {
+
+	//	if (it->second.is_alive() == false) {
+	//		irc::log::add_line("Connection " + it->first + " is dead. 💀");
+	//		unsubscribe(it->second);
+	//		break;
+	//	}
+	//}
 }
 
 

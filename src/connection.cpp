@@ -15,7 +15,9 @@ irc::connection::connection(struct pollfd& pfd)
   _password(""),
   _channelname(""),
   _registered(false),
-  _alive(pfd.fd) {
+  _wait_pong(false),
+  _last_ping(0),
+  _alive(true) {
 	return;
 }
 
@@ -29,8 +31,9 @@ irc::connection::connection(const irc::connection& other)
   _password(other._password),
   _channelname(other._channelname),
   _registered(other._registered),
+  _wait_pong(other._wait_pong),
+  _last_ping(other._last_ping),
   _alive(other._alive) {
-	return;
 }
 
 /* destructor */
@@ -47,15 +50,17 @@ irc::connection& irc::connection::operator=(const irc::connection& other) {
 	// check for self-assignment
 	if (this != &other) {
 		// assign members
-		        _pfd = other.getpfd();
-		     _buffer = other.getbuffer();
-		        _msg = other.getmsg();
-		       _nick = other.getnick();
-		       _user = other.getuser();
-		   _password = other.getpassword();
-		_channelname = other.getchannelname();
-		 _registered = other.is_registered();
-		     _alive = other._alive;
+		        _pfd = other._pfd;
+		     _buffer = other._buffer;
+		        _msg = other._msg;
+		       _nick = other._nick;
+		       _user = other._user;
+		   _password = other._password;
+		_channelname = other._channelname;
+		 _registered = other._registered;
+		  _wait_pong = other._wait_pong;
+		  _last_ping = other._last_ping;
+		      _alive = other._alive;
 	} // return self-reference
 	return *this;
 }
@@ -65,18 +70,53 @@ irc::connection& irc::connection::operator=(const irc::connection& other) {
 
 /* equality operator */
 bool irc::connection::operator==(const irc::connection& other) const {
-    return _pfd.fd == other.getfd()
-		&& _pfd.events == other.getevents()
-		&& _pfd.revents == other.getrevents()
-		&& _buffer == other.getbuffer()
-		&& _msg == other.getmsg()
-		&& _nick == other.getnick()
-		&& _password == other.getpassword()
-		&& _channelname == other.getchannelname();
+    return _pfd.fd == other._pfd.fd
+		&& _pfd.events == other._pfd.events
+		&& _pfd.revents == other._pfd.revents
+		&& _buffer == other._buffer
+		&& _msg == other._msg
+		&& _nick == other._nick
+		&& _password == other._password
+		&& _channelname == other._channelname;
 }
 
 
 // -- public methods ----------------------------------------------------------
+
+
+
+/* dead routine */
+bool irc::connection::dead_routine(void) {
+
+	// check if waiting for pong
+	if (_wait_pong == true) {
+		// check if timeout
+		if ((std::time(0) - _last_ping) > 10) {
+			// set not alive
+			_alive = false;
+			irc::log::add_line("Connection " + std::to_string(_pfd.fd) + " is dead. 💀");
+			return true;
+		}
+	}
+
+	// check if time to ping
+	else if ((std::time(0) - _last_ping) > 10) {
+		// send ping message
+		send("PING :httparty.like.its.98\r\n");
+		// update last ping time
+		_last_ping = std::time(0);
+		// update wait pong flag
+		_wait_pong = true;
+	}
+	return false;
+}
+
+/* reset counter */
+void irc::connection::pong(void) {
+	irc::log::add_line("Connection " + std::to_string(_pfd.fd) + " is alive. 🤖");
+	_wait_pong = false;
+	_last_ping = std::time(0);
+}
 
 /* receive bytes */
 bool irc::connection::receive(void) {
@@ -118,6 +158,7 @@ bool irc::connection::read(void) {
 
 /* check fails */
 bool irc::connection::check_fails(void) {
+
 	// check for POLLHUP event
 	if (_pfd.revents & POLLHUP) {
 		irc::log::print("Client disconnected");
@@ -188,15 +229,11 @@ std::string irc::connection::extract_message(void) {
 	return "";
 }
 
-/* init alive */
-void irc::connection::init_alive(const std::string& server_name) {
-	_alive.set_server_name(server_name);
+/* is alive */
+bool irc::connection::is_alive(void) const {
+	return _alive;
 }
 
-/* pong */
-void irc::connection::pong(void) {
-	_alive.pong();
-}
 
 
 // -- public accessors --------------------------------------------------------
@@ -262,10 +299,6 @@ bool irc::connection::is_registered(void) const {
 	return _registered;
 }
 
-/* is alive */
-bool irc::connection::is_alive(void) {
-	return _alive.is_alive();
-}
 
 
 // S E T T E R S ---------

@@ -44,7 +44,7 @@ void irc::log::add_line(const std::string& line) {
 	std::ofstream out("log.txt", std::ios_base::app);
     out << line;
     out << "\n";
-    out.close(); 
+    out.close();
 }
 
 /* print */
@@ -130,6 +130,7 @@ void irc::log::refresh(const std::string& server_name,
 			+ " connections\x1b[0m\n\n");
 
 
+	// previous line count
 	std::size_t header = 5;
 
 	// get terminal height

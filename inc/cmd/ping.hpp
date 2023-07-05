@@ -36,6 +36,9 @@ namespace irc {
             /* create command */
             static irc::auto_ptr<irc::cmd> create(const irc::msg&, irc::connection&);
 
+			/* send */
+			static void send(irc::connection&);
+
 		private:
 
 			// -- N O N - C O P Y A B L E  C L A S S --------------------------

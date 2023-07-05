@@ -70,11 +70,6 @@ namespace irc {
 			/* extract message */
 			std::string extract_message(void);
 
-			/* init alive */
-			void init_alive(const std::string&);
-
-			/* pong */
-			void pong(void);
 
 
 			// -- public accessors --------------------------------------------
@@ -113,8 +108,6 @@ namespace irc {
 			/* is registered */
 			bool is_registered(void) const;
 
-			/* is alive */
-			bool is_alive(void);
 
 
 			// -- public setters ----------------------------------------------
@@ -137,6 +130,16 @@ namespace irc {
 
 			/* register client */
 			void register_client(void);
+
+
+			/* dead routine */
+			bool dead_routine(void);
+
+			/* is alive */
+			bool is_alive(void) const;
+
+			/* pong */
+			void pong(void);
 
 
 
@@ -183,8 +186,14 @@ namespace irc {
 			/* registered */
 			bool _registered;
 
+			/* waiting for pong flag */
+			bool _wait_pong;
+
+			/* last ping time */
+			time_t _last_ping;
+
 			/* alive */
-			irc::alive _alive;
+			bool _alive;
 
     };
 }
