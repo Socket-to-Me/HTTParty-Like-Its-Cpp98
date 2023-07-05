@@ -73,7 +73,7 @@ void irc::server::start(const std::string &ip, int port) {
 						  _pollfds.size() - 1);
 
 		// get number of events
-        int pollCount = poll(&_pollfds[0], _pollfds.size(), 0);
+        int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
 
 		if (pollCount == -1) {
 			if (errno == EINTR) { break; }
@@ -81,14 +81,12 @@ void irc::server::start(const std::string &ip, int port) {
 				irc::log::add_line("server poll error");
 				break;
 			}
+			continue;
 		}
-		else if (pollCount > 0) {
-
-			// check server listening socket for recent events
-			accept_new_connection();
-			// check client sockets for new events
-			handle_active_connections();
-		}
+		// check server listening socket for recent events
+		accept_new_connection();
+		// check client sockets for new events
+		handle_active_connections();
 
 		usleep(100000);
     }
