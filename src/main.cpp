@@ -13,6 +13,12 @@
 
 int main(int ac, char** av) {
 
+	/*if (ac != 1) {
+		std::cerr << "Usage: " << av[0] << std::endl;
+		return EXIT_FAILURE;
+	}*/
+
+
 	irc::server& server = irc::server::instance();
 
 	irc::signal signal;
