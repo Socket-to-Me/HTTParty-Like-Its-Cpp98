@@ -140,13 +140,14 @@ void irc::log::refresh(const std::string& server_name,
 
 	std::size_t offset = 0;
 
-	//if (q
+	if (_logs.size() > 20) {
+		offset = _logs.size() - 20;
+	}
 
-
-	// print 20 last vectors lines
-	for (std::size_t j = 0;
+	// loop over logs
+	for (std::size_t j = offset;
 			(j < _logs.size())
-			&& (j < 20); ++j) {
+			&& (j < offset + 20 - header); ++j) {
 		// transform index to string with leading zeros
 		std::string index = to_string(j);
 		while (index.size() < 4) {
@@ -156,9 +157,10 @@ void irc::log::refresh(const std::string& server_name,
 		// add index to buffer
 		buffer.append(index);
 		buffer.append(" > ");
-		buffer.append(_logs[_logs.size() - j - 1]);
+		buffer.append(_logs[j]);
 		buffer.push_back('\n');
 	}
+
 
 	//irc::terminal::get_terminal_size(width, height);
 
