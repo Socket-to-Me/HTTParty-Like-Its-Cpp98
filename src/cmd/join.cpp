@@ -35,7 +35,7 @@ bool irc::join::execute(void)
         channel.addUser(_conn);
         channel.addOperator(_conn);
 
-        if (!_password.empty()) { // --- set password
+        if (_password.empty() == false) { // --- set password
 
             channel.set_mode_channel_key(true);
             channel.setkey(_conn, _password);
@@ -79,30 +79,26 @@ bool irc::join::execute(void)
 /* evaluate command */
 bool irc::join::evaluate(void)
 {
-
-    const std::vector<std::string> &params = _msg.get_params();
-
-    if (params.size() == 0)
-    {
+    if (_msg.have_params() == false) {
         _conn.settarget(_msg.get_command());
         _conn.send(irc::numerics::err_needmoreparams_461(_conn));
         return false;
     }
 
+    const std::vector<std::string> &params = _msg.get_params();
     std::string channel = params[0];
 
-    if (irc::server::instance().isChannelNameValid(channel) == false)
-    {
+    if (irc::server::instance().isChannelNameValid(channel) == false) {
         _conn.settarget(channel);
         _conn.send(irc::numerics::err_badchanmask_476(_conn));
         return false;
     }
 
     _channel = channel;
-    if (params.size() == 2)
-    {
+    if (params.size() == 2) {
         _password = params[1];
     }
+
     return true;
 }
 
