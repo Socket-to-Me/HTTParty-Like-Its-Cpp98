@@ -20,6 +20,8 @@ irc::join::~join(void)
 bool irc::join::execute(void)
 {
 
+	std::cout << "EXECUTE JOIN" << std::endl;
+
     // Leave all channels
     if (_channel == "#0") {
         irc::server::instance().leave_all_channels(_conn);
@@ -73,12 +75,16 @@ bool irc::join::execute(void)
     _conn.send(irc::numerics::rpl_namreply_353(_conn));
     _conn.send(irc::numerics::rpl_endofnames_366(_conn));
 
+	std::cout << "EXECUTE JOIN END" << std::endl;
+
     return true;
 }
 
 /* evaluate command */
 bool irc::join::evaluate(void)
 {
+
+	std::cout << "EVALUATE JOIN" << std::endl;
 
     const std::vector<std::string> &params = _msg.get_params();
 
@@ -103,6 +109,10 @@ bool irc::join::evaluate(void)
     {
         _password = params[1];
     }
+
+
+	std::cout << "EVALUATE JOIN END" << std::endl;
+
     return true;
 }
 
