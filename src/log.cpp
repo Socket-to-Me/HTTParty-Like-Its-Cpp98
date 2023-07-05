@@ -135,8 +135,8 @@ void irc::log::refresh(const std::string& server_name,
 	std::size_t header = 5;
 
 	// get terminal height
-	unsigned short height = 0;
-	unsigned short width = 0;
+	//unsigned short height = 0;
+	//unsigned short width = 0;
 
 	std::size_t offset = 0;
 
@@ -145,9 +145,7 @@ void irc::log::refresh(const std::string& server_name,
 	}
 
 	// loop over logs
-	for (std::size_t j = offset;
-			(j < _logs.size())
-			&& (j < offset + 20 - header); ++j) {
+	for (std::size_t j = offset; j < _logs.size(); ++j) {
 		// transform index to string with leading zeros
 		std::string index = to_string(j);
 		while (index.size() < 4) {
