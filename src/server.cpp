@@ -73,7 +73,7 @@ void irc::server::start(const std::string &ip, int port) {
 						  _pollfds.size() - 1);
 
 		// get number of events
-        int pollCount = poll(&_pollfds[0], _pollfds.size(), 0);
+        int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
 
 		if (pollCount == -1) {
 			if (errno == EINTR) { break; }
@@ -81,14 +81,12 @@ void irc::server::start(const std::string &ip, int port) {
 				irc::log::add_line("server poll error");
 				break;
 			}
+			continue;
 		}
-		else if (pollCount > 0) {
-
-			// check server listening socket for recent events
-			accept_new_connection();
-			// check client sockets for new events
-			handle_active_connections();
-		}
+		// check server listening socket for recent events
+		accept_new_connection();
+		// check client sockets for new events
+		handle_active_connections();
 
 		usleep(100000);
     }
@@ -195,8 +193,7 @@ const std::string&	irc::server::getchannelmodes(void) const {
 // -- P R I V A T E  M E T H O D S ----------------------------------------------
 
 /* setup socket */
-int irc::server::setupSocket(const std::string &ip, int port)
-{
+int irc::server::setupSocket(const std::string &ip, int port) {
 
     _socket = ::socket(AF_INET, SOCK_STREAM, 0);
     if (_socket == -1) {
@@ -208,7 +205,7 @@ int irc::server::setupSocket(const std::string &ip, int port)
 	// Enable reuse of the address.
     int yes = 1;
 	if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
-        std::cout << "Failed to set socket options." << std::endl;
+		perror("error: setsockopt");
         return -1;
     }
 
@@ -218,12 +215,12 @@ int irc::server::setupSocket(const std::string &ip, int port)
     inet_pton(AF_INET, ip.c_str(), &(hint.sin_addr));
 
     if (bind(_socket, (sockaddr *)&hint, sizeof(hint)) == -1) {
-        std::cout << "Failed to bind to IP/Port." << std::endl;
+		perror("error: bind");
 		return -1;
     }
 
     if (listen(_socket, SOMAXCONN) == -1) {
-        std::cout << "Failed to listen." << std::endl;
+		perror("error: listen");
 		return -1;
     }
 
@@ -257,11 +254,19 @@ void irc::server::remove_pollfd(const int fd) {
 
 /* setup client socket */
 int irc::server::setup_client_socket(void) const {
+
 	sockaddr_in client;
+
 	socklen_t size = sizeof(client);
+
 	int socket = ::accept(_socket, (sockaddr *)&client, &size);
+
 	// check for accept failure
-	if (socket == -1) { irc::log::add_line("Failed to accept client connection."); }
+	if (socket == -1) {
+		irc::log::add_line(strerror(errno));
+		return -1;
+	}
+
 	// check for already connected
 	for (pollfd_vector::const_iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
 		if (it->fd == socket) { return -1; }
@@ -277,11 +282,11 @@ void irc::server::accept_new_connection(void) {
 	if ((_pollfds[0].revents & POLLERR)
 	 || (_pollfds[0].revents & POLLHUP)
 	 || (_pollfds[0].revents & POLLNVAL)) {
-
 		irc::log::add_line("\x1b[31mError on pollfd.\x1b[0m");
-		return; }
+		return;
+	}
 
-		if (_pollfds[0].revents & POLLIN) {
+	if (_pollfds[0].revents & POLLIN) {
 
 
 

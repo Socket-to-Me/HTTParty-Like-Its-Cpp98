@@ -94,7 +94,7 @@ bool irc::connection::dead_routine(void) {
 		if ((std::time(0) - _last_ping) > 10) {
 			// set not alive
 			_alive = false;
-			irc::log::add_line("Connection " + std::to_string(_pfd.fd) + " is dead. 💀");
+			//irc::log::add_line("Connection " + std::to_string(_pfd.fd) + " is dead. 💀");
 			return true;
 		}
 	}
@@ -113,7 +113,7 @@ bool irc::connection::dead_routine(void) {
 
 /* reset counter */
 void irc::connection::pong(void) {
-	irc::log::add_line("Connection " + std::to_string(_pfd.fd) + " is alive. 🤖");
+	//irc::log::add_line("Connection " + std::to_string(_pfd.fd) + " is alive. 🤖");
 	_wait_pong = false;
 	_last_ping = std::time(0);
 }
@@ -161,17 +161,17 @@ bool irc::connection::check_fails(void) {
 
 	// check for POLLHUP event
 	if (_pfd.revents & POLLHUP) {
-		irc::log::print("Client disconnected");
+		irc::log::print("\x1b[31mPOLLHUP event\x1b[0m");
 		return true;
 	}
 	// check for POLLERR event
 	if (_pfd.revents & POLLERR) {
-		irc::log::print("Error in client connection");
+		irc::log::print("\x1b[31mPOLLERR event\x1b[0m");
 		return true;
 	}
 	// check for POLLNVAL event
 	if (_pfd.revents & POLLNVAL) {
-		irc::log::print("Invalid request from client");
+		irc::log::print("\x1b[31mPOLLNVAL event\x1b[0m");
 		return true;
 	}
 	// else return false
