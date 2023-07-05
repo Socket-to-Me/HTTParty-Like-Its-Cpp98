@@ -23,7 +23,7 @@ void irc::log::init(void) {
 	// move cursor to top left
 	std::cout.write("\033[H", 3);
 	// set raw terminal
-	irc::terminal::raw_terminal();
+	//irc::terminal::raw_terminal();
 }
 
 /* exit log */
@@ -33,7 +33,7 @@ void irc::log::exit(void) {
 	// close alternative screen buffer
 	std::cout.write("\033[?1049l", 8);
 	// restore original terminal
-	irc::terminal::restore_terminal();
+	//irc::terminal::restore_terminal();
 }
 
 /* add line to log */
@@ -64,10 +64,11 @@ void irc::log::refresh(const std::string& server_name,
 					   const std::size_t num_connections) {
 
 
-	static char buff[1024];
-	static std::size_t offset = 0;
+	//static char buff[1024];
+	//static std::size_t offset = 0;
 
 
+	/*
 	int readed = read(STDIN_FILENO, &buff, 1024);
 
 	if (readed == 3) {
@@ -79,7 +80,7 @@ void irc::log::refresh(const std::string& server_name,
 				}
 			}
 		}
-	}
+	}*/
 
 
 	static std::string buffer;
@@ -134,12 +135,35 @@ void irc::log::refresh(const std::string& server_name,
 	std::size_t header = 5;
 
 	// get terminal height
-	unsigned short height = 0;
-	unsigned short width = 0;
+	//unsigned short height = 0;
+	//unsigned short width = 0;
 
-	irc::terminal::get_terminal_size(width, height);
+	std::size_t offset = 0;
+
+	if (_logs.size() > 20) {
+		offset = _logs.size() - 20;
+	}
+
+	// loop over logs
+	for (std::size_t j = offset; j < _logs.size(); ++j) {
+		// transform index to string with leading zeros
+		std::string index = to_string(j);
+		while (index.size() < 4) {
+			index.insert(0, "0");
+		}
+
+		// add index to buffer
+		buffer.append(index);
+		buffer.append(" > ");
+		buffer.append(_logs[j]);
+		buffer.push_back('\n');
+	}
 
 
+	//irc::terminal::get_terminal_size(width, height);
+
+
+	/*
 	for (std::size_t j = offset;
 			(j < _logs.size())
 			&& (j < offset + height - header); ++j) {
@@ -154,7 +178,7 @@ void irc::log::refresh(const std::string& server_name,
 		buffer.append(" > ");
 		buffer.append(_logs[j]);
 		buffer.push_back('\n');
-	}
+	}*/
 
 	// print buffer
 	std::cout << buffer << std::flush;
