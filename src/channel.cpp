@@ -106,17 +106,17 @@ void  irc::channel::setmode(const irc::connection& op, const std::vector<std::st
 
 		bool setting = false;
 
-		for (size_t i = 0; i < str.length(); ++i) {
+		for (size_t i = 0; i < modestring.length(); ++i) {
 
-			if (str[i] == '+') {
+			if (modestring[i] == '+') {
 				setting = true;
 
-			} else if (str[i] == '-') {
+			} else if (modestring[i] == '-') {
 				setting = false;
 
 			} else {
 
-				switch (str[i]) {
+				switch (modestring[i]) {
 
 					case 'i':
 						_mode_invite_only = setting;
@@ -144,14 +144,12 @@ void  irc::channel::setmode(const irc::connection& op, const std::vector<std::st
 			}
 		}
 
-		op.send(":" + op.getnick() + " MODE " + _target + " " + modestring + "\r\n");
-
     }
 
     return;
 }
 
-bool irc::channel::check_modestring(const std::string& str) {
+bool irc::channel::check_modestring(const std::string& str) const {
 
     if (str.empty()) {
         return false;  // Empty string is not valid
@@ -159,7 +157,7 @@ bool irc::channel::check_modestring(const std::string& str) {
 
     bool hasPlus = false;
     bool hasMinus = false;
-	std::unordered_set<char> modeChars;
+	std::string modeChars;
 
     if (str[0] != '+' && str[0] != '-') {
         return false;  // First character should be '+' or '-'
@@ -190,9 +188,10 @@ bool irc::channel::check_modestring(const std::string& str) {
                     case 'k':
                     case 'o':
                     case 'l':
-                        if (!modeChars.insert(str[i]).second) {
+                        if (modeChars.find(str[i]) != std::string::npos) {
                             return false;  	// Duplicate mode character found
                         }
+						modeChars += str[i];
                         break;
 
 					default:

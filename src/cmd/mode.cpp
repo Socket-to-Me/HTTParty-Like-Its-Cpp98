@@ -35,6 +35,7 @@ bool irc::mode::execute(void) {
         } else { // -------------------- change modes
             irc::channel&   channel = irc::server::instance().getchannel(_target);
             channel.setmode(_conn, params);
+            _conn.send(":" + _conn.getnick() + " MODE " + _target + " " + params[1] + "\r\n");
         }
     }
     else { // --------------------------------- user mode
@@ -72,6 +73,18 @@ bool irc::mode::evaluate(void) {
             return false;
         }
 
+        if (params.size() > 1) {
+            
+            irc::channel&   channel = irc::server::instance().getchannel(_target);
+
+            if (channel.check_modestring(params[1]) == false) {
+                _conn.settarget(params[1]);
+                _conn.send(irc::numerics::err_unknownmode_472(_conn));
+                return false;
+            }
+
+        }
+
         _ischannel = true;
     }
     else { // --------------------------------- user mode
@@ -88,16 +101,6 @@ bool irc::mode::evaluate(void) {
         }
 
         _ischannel = false;
-    }
-
-    if (params.size() > 1) {
-        
-        if (irc::channel::check_modestring(params[1]) == false) {
-            _conn.settarget(params[1]);
-            _conn.send(irc::numerics::err_unknownmode_472(_conn));
-            return false;
-        }
-
     }
 
     _target = target;

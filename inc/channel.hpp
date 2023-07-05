@@ -5,7 +5,6 @@
 # include <iterator>
 # include <string>
 # include <vector>
-# include <unordered_set>
 
 # include "connection.hpp"
 
@@ -46,7 +45,7 @@ namespace irc {
 			// -- public methods ----------------------------------------------
             void  setname(const irc::connection& op, const std::string& str);
             void  settopic(const irc::connection& op, const std::string& str);
-            void  setmode(const irc::connection& op, const std::string& str);
+            void  setmode(const irc::connection& op, const std::vector<std::string>& params);
             void  setkey(const irc::connection& op, const std::string& str);
 
 			void addOperator(irc::connection& conn);
@@ -69,6 +68,8 @@ namespace irc {
 			bool is_mode_channel_key(void);
 
 			std::string getsymbol(void) const;
+
+			bool check_modestring(const std::string& str) const;
 
 		private:
 
