@@ -98,46 +98,115 @@ void  irc::channel::settopic(const irc::connection& op, const std::string& str) 
 	return;
 }
 
-void  irc::channel::setmode(const irc::connection& op, const std::string& s) {
+void  irc::channel::setmode(const irc::connection& op, const std::vector<std::string>& params) {
+    
+	std::string modestring = params[0];
 
-	if (isOperator(op)) {
+    if (isOperator(op)) {
 
-		if (s.find('+') != std::string::npos) {
+		bool setting = false;
 
-			if (s.find('i') != std::string::npos)
-				_mode_invite_only = true;
-			if (s.find('t') != std::string::npos)
-				_mode_topic_restricted = true;
-			if (s.find('l') != std::string::npos)
-				_mode_user_limit = true;
-			if (s.find('k') != std::string::npos)
-				_mode_channel_key = true;
-			if (s.find('o') != std::string::npos)
-				_mode_operator_privileges = true;
-			if (s.find('b') != std::string::npos)
-				_mode_ban = true;
+		for (size_t i = 0; i < str.length(); ++i) {
 
+			if (str[i] == '+') {
+				setting = true;
+
+			} else if (str[i] == '-') {
+				setting = false;
+
+			} else {
+
+				switch (str[i]) {
+
+					case 'i':
+						_mode_invite_only = setting;
+						break;
+
+					case 't':
+						_mode_topic_restricted = setting;
+						break;
+
+					case 'k':
+						_mode_channel_key = setting; //TODO WITH ARG
+						break;
+
+					case 'o':
+						_mode_operator_privileges = setting; //TODO WITH ARG
+						break;
+
+					case 'l':
+						_mode_user_limit = setting;
+						break;
+
+					default:
+						break;
+				}
+			}
 		}
-		else {
 
-			if (s.find('i') != std::string::npos)
-				_mode_invite_only = false;
-			if (s.find('t') != std::string::npos)
-				_mode_topic_restricted = false;
-			if (s.find('l') != std::string::npos)
-				_mode_user_limit = false;
-			if (s.find('k') != std::string::npos)
-				_mode_channel_key = false;
-			if (s.find('o') != std::string::npos)
-				_mode_operator_privileges = false;
-			if (s.find('b') != std::string::npos)
-				_mode_ban = false;
+		op.send(":" + op.getnick() + " MODE " + _target + " " + modestring + "\r\n");
 
-		}
+    }
 
-	}
-	return;
+    return;
 }
+
+bool irc::channel::check_modestring(const std::string& str) {
+
+    if (str.empty()) {
+        return false;  // Empty string is not valid
+    }
+
+    bool hasPlus = false;
+    bool hasMinus = false;
+	std::unordered_set<char> modeChars;
+
+    if (str[0] != '+' && str[0] != '-') {
+        return false;  // First character should be '+' or '-'
+    }
+
+    for (size_t i = 1; i < str.length(); ++i) {
+
+        if (!std::isalpha(str[i])) {
+
+            if (str[i] == '+') {
+                if (hasPlus) {
+                    return false;  	// Multiple '+' characters found
+                }
+                hasPlus = true;
+
+            } else if (str[i] == '-') {
+                if (hasMinus) {
+                    return false; 	// Multiple '-' characters found
+                }
+                hasMinus = true;
+
+            } else {
+
+				switch (str[i]) {
+
+                    case 'i':
+                    case 't':
+                    case 'k':
+                    case 'o':
+                    case 'l':
+                        if (!modeChars.insert(str[i]).second) {
+                            return false;  	// Duplicate mode character found
+                        }
+                        break;
+
+					default:
+						return false; 		// Invalid mode character
+						break;
+				}
+
+            }
+        }
+    }
+
+    return true;
+}
+
 
 void  irc::channel::setkey(const irc::connection& op, const std::string& str) {
 

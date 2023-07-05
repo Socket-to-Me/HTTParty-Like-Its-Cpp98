@@ -5,6 +5,7 @@
 # include <iterator>
 # include <string>
 # include <vector>
+# include <unordered_set>
 
 # include "connection.hpp"
 
