@@ -161,17 +161,17 @@ bool irc::connection::check_fails(void) {
 
 	// check for POLLHUP event
 	if (_pfd.revents & POLLHUP) {
-		irc::log::print("Client disconnected");
+		irc::log::print("\x1b[31mPOLLHUP event\x1b[0m");
 		return true;
 	}
 	// check for POLLERR event
 	if (_pfd.revents & POLLERR) {
-		irc::log::print("Error in client connection");
+		irc::log::print("\x1b[31mPOLLERR event\x1b[0m");
 		return true;
 	}
 	// check for POLLNVAL event
 	if (_pfd.revents & POLLNVAL) {
-		irc::log::print("Invalid request from client");
+		irc::log::print("\x1b[31mPOLLNVAL event\x1b[0m");
 		return true;
 	}
 	// else return false
