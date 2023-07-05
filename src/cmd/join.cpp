@@ -30,7 +30,7 @@ bool irc::join::execute(void)
     { // ------------------------------------------------------ new channel
 
         irc::server::instance().newChannel(_channel);
-        irc::channel &channel = irc::server::instance().getchannel(_channel);
+        irc::channel& channel = irc::server::instance().getchannel(_channel);
 
         channel.addUser(_conn);
         channel.addOperator(_conn);
@@ -43,7 +43,7 @@ bool irc::join::execute(void)
 
     } else { // ----------------------------------------------- existing channel
 
-        irc::channel &channel = irc::server::instance().getchannel(_channel);
+        irc::channel& channel = irc::server::instance().getchannel(_channel);
 
         if (channel.is_mode_channel_key())
         { // ---------------------------------------- private channel
