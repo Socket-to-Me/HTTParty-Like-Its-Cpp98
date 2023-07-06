@@ -85,7 +85,7 @@ void irc::server::start(const std::string &ip, int port) {
 
 
 		// get number of events
-        int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
+        int pollCount = poll(_pollfds.data(), _pollfds.size(), 60 * 1000);
 
 		if (pollCount == -1) {
 			if (errno == EINTR) { break; }
@@ -101,7 +101,7 @@ void irc::server::start(const std::string &ip, int port) {
 		// check client sockets for new events
 		handle_active_connections();
 
-		usleep(100000);
+		//usleep(100000);
     }
 
 	irc::log::exit();
