@@ -20,7 +20,9 @@ irc::server &irc::server::instance(void) {
 
 /* default constructor */
 irc::server::server(void)
-: _is_running(true),
+:
+
+  _is_running(true),
   _networkname("httparty.like.its.98"),
   _version("1.1"),
   _usermodes("o"),
@@ -385,6 +387,8 @@ void irc::server::handle_active_connections(void) {
 
 
 		std::string msg = it->second.extract_message();
+
+		irc::log::add_line("msg: " + msg);
 
 		irc::msg message = irc::parser::parse(msg);
 

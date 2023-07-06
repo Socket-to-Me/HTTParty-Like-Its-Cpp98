@@ -30,6 +30,7 @@ bool irc::ping::execute(void) {
 
 /* evaluate command */
 bool irc::ping::evaluate(void) {
+	return true;
 	// check there is only one parameter
 	return (_msg.get_params().size() == 1);
 }
