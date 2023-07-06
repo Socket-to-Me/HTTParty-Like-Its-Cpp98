@@ -27,26 +27,23 @@ irc::user::~user(void) {
 bool irc::user::execute(void) {
 
     _conn.setuser(_user);
-    return false;
+    return true;
 }
 
 /* evaluate command */
 bool irc::user::evaluate(void) {
 
-    const std::vector<std::string>&   params = _msg.get_params();
-    std::string user = params.back();
-
-    if (params.size() == 0 || user.length() == 0) {
+    if (_msg.have_params() == false) {
+        _conn.settarget(_msg.get_command());
         _conn.send(irc::numerics::err_needmoreparams_461(_conn));
         return false;
     }
-    // else if (params.size() != 2) {
-    //     return false;
-    // }
+
+    const std::vector<std::string>&   params = _msg.get_params();
+    std::string user = params[0];
 
     if (_conn.getuser().length()) {
         _conn.send(irc::numerics::err_alreadyregistered_462(_conn));
-        return false;
     }
 
     _user = user;

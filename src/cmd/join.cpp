@@ -45,29 +45,36 @@ bool irc::join::execute(void)
         irc::channel& channel = irc::server::instance().getchannel(_channel);
 
         if (channel.is_mode_channel_key()) { // --------------------- private channel
-
             if (channel.checkPassword(_password)) {
 
                 if (channel.is_mode_invite_only()) { // --------- invite-only channel
-
                     if (channel.isInvited(_conn)) { 
 
-                        channel.addUser(_conn);
+                        if (channel.is_mode_user_limit()) { // --- user limit channel
+                            if (channel.getconnections().size() <= channel.getlimit()) {
+                                channel.addUser(_conn);
+
+                            } else { // -------------- channel full
+                                _conn.settarget(_channel);
+                                _conn.send(irc::numerics::err_channelisfull_471(_conn));
+                                return false;
+                            }
+
+                        } else {
+                            channel.addUser(_conn);
+                        }
 
                     } else { // ---------------------- not invited
-
                         _conn.settarget(_channel);
                         _conn.send(irc::numerics::err_inviteonlychan_473(_conn));
                         return false;
                     }
 
                 } else { // --------------------- correct password
-
                     channel.addUser(_conn);
                 }
 
             } else { // ----------------------- incorrect password
-
                 _conn.settarget(_channel);
                 _conn.send(irc::numerics::err_badchannelkey_475(_conn));
                 return false;
@@ -76,11 +83,22 @@ bool irc::join::execute(void)
         } else { // -------------------------------------------------- public channel
 
             if (channel.is_mode_invite_only()) { // ------------- invite-only channel
-
                 if (channel.isInvited(_conn)) { 
 
-                    channel.addUser(_conn);
+                    if (channel.is_mode_user_limit()) { // ------- user limit channel
+                        if (channel.getconnections().size() <= channel.getlimit()) {
+                            channel.addUser(_conn);
 
+                        } else { // ---------------- channel full
+                                _conn.settarget(_channel);
+                                _conn.send(irc::numerics::err_channelisfull_471(_conn));
+                                return false;
+                        }
+
+                    } else {
+                        channel.addUser(_conn);
+                    }
+                    
                 } else { // ------------------------- not invited
 
                     _conn.settarget(_channel);
@@ -89,10 +107,8 @@ bool irc::join::execute(void)
                 }
 
             } else {
-
                 channel.addUser(_conn);
             }
-
         }
 
         channel.broadcast(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");

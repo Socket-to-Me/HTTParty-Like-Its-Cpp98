@@ -39,6 +39,15 @@ bool irc::topic::execute(void) {
 
     } else { // ---------------- edit topic
 
+        if (chan.is_mode_topic_restricted()) {
+
+            if (chan.isOperator(_conn) == false) {
+                _conn.settarget(_channel);
+                _conn.send(irc::numerics::err_chanoprivsneeded_482(_conn));
+                return false;
+            }
+        }
+
         chan.broadcast(":" + _conn.getnick() + " TOPIC " + _channel + " " + _topic + "\r\n");
     }
 
@@ -67,11 +76,6 @@ bool irc::topic::evaluate(void) {
     if (chan.isConnection(_conn) == false) {
         _conn.settarget(channel);
         _conn.send(irc::numerics::err_notonchannel_442(_conn));
-        return false;
-    }
-    if (chan.isOperator(_conn) == false) {
-        _conn.settarget(channel);
-        _conn.send(irc::numerics::err_chanoprivsneeded_482(_conn));
         return false;
     }
 

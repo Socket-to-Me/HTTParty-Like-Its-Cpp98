@@ -36,6 +36,7 @@ namespace irc {
             const std::string&  getname(void) const;
             const std::string&  gettopic(void) const;
             const std::string  	getmode(void) const;
+            size_t 				getlimit(void) const;
             const std::vector<irc::connection*>&  getoperators(void) const;
             const std::vector<irc::connection*>&  getconnections(void) const;
 

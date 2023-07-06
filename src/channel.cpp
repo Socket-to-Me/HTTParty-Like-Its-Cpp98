@@ -31,6 +31,10 @@ const std::string&  irc::channel::gettopic(void) const {
 	return _topic;
 }
 
+size_t	irc::channel::getlimit(void) const {
+	return _limit;
+}
+
 const std::vector<irc::connection*>&  irc::channel::getoperators(void) const {
 	return _operators;
 }

@@ -29,11 +29,9 @@ bool irc::part::execute(void) {
 	channel.removeUser(_conn);
 
 	if (_reason.empty()) {
-
 		channel.broadcast(":" + _conn.getnick() + " PART " + _channel + "\r\n");
 	
 	} else {
-
 		channel.broadcast(":" + _conn.getnick() + " PART " + _channel + " :" + _reason + "\r\n");
 	}
 
@@ -45,7 +43,7 @@ bool irc::part::evaluate(void) {
 
     const std::vector<std::string> &params = _msg.get_params();
 
-    if (params.size() == 0)
+    if (_msg.have_params() == false)
     {
         _conn.settarget(_msg.get_command());
         _conn.send(irc::numerics::err_needmoreparams_461(_conn));
