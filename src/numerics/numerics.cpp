@@ -245,7 +245,7 @@ const std::string& irc::numerics::rpl_whoreply_352(irc::connection& conn) {
     irc::connection&    usr = serv.getconnection(conn.gettarget());
 
     conn.setmsg("352 " + conn.getnick() + " " + conn.getchannelname() + " " + \
-    usr.getuser() + " " + conn.gethost() + " " + serv.getname() + " " + usr.getnick() + " H :0 " + usr.getrealname() + "\r\n");
+    usr.getuser() + " " + usr.gethost() + " " + serv.getname() + " " + usr.getnick() + " H :0 " + usr.getrealname() + "\r\n");
     return conn.getmsg();
 }
 
