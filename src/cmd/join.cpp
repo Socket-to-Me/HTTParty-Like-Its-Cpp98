@@ -50,7 +50,7 @@ bool irc::join::execute(void)
 
                 if (channel.is_mode_invite_only()) { // --------- invite-only channel
 
-                    if (channel.checkInvited(_conn)) { 
+                    if (channel.isInvited(_conn)) { 
 
                         channel.addUser(_conn);
 
@@ -77,7 +77,7 @@ bool irc::join::execute(void)
 
             if (channel.is_mode_invite_only()) { // ------------- invite-only channel
 
-                if (channel.checkInvited(_conn)) { 
+                if (channel.isInvited(_conn)) { 
 
                     channel.addUser(_conn);
 

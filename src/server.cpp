@@ -105,17 +105,20 @@ void irc::server::stop(void) {
 
 
 /* send message to all clients */
-bool irc::server::broadcast(const std::string &message) {
+bool irc::server::broadcast(const std::string& msg) {
 
-	std::vector<irc::connection>::iterator	it;
+    // Iterator typedef for the map
+    typedef std::map<std::string, irc::connection>::const_iterator const_map_iter;
 
-	for (it=_connections.begin(); it!=_connections.end(); ++it) {
-		if ((*it)->send(msg) <= 0) {
-			return false;
-		}
-	}
-	return true;
+    for (const_map_iter it = _connections.begin(); it != _connections.end(); ++it) {
+        if (it->second.send(msg) <= 0) {
+            return false;
+        }
+    }
+
+    return true;
 }
+
 
 
 // -- C O M M A N D  U T I L S ---------------------

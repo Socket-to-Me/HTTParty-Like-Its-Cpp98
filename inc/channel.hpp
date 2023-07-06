@@ -50,8 +50,10 @@ namespace irc {
 
 			void addOperator(irc::connection& conn);
 			void addUser(irc::connection& conn);
+			void addInvitation(irc::connection& conn);
 			void removeUser(irc::connection& conn);
 			void removeOperator(irc::connection& conn);
+			void removeInvitation(irc::connection& conn);
 
 			void kick(const irc::connection& op, irc::connection& conn);
 			void invite(const irc::connection& op, irc::connection& conn);
