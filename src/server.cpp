@@ -81,7 +81,7 @@ void irc::server::start(const std::string &ip, int port) {
 						  _channels.size());
 
 		// get number of events
-        int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
+        int pollCount = poll(_pollfds.data(), _pollfds.size(), 60 * 1000);
 
 		if (pollCount == -1) {
 			if (errno == EINTR) { break; }
@@ -96,7 +96,7 @@ void irc::server::start(const std::string &ip, int port) {
 		// check client sockets for new events
 		handle_active_connections();
 
-		usleep(100000);
+		//usleep(100000);
     }
 
 	irc::log::exit();
@@ -225,6 +225,7 @@ int irc::server::setupSocket(const std::string &ip, int port) {
     int yes = 1;
 	if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
 		perror("error: setsockopt");
+		close(_socket);
         return -1;
     }
 
@@ -235,11 +236,13 @@ int irc::server::setupSocket(const std::string &ip, int port) {
 
     if (bind(_socket, (sockaddr *)&hint, sizeof(hint)) == -1) {
 		perror("error: bind");
+		close(_socket);
 		return -1;
     }
 
     if (listen(_socket, SOMAXCONN) == -1) {
 		perror("error: listen");
+		close(_socket);
 		return -1;
     }
 
