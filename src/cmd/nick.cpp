@@ -25,7 +25,10 @@ irc::nick::~nick(void) {
 /* execute command */
 bool irc::nick::execute(void) {
 
+    irc::server&    serv = irc::server::instance();
+
     _conn.setnick(_nick);
+    serv.broadcast(":" + _conn.getnick() + " NICK " + _nick + "\r\n");
     return true;
 }
 

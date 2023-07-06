@@ -104,9 +104,17 @@ void irc::server::stop(void) {
 }
 
 
-/* send message to one client */
-void irc::server::send(irc::connection &conn, const std::string &message) {
-    // TODO
+/* send message to all clients */
+bool irc::server::broadcast(const std::string &message) {
+
+	std::vector<irc::connection>::iterator	it;
+
+	for (it=_connections.begin(); it!=_connections.end(); ++it) {
+		if ((*it)->send(msg) <= 0) {
+			return false;
+		}
+	}
+	return true;
 }
 
 

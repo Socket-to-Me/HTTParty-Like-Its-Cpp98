@@ -601,7 +601,7 @@ const std::string& irc::numerics::err_unknownmode_472(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_inviteonlychan_473(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("473 " + conn.getnick() + " " + conn.gettarget() + " :Cannot join channel (+i)" + "\r\n");
     return conn.getmsg();
 }
 

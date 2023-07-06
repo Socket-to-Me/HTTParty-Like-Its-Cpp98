@@ -45,9 +45,8 @@ namespace irc {
 			/* stop server */
 			void stop(void);
 
-			/* send message to a client */
-			void send(irc::connection&, const std::string&);
-
+			/* send message to all clients */
+			bool broadcast(const std::string&);
 
 			// -- public methods ----------------------------------------------
 

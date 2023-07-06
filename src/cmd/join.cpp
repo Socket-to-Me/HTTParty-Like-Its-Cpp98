@@ -19,9 +19,6 @@ irc::join::~join(void)
 /* execute command */
 bool irc::join::execute(void)
 {
-
-	std::cout << "EXECUTE JOIN" << std::endl;
-
     // Leave all channels
     if (_channel == "#0") {
         irc::server::instance().leave_all_channels(_conn);
@@ -29,7 +26,7 @@ bool irc::join::execute(void)
 
     // Join a channel
     if (irc::server::instance().isChannelExist(_channel) == false)
-    { // ------------------------------------------------------ new channel
+    { // --------------------------------------------------------------- new channel
 
         irc::server::instance().newChannel(_channel);
         irc::channel& channel = irc::server::instance().getchannel(_channel);
@@ -37,33 +34,65 @@ bool irc::join::execute(void)
         channel.addUser(_conn);
         channel.addOperator(_conn);
 
-        if (_password.empty() == false) { // --- set password
+        if (_password.empty() == false) { // -------- set password
 
             channel.set_mode_channel_key(true);
             channel.setkey(_conn, _password);
         }
 
-    } else { // ----------------------------------------------- existing channel
+    } else { // ---------------------------------------------------- existing channel
 
         irc::channel& channel = irc::server::instance().getchannel(_channel);
 
-        if (channel.is_mode_channel_key())
-        { // ---------------------------------------- private channel
+        if (channel.is_mode_channel_key()) { // --------------------- private channel
 
             if (channel.checkPassword(_password)) {
 
-                channel.addUser(_conn);
+                if (channel.is_mode_invite_only()) { // --------- invite-only channel
 
-            } else { // -------------- wrong password
+                    if (channel.checkInvited(_conn)) { 
+
+                        channel.addUser(_conn);
+
+                    } else { // ---------------------- not invited
+
+                        _conn.settarget(_channel);
+                        _conn.send(irc::numerics::err_inviteonlychan_473(_conn));
+                        return false;
+                    }
+
+                } else { // --------------------- correct password
+
+                    channel.addUser(_conn);
+                }
+
+            } else { // ----------------------- incorrect password
 
                 _conn.settarget(_channel);
                 _conn.send(irc::numerics::err_badchannelkey_475(_conn));
                 return false;
             }
 
-        } else { // --------------------------------- public channel
+        } else { // -------------------------------------------------- public channel
 
-            channel.addUser(_conn);
+            if (channel.is_mode_invite_only()) { // ------------- invite-only channel
+
+                if (channel.checkInvited(_conn)) { 
+
+                    channel.addUser(_conn);
+
+                } else { // ------------------------- not invited
+
+                    _conn.settarget(_channel);
+                    _conn.send(irc::numerics::err_inviteonlychan_473(_conn));
+                    return false;
+                }
+
+            } else {
+
+                channel.addUser(_conn);
+            }
+
         }
 
         channel.broadcast(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
@@ -75,17 +104,12 @@ bool irc::join::execute(void)
     _conn.send(irc::numerics::rpl_namreply_353(_conn));
     _conn.send(irc::numerics::rpl_endofnames_366(_conn));
 
-	std::cout << "EXECUTE JOIN END" << std::endl;
-
     return true;
 }
 
 /* evaluate command */
 bool irc::join::evaluate(void)
 {
-
-	std::cout << "EVALUATE JOIN" << std::endl;
-
     if (_msg.have_params() == false) {
         _conn.settarget(_msg.get_command());
         _conn.send(irc::numerics::err_needmoreparams_461(_conn));
@@ -105,8 +129,6 @@ bool irc::join::evaluate(void)
     if (params.size() == 2) {
         _password = params[1];
     }
-    
-	std::cout << "EVALUATE JOIN END" << std::endl;
 
     return true;
 }

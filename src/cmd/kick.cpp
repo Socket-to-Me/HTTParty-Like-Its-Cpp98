@@ -31,10 +31,10 @@ bool irc::kick::execute(void) {
     chan.kick(_conn, usr);
 
     if (_comment.empty()) { // --- kick without comment
-        usr.send(":" + _conn.getnick() + " KICK " + _channel + " " + _user + "\r\n");
+        chan.broadcast(":" + _conn.getnick() + " KICK " + _channel + " " + _user + "\r\n");
 
     } else { // ------------------ kick with comment
-        usr.send(":" + _conn.getnick() + " KICK " + _channel + " " + _user + " " + _comment + "\r\n");
+        chan.broadcast(":" + _conn.getnick() + " KICK " + _channel + " " + _user + " " + _comment + "\r\n");
     }
 
     return true;

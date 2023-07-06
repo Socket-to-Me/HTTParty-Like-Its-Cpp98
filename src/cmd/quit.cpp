@@ -48,6 +48,13 @@ bool irc::quit::execute(void) {
 	// add to remove queue
 	serv.add_to_remove_queue(_conn);
 
+	if (_msg.have_trailing()) {
+		serv.broadcast(":" + _conn.getnick() + " QUIT :" + _msg.get_trailing() + "\r\n");
+	
+	} else {
+		serv.broadcast(":" + _conn.getnick() + " QUIT" + "\r\n");
+	}
+
     return true;
 }
 

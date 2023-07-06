@@ -63,6 +63,7 @@ namespace irc {
 
 			bool isConnection(const irc::connection& conn) const;
 			bool isOperator(const irc::connection& op) const;
+			bool isInvited(const irc::connection& conn) const;
 
 			bool is_mode_invite_only(void);
 			bool is_mode_topic_restricted(void);
@@ -73,7 +74,6 @@ namespace irc {
 			void set_mode_topic_restricted(bool);
 			void set_mode_user_limit(bool);
 			void set_mode_channel_key(bool);
-
 
 			std::string getsymbol(void) const;
 
@@ -99,6 +99,7 @@ namespace irc {
 			size_t							_limit;
 			std::vector<irc::connection*>	_operators;
 			std::vector<irc::connection*>	_connections;
+			std::vector<irc::connection*>	_invitations;
 
 			// -- modes -----------------------------------------------------
 

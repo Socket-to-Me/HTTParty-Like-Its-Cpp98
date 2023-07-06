@@ -27,10 +27,10 @@ bool irc::invite::execute(void) {
     irc::channel& chan = irc::server::instance().getchannel(_channel);
     irc::connection& usr = irc::server::instance().getconnection(_nick);
 
-	chan.addUser(usr);
+	chan.addInvitation(usr);
 
     _conn.send(irc::numerics::rpl_inviting_341(_conn));
-    chan.broadcast(":" + _conn.getnick() + " INVITE " + _nick + " " + _channel + "\r\n");
+    usr.send(":" + _conn.getnick() + " INVITE " + _nick + " " + _channel + "\r\n");
 
     return true;
 }
