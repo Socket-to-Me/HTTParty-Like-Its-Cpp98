@@ -73,18 +73,8 @@ void irc::server::start(const std::string &ip, int port) {
 	// main server loop
     while (_is_running) {
 
-		irc::log::refresh(_networkname,
-						  _version,
-						  _creation,
-						  _pollfds.size() - 1,
-						  _connections.size(),
-						  _channels.size());
-
 		std::vector<pollfd> pollfds;
-
-
 		pollfd server_pollfd = { _socket, POLLIN, 0 };
-
 		// add server socket to pollfds
 		pollfds.push_back(server_pollfd);
 
@@ -93,6 +83,14 @@ void irc::server::start(const std::string &ip, int port) {
 			pollfd client_pollfd = { it->second.getfd(), POLLIN, 0 };
 			pollfds.push_back(client_pollfd);
 		}
+
+
+		irc::log::refresh(_networkname,
+						  _version,
+						  _creation,
+						  pollfds.size() - 1,
+						  _connections.size(),
+						  _channels.size());
 
 
 
@@ -477,7 +475,7 @@ void irc::server::unsubscribe(irc::connection& conn) {
 		_connections.erase(it); }
 
 	// remove pollfd
-	remove_pollfd(fd);
+	//remove_pollfd(fd);
 
 }
 
