@@ -42,7 +42,9 @@ namespace irc {
 					const std::string&, // server name
 					const std::string&, // server version
 					const std::string&, // server creation time
-					const std::size_t   // number of clients
+					const std::size_t,   // number of pollfds
+					const std::size_t,   // number of connections
+					const std::size_t   // number of channels
 					);
 
 
