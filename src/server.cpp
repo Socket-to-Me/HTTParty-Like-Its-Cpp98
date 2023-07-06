@@ -70,9 +70,10 @@ void irc::server::start(const std::string &ip, int port) {
 	// init logger
 	irc::log::init();
 
+	_pollfds.reserve(1024);
+
 	// main server loop
     while (_is_running) {
-
 
 		irc::log::refresh(_networkname,
 						  _version,
@@ -83,9 +84,14 @@ void irc::server::start(const std::string &ip, int port) {
 
 
 
-
 		// get number of events
-        int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
+        int pollCount = poll(_pollfds.data(), _pollfds.size(), 60 * 1000);
+
+		std::stringstream ss;
+
+		ss << pollCount;
+
+		irc::log::add_line("pollCount: " + ss.str());
 
 		if (pollCount == -1) {
 			if (errno == EINTR) { break; }
@@ -101,7 +107,7 @@ void irc::server::start(const std::string &ip, int port) {
 		// check client sockets for new events
 		handle_active_connections();
 
-		usleep(100000);
+		//usleep(100000);
     }
 
 	irc::log::exit();
@@ -396,10 +402,10 @@ void irc::server::handle_active_connections(void) {
     /* loop over all connections */
     for (map_iter it = _connections.begin(); it != _connections.end(); ++it) {
 
-		if (it->second.check_fails()  == true) {
+		/*if (it->second.check_fails()  == true) {
 			_remove_queue.push(&it->second);
 			continue;
-		}
+		}*/
 		 ///*|| it->second.dead_routine() == true*/)
 
 		// check if connection is active

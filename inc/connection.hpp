@@ -172,7 +172,7 @@ namespace irc {
 			// -- private members ---------------------------------------------
 
 			/* pollfd */
-            struct pollfd _pfd;
+            struct pollfd& _pfd;
 
 			/* buffer */
 			std::string _buffer;
