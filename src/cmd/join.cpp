@@ -100,7 +100,6 @@ bool irc::join::execute(void)
                     }
                     
                 } else { // ------------------------- not invited
-
                     _conn.settarget(_channel);
                     _conn.send(irc::numerics::err_inviteonlychan_473(_conn));
                     return false;
@@ -111,10 +110,11 @@ bool irc::join::execute(void)
             }
         }
 
-        channel.broadcast(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
     }
+    
+    irc::channel& channel = irc::server::instance().getchannel(_channel);
+    channel.broadcast(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
 
-    // replies
     _conn.setchannelname(_channel);
     _conn.send(irc::numerics::rpl_topic_332(_conn));
     _conn.send(irc::numerics::rpl_namreply_353(_conn));

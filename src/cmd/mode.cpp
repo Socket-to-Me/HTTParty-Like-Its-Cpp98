@@ -61,14 +61,14 @@ bool irc::mode::execute(void) {
 /* evaluate command */
 bool irc::mode::evaluate(void) {
 
-    const std::vector<std::string>& params = _msg.get_params();
-
-    if (params.size() == 0)
+    if (_msg.have_params() == false)
     {
         _conn.settarget(_msg.get_command());
         _conn.send(irc::numerics::err_needmoreparams_461(_conn));
         return false;
     }
+
+    const std::vector<std::string>& params = _msg.get_params();
 
     std::string target = params[0];
     std::string modestring;
@@ -76,14 +76,15 @@ bool irc::mode::evaluate(void) {
     if (target[0] == '#') { //----------------- channel mode
 
         if (irc::server::instance().isChannelExist(target) == false) {
+            _conn.settarget(target);
             _conn.send(irc::numerics::err_nosuchchannel_403(_conn));
             return false;
         }
 
-        irc::channel&   channel = irc::server::instance().getchannel(_target);
+        irc::channel&   channel = irc::server::instance().getchannel(target);
 
         if (channel.isOperator(_conn) == false) {
-            _conn.settarget(_target);
+            _conn.settarget(target);
             _conn.send(irc::numerics::err_chanoprivsneeded_482(_conn));
             return false;
         }
