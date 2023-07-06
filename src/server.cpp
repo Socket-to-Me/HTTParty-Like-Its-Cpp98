@@ -97,7 +97,7 @@ void irc::server::start(const std::string &ip, int port) {
 
 		// get number of events
         //int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
-        int pollCount = poll(pollfds.data(), _pollfds.size(), 0);
+        int pollCount = poll(pollfds.data(), pollfds.size(), 0);
 
 		if (pollCount == -1) {
 			if (errno == EINTR) { break; }
