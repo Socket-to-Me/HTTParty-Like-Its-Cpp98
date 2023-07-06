@@ -449,11 +449,12 @@ void irc::server::leave_all_channels(irc::connection& conn) {
     // iterator typedef
     typedef channel_map::iterator map_iter;
 
-
-
 	for (map_iter it=_channels.begin(); it != _channels.end(); ++it) {
 
+        irc::log::print("[" + it->second.getname() + "]");
 		it->second.removeUser(conn);
+		it->second.broadcast(":" + conn.getnick() + " PART " + it->second.getname() + "\r\n");
+
 	}
 }
 

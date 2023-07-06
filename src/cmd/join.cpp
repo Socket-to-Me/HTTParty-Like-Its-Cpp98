@@ -22,6 +22,7 @@ bool irc::join::execute(void)
     // Leave all channels
     if (_channel == "#0") {
         irc::server::instance().leave_all_channels(_conn);
+        return true;
     }
 
     // Join a channel
@@ -142,7 +143,7 @@ bool irc::join::evaluate(void)
     }
 
     _channel = channel;
-    if (params.size() == 2) {
+    if (params.size() > 1) {
         _password = params[1];
     }
 
