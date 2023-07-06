@@ -80,8 +80,26 @@ void irc::server::start(const std::string &ip, int port) {
 						  _connections.size(),
 						  _channels.size());
 
+		std::vector<pollfd> pollfds;
+
+
+		pollfd server_pollfd = { _socket, POLLIN, 0 };
+
+		// add server socket to pollfds
+		pollfds.push_back(server_pollfd);
+
+		// loop over all connections and add them to pollfds
+		for (connection_map::iterator it = _connections.begin(); it != _connections.end(); ++it) {
+			pollfd client_pollfd = { it->second.getfd(), POLLIN, 0 };
+			pollfds.push_back(client_pollfd);
+		}
+
+
+
+
 		// get number of events
-        int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
+        //int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
+        int pollCount = poll(pollfds.data(), _pollfds.size(), 0);
 
 		if (pollCount == -1) {
 			if (errno == EINTR) { break; }
@@ -392,8 +410,11 @@ void irc::server::handle_active_connections(void) {
     /* loop over all connections */
     for (map_iter it = _connections.begin(); it != _connections.end(); ++it) {
 
-		if (it->second.check_fails()  == true
-		 /*|| it->second.dead_routine() == true*/) { _remove_queue.push(&it->second); continue; }
+		if (it->second.check_fails()  == true) {
+			_remove_queue.push(&it->second);
+			continue;
+		}
+		 ///*|| it->second.dead_routine() == true*/)
 
 		// check if connection is active
 		if (it->second.receive() == false) { continue; }
@@ -438,20 +459,25 @@ void irc::server::handle_active_connections(void) {
 /* unsubscribe client connection */
 void irc::server::unsubscribe(irc::connection& conn) {
 
-	// remove pollfd
-	remove_pollfd(conn.getfd());
 
-	// close socket
-	close(conn.getfd());
 
 	// remove user from channels
 	leave_all_channels(conn);
+
+	int fd = conn.getfd();
+
+	// close socket
+	close(fd);
 
 	// search for connection in map
 	connection_map::iterator it = _connections.find(conn.getnick());
 
 	// check if connection was found
-	if (it != _connections.end()) { _connections.erase(it); }
+	if (it != _connections.end()) {
+		_connections.erase(it); }
+
+	// remove pollfd
+	remove_pollfd(fd);
 
 }
 
