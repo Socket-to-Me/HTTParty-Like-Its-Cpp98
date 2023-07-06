@@ -68,20 +68,18 @@ void irc::server::start(const std::string &ip, int port) {
 
 
 	// init logger
-	//irc::log::init();
+	irc::log::init();
 
 	// main server loop
     while (_is_running) {
 
 
-		/*
 		irc::log::refresh(_networkname,
 						  _version,
 						  _creation,
 						  _pollfds.size() - 1,
 						  _connections.size(),
 						  _channels.size());
-						  */
 
 
 
@@ -106,7 +104,7 @@ void irc::server::start(const std::string &ip, int port) {
 		usleep(100000);
     }
 
-	//irc::log::exit();
+	irc::log::exit();
 
 	irc::out<3>::print("server stopped");
 
@@ -448,8 +446,7 @@ void irc::server::handle_active_connections(void) {
 void irc::server::unsubscribe(irc::connection& conn) {
 
 
-	std::cout << "Unsubscribing " << conn.getnick() << std::endl;
-	std::cout << "fd: " << conn.getfd() << std::endl;
+
 
 	// remove user from channels
 	leave_all_channels(conn);
