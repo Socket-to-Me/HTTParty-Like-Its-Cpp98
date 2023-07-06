@@ -36,9 +36,12 @@ bool irc::who::execute(void) {
         for (it = connections.begin(); it != connections.end(); ++it) {
 
             std::string nick = (*it)->getnick();
-            _conn.settarget(nick);
-            _conn.setchannelname(_target);
-            _conn.send(irc::numerics::rpl_whoreply_352(_conn));
+
+            if (nick.empty() == false) {
+                _conn.settarget(nick);
+                _conn.setchannelname(_target);
+                _conn.send(irc::numerics::rpl_whoreply_352(_conn));
+            }
         }
 
         _conn.settarget(_target);
