@@ -48,7 +48,7 @@ bool irc::topic::execute(void) {
             }
         }
 
-        chan.broadcast(":" + _conn.getnick() + " TOPIC " + _channel + " " + _topic + "\r\n");
+        chan.broadcast(":" + _conn.getnick() + " TOPIC " + _channel + " :" + _topic + "\r\n");
     }
 
     return true;
