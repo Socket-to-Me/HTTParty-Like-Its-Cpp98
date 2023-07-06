@@ -241,7 +241,11 @@ const std::string& irc::numerics::rpl_nowaway_306(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_whoreply_352(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    irc::server&        serv = irc::server::instance();
+    irc::connection&    usr = serv.getconnection(conn.gettarget());
+
+    conn.setmsg("352 " + conn.getnick() + " " + conn.getchannelname() + " " + \
+    usr.getuser() + " " + serv.getname() + " " + usr.getnick() + " H :0 " + usr.getuser() + "\r\n");
     return conn.getmsg();
 }
 
@@ -267,6 +271,11 @@ const std::string& irc::numerics::rpl_whoisoperator_313(irc::connection& conn) {
 
 const std::string& irc::numerics::rpl_whowasuser_314(irc::connection& conn) {
     conn.setmsg("N/A \r\n");
+    return conn.getmsg();
+}
+
+const std::string& irc::numerics::rpl_endofwho_315(irc::connection& conn) {
+    conn.setmsg("315 " + conn.getnick() + " " + conn.gettarget() + " :End of WHO list" + "\r\n");
     return conn.getmsg();
 }
 

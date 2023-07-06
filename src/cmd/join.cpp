@@ -45,6 +45,14 @@ bool irc::join::execute(void)
 
         irc::channel& channel = irc::server::instance().getchannel(_channel);
 
+        // check not in channel already
+        if (channel.isConnection(_conn) == true) {
+            _conn.settarget(_conn.getnick());
+            _conn.setchannelname(_channel);
+            _conn.send(irc::numerics::err_useronchannel_443(_conn));
+            return false;
+        }
+
         if (channel.is_mode_channel_key()) { // --------------------- private channel
             if (channel.checkPassword(_password)) {
 

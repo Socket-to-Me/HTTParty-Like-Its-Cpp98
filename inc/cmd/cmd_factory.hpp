@@ -25,6 +25,7 @@
 #include "quit.hpp"
 #include "topic.hpp"
 #include "user.hpp"
+#include "who.hpp"
 
 
 // -- I R C  N A M E S P A C E ------------------------------------------------

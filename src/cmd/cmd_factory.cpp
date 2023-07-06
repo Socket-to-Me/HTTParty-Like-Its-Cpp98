@@ -20,6 +20,7 @@ std::map<std::string, irc::cmd_factory::cmd_maker>	init(void) {
 	_cmds.insert(pair("QUIT", irc::quit::create));
 	_cmds.insert(pair("TOPIC", irc::topic::create));
 	_cmds.insert(pair("USER", irc::user::create));
+	_cmds.insert(pair("WHO", irc::who::create));
 
 	return _cmds;
 }

@@ -48,6 +48,7 @@ namespace irc {
         const std::string& rpl_whoisserver_312(irc::connection& conn);
         const std::string& rpl_whoisoperator_313(irc::connection& conn);
         const std::string& rpl_whowasuser_314(irc::connection& conn);
+        const std::string& rpl_endofwho_315(irc::connection& conn);
         const std::string& rpl_whoisidle_317(irc::connection& conn);
         const std::string& rpl_endofwhois_318(irc::connection& conn);
         const std::string& rpl_whoischannels_319(irc::connection& conn);
