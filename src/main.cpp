@@ -1,7 +1,7 @@
 #include "server.hpp"
 #include "signal.hpp"
 #include "terminal.hpp"
-#include <cstdint>
+#include <stdint.h>
 
 #if defined(__linux__)
 # define PORT 5000
