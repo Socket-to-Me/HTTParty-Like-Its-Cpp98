@@ -349,7 +349,13 @@ void irc::server::accept_new_connection(void) {
 		} while (msg.size() > 0);
 
 
-		if (conn.getnick().length() && conn.getuser().length()) {
+		if (conn.getnick().empty() || conn.getuser().empty())
+		{ // Failure to set up new connection with unique nick
+
+			close(clientSocket);
+			_pollfds.pop_back();
+
+		} else { // ---------------------------------- success
 
 			irc::log::print("New connection: " + conn.getnick());
 
@@ -363,10 +369,6 @@ void irc::server::accept_new_connection(void) {
 			conn.send(irc::numerics::rpl_myinfo_004(conn));
 			conn.send(irc::numerics::rpl_isupport_005(conn));
 
-		} else { // Failure to set up new connection with unique nick
-
-			close(clientSocket);
-			_pollfds.pop_back();
 		}
 	}
 }
