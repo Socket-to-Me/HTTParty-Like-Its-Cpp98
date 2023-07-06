@@ -298,12 +298,12 @@ int irc::server::setup_client_socket(void) const {
 void irc::server::accept_new_connection(void) {
 
 	// check for poll errors
-	if ((_pollfds[0].revents & POLLERR)
+	/*if ((_pollfds[0].revents & POLLERR)
 	 || (_pollfds[0].revents & POLLHUP)
 	 || (_pollfds[0].revents & POLLNVAL)) {
 		irc::log::add_line("\x1b[31mError on pollfd.\x1b[0m");
 		return;
-	}
+	}*/
 
 	if (_pollfds[0].revents & POLLIN) {
 
@@ -387,8 +387,8 @@ void irc::server::handle_active_connections(void) {
     /* loop over all connections */
     for (map_iter it = _connections.begin(); it != _connections.end(); ++it) {
 
-		if (it->second.check_fails()  == true
-		 /*|| it->second.dead_routine() == true*/) { _remove_queue.push(&it->second); continue; }
+		//if (it->second.check_fails()  == true
+		 ///*|| it->second.dead_routine() == true*/) { _remove_queue.push(&it->second); continue; }
 
 		// check if connection is active
 		if (it->second.receive() == false) { continue; }
