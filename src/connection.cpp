@@ -269,6 +269,16 @@ const std::string&  irc::connection::getuser(void) const
 	return _user;
 }
 
+const std::string&  irc::connection::gethost(void) const
+{
+	return _host;
+}
+
+const std::string&  irc::connection::getrealname(void) const
+{
+	return _realname;
+}
+
 const std::string&  irc::connection::getmsg(void) const
 {
 	return _msg;
@@ -317,6 +327,18 @@ void  irc::connection::setnick(const std::string& str)
 void  irc::connection::setuser(const std::string& str)
 {
 	_user = str;
+	return;
+}
+
+void  irc::connection::sethost(const std::string& str)
+{
+	_host = str;
+	return;
+}
+
+void  irc::connection::setrealname(const std::string& str)
+{
+	_realname = str;
 	return;
 }
 

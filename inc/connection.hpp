@@ -92,6 +92,12 @@ namespace irc {
 			/* get user */
             const std::string&  getuser(void) const;
 
+			/* get host */
+            const std::string&  gethost(void) const;
+
+			/* get real name */
+            const std::string&  getrealname(void) const;
+
 			/* get message */
             const std::string&  getmsg(void) const;
 
@@ -118,13 +124,19 @@ namespace irc {
 			/* set user */
             void  setuser(const std::string& str);
 
+			/* set host */
+            void  sethost(const std::string& str);
+
+			/* set real name */
+            void  setrealname(const std::string& str);
+
 			/* set message */
             void  setmsg(const std::string& str);
 
 			/* set password */
             void  setpassword(const std::string& str);
 
-			/* set channel name */
+			/* set channel name & target for numerics */
             void  setchannelname(const std::string& str);
             void  settarget(const std::string& str);
 
@@ -176,6 +188,12 @@ namespace irc {
 
 			/* password */
             std::string _password;
+
+			/* host */
+            std::string _host;
+
+			/* real name */
+            std::string _realname;
 
 			/* channel name */
             std::string _channelname;

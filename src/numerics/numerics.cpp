@@ -245,7 +245,7 @@ const std::string& irc::numerics::rpl_whoreply_352(irc::connection& conn) {
     irc::connection&    usr = serv.getconnection(conn.gettarget());
 
     conn.setmsg("352 " + conn.getnick() + " " + conn.getchannelname() + " " + \
-    usr.getuser() + " " + serv.getname() + " " + usr.getnick() + " H :0 " + usr.getuser() + "\r\n");
+    usr.getuser() + " " + conn.gethost() + " " + serv.getname() + " " + usr.getnick() + " H :0 " + usr.getrealname() + "\r\n");
     return conn.getmsg();
 }
 
@@ -585,7 +585,7 @@ const std::string& irc::numerics::err_needmoreparams_461(irc::connection& conn) 
 }
 
 const std::string& irc::numerics::err_alreadyregistered_462(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("462 " + conn.getnick() + " :You may not reregister" + "\r\n");
     return conn.getmsg();
 }
 
