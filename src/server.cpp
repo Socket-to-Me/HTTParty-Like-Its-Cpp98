@@ -82,6 +82,32 @@ void irc::server::start(const std::string &ip, int port) {
 						  _channels.size());
 
 
+		//loop over all connections
+		for (connection_map::iterator it = _connections.begin(); it != _connections.end(); ++it) {
+
+			int fd = it->second.getfd();
+
+			std::stringstream ss;
+
+			ss << fd;
+
+			irc::log::add_line("map_co: " + ss.str());
+
+		}
+
+		// loop over all pollfds
+		for (pollfd_vector::size_type i = 0; i < _pollfds.size(); ++i) {
+
+			int fd = _pollfds[i].fd;
+
+			std::stringstream ss;
+
+			ss << fd;
+
+			irc::log::add_line("pollfd: " + ss.str());
+
+		}
+
 
 
 		// get number of events
