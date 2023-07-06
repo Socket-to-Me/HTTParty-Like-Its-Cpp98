@@ -73,22 +73,23 @@ void irc::server::start(const std::string &ip, int port) {
 	// main server loop
     while (_is_running) {
 
-		std::vector<pollfd> pollfds;
+		_pollfds.clear();
+
 		pollfd server_pollfd = { _socket, POLLIN, 0 };
 		// add server socket to pollfds
-		pollfds.push_back(server_pollfd);
+		_pollfds.push_back(server_pollfd);
 
 		// loop over all connections and add them to pollfds
 		for (connection_map::iterator it = _connections.begin(); it != _connections.end(); ++it) {
 			pollfd client_pollfd = { it->second.getfd(), POLLIN, 0 };
-			pollfds.push_back(client_pollfd);
+			_pollfds.push_back(client_pollfd);
 		}
 
 
 		irc::log::refresh(_networkname,
 						  _version,
 						  _creation,
-						  pollfds.size() - 1,
+						  _pollfds.size() - 1,
 						  _connections.size(),
 						  _channels.size());
 
@@ -96,8 +97,7 @@ void irc::server::start(const std::string &ip, int port) {
 
 
 		// get number of events
-        //int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
-        int pollCount = poll(pollfds.data(), pollfds.size(), 0);
+        int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
 
 		if (pollCount == -1) {
 			if (errno == EINTR) { break; }
