@@ -290,12 +290,12 @@ int irc::server::setup_client_socket(void) const {
 void irc::server::accept_new_connection(void) {
 
 	// check for poll errors
-	if ((_pollfds[0].revents & POLLERR)
+	/*if ((_pollfds[0].revents & POLLERR)
 	 || (_pollfds[0].revents & POLLHUP)
 	 || (_pollfds[0].revents & POLLNVAL)) {
 		irc::log::add_line("\x1b[31mError on pollfd.\x1b[0m");
 		return;
-	}
+	}*/
 
 	if (_pollfds[0].revents & POLLIN) {
 
