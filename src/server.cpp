@@ -68,33 +68,24 @@ void irc::server::start(const std::string &ip, int port) {
 
 
 	// init logger
-	irc::log::init();
+	//irc::log::init();
 
 	// main server loop
     while (_is_running) {
 
+
 		/*
-		_pollfds.clear();
-
-		pollfd server_pollfd = { _socket, POLLIN, 0 };
-		// add server socket to pollfds
-		_pollfds.push_back(server_pollfd);
-
-		// loop over all connections and add them to pollfds
-		for (connection_map::iterator it = _connections.begin(); it != _connections.end(); ++it) {
-			pollfd client_pollfd = { it->second.getfd(), POLLIN, 0 };
-			_pollfds.push_back(client_pollfd);
-		}*/
-
-
 		irc::log::refresh(_networkname,
 						  _version,
 						  _creation,
 						  _pollfds.size() - 1,
 						  _connections.size(),
 						  _channels.size());
+						  */
 
 
+		std::cout << "pollfds: " << _pollfds.size() << std::endl;
+		std::cout << "connections: " << _connections.size() << std::endl;
 
 
 		// get number of events
@@ -117,7 +108,7 @@ void irc::server::start(const std::string &ip, int port) {
 		usleep(100000);
     }
 
-	irc::log::exit();
+	//irc::log::exit();
 
 	irc::out<3>::print("server stopped");
 
@@ -459,6 +450,8 @@ void irc::server::handle_active_connections(void) {
 void irc::server::unsubscribe(irc::connection& conn) {
 
 
+	std::cout << "Unsubscribing " << conn.getnick() << std::endl;
+	std::cout << "fd: " << conn.getfd() << std::endl;
 
 	// remove user from channels
 	leave_all_channels(conn);
