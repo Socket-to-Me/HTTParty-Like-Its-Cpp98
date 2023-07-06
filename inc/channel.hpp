@@ -23,6 +23,9 @@ namespace irc {
 
 			// -- public constructors -----------------------------------------
 
+			/* default constructor */
+            channel(void);
+
 			/* parametric constructor */
             channel(const std::string& name);
 
@@ -31,6 +34,10 @@ namespace irc {
 
 			/* destructor */
 			~channel(void);
+
+			/* copy assignment operator */
+			channel& operator=(const channel&);
+
 
 			// -- public accessors --------------------------------------------
             const std::string&  getname(void) const;
@@ -87,13 +94,6 @@ namespace irc {
 			// -- private methods ----------------------------------------------
             const std::string&  getkey(void) const;
 
-			/* default constructor */
-            channel(void);
-
-			// -- private assignment operator ----------------------------------
-
-			/* copy assignment operator */
-			channel& operator=(const channel&);
 
 			// -- private members --------------------------------------------
 			std::string						_name;

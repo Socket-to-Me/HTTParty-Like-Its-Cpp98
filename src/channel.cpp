@@ -3,6 +3,21 @@
 
 // -- public constructors -----------------------------------------
 
+/* default constructor */
+irc::channel::channel(void)
+: _name(""),
+  _topic(""),
+  _key(""),
+  _limit(0),
+  _operators(),
+  _connections(),
+  _invitations(),
+  _mode_invite_only(false),
+  _mode_topic_restricted(false),
+  _mode_user_limit(false),
+  _mode_channel_key(false) {
+}
+
 /* parametric constructor */
 irc::channel::channel(const std::string& name)
 : _name(name),
@@ -36,6 +51,27 @@ irc::channel::channel(const channel& other)
   _mode_channel_key(other._mode_channel_key) {
 
 	return;
+}
+
+/* copy assignment operator */
+irc::channel& irc::channel::operator=(const irc::channel& other) {
+
+	if (this != &other) // not a self-assignment
+	{
+		_name = other._name;
+		_topic = other._topic;
+		_key = other._key;
+		_limit = other._limit;
+		_operators = other._operators;
+		_connections = other._connections;
+		_invitations = other._invitations;
+		_mode_invite_only = other._mode_invite_only;
+		_mode_topic_restricted = other._mode_topic_restricted;
+		_mode_user_limit = other._mode_user_limit;
+		_mode_channel_key = other._mode_channel_key;
+
+	}
+	return *this;
 }
 
 /* destructor */
@@ -494,10 +530,6 @@ std::string irc::channel::getsymbol(void) const {
 
 // --------------------------------------------------
 
-/* default constructor */
-irc::channel::channel(void) {
-	return;
-}
 
 // -- private methods ----------------------------------------------
 const std::string&  irc::channel::getkey(void) const {
@@ -506,17 +538,3 @@ const std::string&  irc::channel::getkey(void) const {
 
 // -- private assignment operator ----------------------------------
 
-/* copy assignment operator */
-irc::channel& irc::channel::operator=(const irc::channel& other) {
-
-	if (this != &other) // not a self-assignment
-	{
-		_name = other.getname();
-		_topic = other.gettopic();
-		_key = other.getmode();
-		_operators = other.getoperators();
-		_connections = other.getconnections();
-
-	}
-	return *this;
-}
