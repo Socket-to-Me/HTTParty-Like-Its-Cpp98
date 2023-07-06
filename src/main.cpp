@@ -1,6 +1,7 @@
 #include "server.hpp"
 #include "signal.hpp"
 #include "terminal.hpp"
+#include <cstdint>
 
 #if defined(__linux__)
 # define PORT 5000
@@ -26,7 +27,7 @@ bool is_only_printable(const char* arg) {
 	} return true;
 }
 
-int check_arguments(const int ac, const char* const* av, std::uint16_t& port) {
+int check_arguments(const int ac, const char* const* av, uint16_t& port) {
 
 	if (ac != 3) {
 		std::cerr << "usage: " << av[0] << " <port> <password>" << std::endl;
@@ -57,7 +58,7 @@ int check_arguments(const int ac, const char* const* av, std::uint16_t& port) {
 
 int main(int ac, char** av) {
 
-	std::uint16_t port;
+	uint16_t port;
 
 	if (check_arguments(ac, av, port) == EXIT_FAILURE)
 		return EXIT_FAILURE;
