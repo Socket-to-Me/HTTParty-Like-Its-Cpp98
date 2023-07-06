@@ -73,6 +73,7 @@ void irc::server::start(const std::string &ip, int port) {
 	// main server loop
     while (_is_running) {
 
+		/*
 		_pollfds.clear();
 
 		pollfd server_pollfd = { _socket, POLLIN, 0 };
@@ -83,7 +84,7 @@ void irc::server::start(const std::string &ip, int port) {
 		for (connection_map::iterator it = _connections.begin(); it != _connections.end(); ++it) {
 			pollfd client_pollfd = { it->second.getfd(), POLLIN, 0 };
 			_pollfds.push_back(client_pollfd);
-		}
+		}*/
 
 
 		irc::log::refresh(_networkname,
@@ -464,8 +465,10 @@ void irc::server::unsubscribe(irc::connection& conn) {
 
 	int fd = conn.getfd();
 
-	// close socket
-	close(fd);
+	if (fd != -1) {
+		// close socket
+		close(fd);
+	}
 
 	// search for connection in map
 	connection_map::iterator it = _connections.find(conn.getnick());
@@ -475,7 +478,7 @@ void irc::server::unsubscribe(irc::connection& conn) {
 		_connections.erase(it); }
 
 	// remove pollfd
-	//remove_pollfd(fd);
+	remove_pollfd(fd);
 
 }
 
