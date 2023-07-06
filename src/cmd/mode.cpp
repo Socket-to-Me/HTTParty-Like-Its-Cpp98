@@ -35,13 +35,12 @@ bool irc::mode::execute(void) {
         } else { // -------------------- change modes
             irc::channel&   channel = irc::server::instance().getchannel(_target);
             
-            channel.broadcast(":" + _conn.getnick() + " MODE " + _target + " " + _modestring + "\r\n");
-            
             if (channel.setmode(_conn, params) == false) {
                 _conn.send(irc::numerics::err_umodeunknownflag_501(_conn));
                 return false;
             }
 
+            channel.broadcast(":" + _conn.getnick() + " MODE " + _target + " " + _modestring + "\r\n");
         }
     }
     else { // --------------------------------- user mode

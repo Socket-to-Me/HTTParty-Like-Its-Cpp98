@@ -87,11 +87,9 @@ void irc::server::start(const std::string &ip, int port) {
 		// get number of events
         int pollCount = poll(_pollfds.data(), _pollfds.size(), 60 * 1000);
 
-		std::stringstream ss;
-
-		ss << pollCount;
-
-		irc::log::add_line("pollCount: " + ss.str());
+		// std::stringstream ss;
+		// ss << pollCount;
+		// irc::log::add_line("pollCount: " + ss.str());
 
 		if (pollCount == -1) {
 			if (errno == EINTR) { break; }

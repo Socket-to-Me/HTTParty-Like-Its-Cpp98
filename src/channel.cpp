@@ -156,8 +156,8 @@ void  irc::channel::settopic(const irc::connection& op, const std::string& str) 
 
 bool  irc::channel::setmode(const irc::connection& op, const std::vector<std::string>& params) {
 
-	std::string modestring = params[0];
-	const std::vector<std::string>& args = std::vector<std::string>(params.begin() + 1, params.end());
+	std::string modestring = params[1];
+	const std::vector<std::string>& args = std::vector<std::string>(params.begin() + 2, params.end());
 
     if (isOperator(op)) {
 
@@ -259,7 +259,7 @@ bool irc::channel::check_modestring(const std::string& str) const {
 
     for (size_t i = 1; i < str.length(); ++i) {
 
-        if (!std::isalpha(str[i])) {
+        if (std::isalpha(str[i])) {
 
             if (str[i] == '+') {
                 if (hasPlus) {
