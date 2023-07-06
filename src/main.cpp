@@ -11,19 +11,68 @@
 #include "parser.hpp"
 #include "msg.hpp"
 
-int main(int ac, char** av) {
 
-	/*if (ac != 1) {
-		std::cerr << "Usage: " << av[0] << std::endl;
+bool is_only_digits(const char* arg) {
+	while (*arg) { if (!std::isdigit(*arg))
+			return false;
+		++arg;
+	} return true;
+}
+
+bool is_only_printable(const char* arg) {
+	while (*arg) { if (!std::isprint(*arg))
+			return false;
+		++arg;
+	} return true;
+}
+
+int check_arguments(const int ac, const char* const* av, std::uint16_t& port) {
+
+	if (ac != 3) {
+		std::cerr << "usage: " << av[0] << " <port> <password>" << std::endl;
 		return EXIT_FAILURE;
-	}*/
+	}
 
+	// TODO: check if port is a number
+	std::stringstream ss(av[1]);
 
-	irc::server& server = irc::server::instance();
+	if (is_only_digits(av[1]) == false) {
+		std::cerr << "\x1b[32mirc error:\x1b[0m port is not a number" << std::endl;
+		return EXIT_FAILURE;
+	}
 
-	irc::signal signal;
+	if (!(ss >> port)) {
+		std::cerr << "\x1b[32mirc error:\x1b[0m overflow port" << std::endl;
+		return EXIT_FAILURE;
+	}
 
-	server.start("127.0.0.1", PORT);
+	if (is_only_printable(av[2]) == false) {
+		std::cerr << "\x1b[32mirc error:\x1b[0m password is not printable" << std::endl;
+		return EXIT_FAILURE;
+	}
 
 	return EXIT_SUCCESS;
+}
+
+
+int main(int ac, char** av) {
+
+	std::uint16_t port;
+
+	if (check_arguments(ac, av, port) == EXIT_FAILURE)
+		return EXIT_FAILURE;
+
+	irc::server& server = irc::server::instance();
+	irc::signal signal;
+
+	server.start("127.0.0.1", port);
+	return EXIT_SUCCESS;
+
+
+
+
+
+
+
+
 }
