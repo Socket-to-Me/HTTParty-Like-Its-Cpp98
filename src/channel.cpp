@@ -5,14 +5,35 @@
 
 /* parametric constructor */
 irc::channel::channel(const std::string& name)
-: _name(name), _mode_invite_only(false), _mode_topic_restricted(false), _mode_user_limit(false), _mode_channel_key(false) {
+: _name(name),
+  _topic(""),
+  _key(""),
+  _limit(0),
+  _operators(),
+  _connections(),
+  _invitations(),
+  _mode_invite_only(false),
+  _mode_topic_restricted(false),
+  _mode_user_limit(false),
+  _mode_channel_key(false) {
 
 	return;
 }
 
 /* copy constructor */
 irc::channel::channel(const channel& other)
-: _name(other._name), _topic(other._topic), _key(other._key), _mode_invite_only(other._mode_invite_only), _mode_topic_restricted(other._mode_topic_restricted), _mode_user_limit(other._mode_user_limit), _mode_channel_key(other._mode_channel_key) {
+: _name(other._name),
+  _topic(other._topic),
+  _key(other._key),
+  _limit(other._limit),
+  _operators(other._operators),
+  _connections(other._connections),
+  _invitations(other._invitations),
+
+  _mode_invite_only(other._mode_invite_only),
+  _mode_topic_restricted(other._mode_topic_restricted),
+  _mode_user_limit(other._mode_user_limit),
+  _mode_channel_key(other._mode_channel_key) {
 
 	return;
 }
