@@ -138,7 +138,7 @@ void irc::log::refresh(const std::string& server_name,
 			+ std::string("connections: ")
 			+ "\x1b[33m"
 			+ to_string(num_connections)
-			+ "\x1b[0m\n\n");
+			+ "\x1b[0m\n");
 
 	// print number of channels
 	buffer.append(
