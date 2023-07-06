@@ -377,8 +377,8 @@ void irc::server::handle_active_connections(void) {
     /* loop over all connections */
     for (map_iter it = _connections.begin(); it != _connections.end(); ++it) {
 
-		if (it->second.check_fails()  == true
-		 /*|| it->second.dead_routine() == true*/) { _remove_queue.push(&it->second); continue; }
+		//if (it->second.check_fails()  == true
+		// /*|| it->second.dead_routine() == true*/) { _remove_queue.push(&it->second); continue; }
 
 		// check if connection is active
 		if (it->second.receive() == false) { continue; }
