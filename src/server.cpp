@@ -396,10 +396,10 @@ void irc::server::handle_active_connections(void) {
     /* loop over all connections */
     for (map_iter it = _connections.begin(); it != _connections.end(); ++it) {
 
-		if (it->second.check_fails()  == true) {
+		/*if (it->second.check_fails()  == true) {
 			_remove_queue.push(&it->second);
 			continue;
-		}
+		}*/
 		 ///*|| it->second.dead_routine() == true*/)
 
 		// check if connection is active
