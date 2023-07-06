@@ -73,12 +73,29 @@ void irc::server::start(const std::string &ip, int port) {
 	// main server loop
     while (_is_running) {
 
+		/*
+		_pollfds.clear();
+
+		pollfd server_pollfd = { _socket, POLLIN, 0 };
+		// add server socket to pollfds
+		_pollfds.push_back(server_pollfd);
+
+		// loop over all connections and add them to pollfds
+		for (connection_map::iterator it = _connections.begin(); it != _connections.end(); ++it) {
+			pollfd client_pollfd = { it->second.getfd(), POLLIN, 0 };
+			_pollfds.push_back(client_pollfd);
+		}*/
+
+
 		irc::log::refresh(_networkname,
 						  _version,
 						  _creation,
 						  _pollfds.size() - 1,
 						  _connections.size(),
 						  _channels.size());
+
+
+
 
 		// get number of events
         int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
@@ -91,6 +108,7 @@ void irc::server::start(const std::string &ip, int port) {
 			}
 			continue;
 		}
+
 		// check server listening socket for recent events
 		accept_new_connection();
 		// check client sockets for new events
@@ -225,6 +243,7 @@ int irc::server::setupSocket(const std::string &ip, int port) {
     int yes = 1;
 	if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
 		perror("error: setsockopt");
+		close(_socket);
         return -1;
     }
 
@@ -235,11 +254,13 @@ int irc::server::setupSocket(const std::string &ip, int port) {
 
     if (bind(_socket, (sockaddr *)&hint, sizeof(hint)) == -1) {
 		perror("error: bind");
+		close(_socket);
 		return -1;
     }
 
     if (listen(_socket, SOMAXCONN) == -1) {
 		perror("error: listen");
+		close(_socket);
 		return -1;
     }
 
@@ -301,7 +322,8 @@ void irc::server::accept_new_connection(void) {
 	if ((_pollfds[0].revents & POLLERR)
 	 || (_pollfds[0].revents & POLLHUP)
 	 || (_pollfds[0].revents & POLLNVAL)) {
-		irc::log::add_line("\x1b[31mError on pollfd.\x1b[0m");
+		irc::log::add_line("\x1b[31mError on pollfd [0].\nexiting\x1b[0m");
+		_is_running = false;
 		return;
 	}
 
@@ -387,8 +409,11 @@ void irc::server::handle_active_connections(void) {
     /* loop over all connections */
     for (map_iter it = _connections.begin(); it != _connections.end(); ++it) {
 
-		if (it->second.check_fails()  == true
-		 /*|| it->second.dead_routine() == true*/) { _remove_queue.push(&it->second); continue; }
+		if (it->second.check_fails()  == true) {
+			_remove_queue.push(&it->second);
+			continue;
+		}
+		 ///*|| it->second.dead_routine() == true*/)
 
 		// check if connection is active
 		if (it->second.receive() == false) { continue; }
@@ -433,20 +458,27 @@ void irc::server::handle_active_connections(void) {
 /* unsubscribe client connection */
 void irc::server::unsubscribe(irc::connection& conn) {
 
-	// remove pollfd
-	remove_pollfd(conn.getfd());
 
-	// close socket
-	close(conn.getfd());
 
 	// remove user from channels
 	leave_all_channels(conn);
+
+	int fd = conn.getfd();
+
+	if (fd != -1) {
+		// close socket
+		close(fd);
+	}
 
 	// search for connection in map
 	connection_map::iterator it = _connections.find(conn.getnick());
 
 	// check if connection was found
-	if (it != _connections.end()) { _connections.erase(it); }
+	if (it != _connections.end()) {
+		_connections.erase(it); }
+
+	// remove pollfd
+	remove_pollfd(fd);
 
 }
 
