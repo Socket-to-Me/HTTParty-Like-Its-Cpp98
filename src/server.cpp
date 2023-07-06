@@ -72,7 +72,8 @@ void irc::server::start(const std::string &ip, int port) {
 		irc::log::refresh(_networkname,
 						  _version,
 						  _creation,
-						  _pollfds.size() - 1 != _connections.size() ? _pollfds.size() - 1 : 100000);
+						  _pollfds.size() - 1,
+						  _connections.size());
 
 		// get number of events
         int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);

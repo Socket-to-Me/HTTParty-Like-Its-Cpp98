@@ -61,6 +61,7 @@ void irc::log::print(const std::string& str) {
 void irc::log::refresh(const std::string& server_name,
 					   const std::string& server_version,
 					   const std::string& server_creation,
+					   const std::size_t num_pollfd,
 					   const std::size_t num_connections) {
 
 
@@ -125,10 +126,18 @@ void irc::log::refresh(const std::string& server_name,
 	// print number of connections
 	buffer.append(
 			"\x1b[31m"
-			+ std::string("clients: ")
+			+ std::string("pollfds: ")
+			+ "\x1b[33m"
+			+ to_string(num_pollfd)
+			+ "\x1b[0m\n");
+
+	// print number of connections
+	buffer.append(
+			"\x1b[31m"
+			+ std::string("connections: ")
 			+ "\x1b[33m"
 			+ to_string(num_connections)
-			+ " connections\x1b[0m\n\n");
+			+ "\x1b[0m\n\n");
 
 
 	// previous line count
