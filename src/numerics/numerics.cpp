@@ -241,11 +241,7 @@ const std::string& irc::numerics::rpl_nowaway_306(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_whoreply_352(irc::connection& conn) {
-    irc::server&        serv = irc::server::instance();
-    irc::connection&    usr = serv.getconnection(conn.gettarget());
-
-    conn.setmsg("352 " + conn.getnick() + " " + conn.getchannelname() + " " + \
-    usr.getuser() + " " + usr.gethost() + " " + serv.getname() + " " + usr.getnick() + " H :0 " + usr.getrealname() + "\r\n");
+    conn.setmsg("N/A \r\n");
     return conn.getmsg();
 }
 
@@ -585,7 +581,7 @@ const std::string& irc::numerics::err_needmoreparams_461(irc::connection& conn) 
 }
 
 const std::string& irc::numerics::err_alreadyregistered_462(irc::connection& conn) {
-    conn.setmsg("462 " + conn.getnick() + " :You may not reregister" + "\r\n");
+    conn.setmsg("N/A \r\n");
     return conn.getmsg();
 }
 
@@ -610,7 +606,7 @@ const std::string& irc::numerics::err_unknownmode_472(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_inviteonlychan_473(irc::connection& conn) {
-    conn.setmsg("473 " + conn.getnick() + " " + conn.gettarget() + " :Cannot join channel (+i)" + "\r\n");
+    conn.setmsg("N/A \r\n");
     return conn.getmsg();
 }
 

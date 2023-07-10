@@ -365,6 +365,23 @@ bool irc::channel::broadcast(const std::string& msg) {
 	return true;
 }
 
+bool irc::channel::broadcastNumeric(const std::string& target, const std::string& (*numfn)(irc::connection&)) {
+
+	std::vector<irc::connection*>::iterator	it;
+
+	for (it=_connections.begin(); it!=_connections.end(); ++it) {
+
+		irc::connection&	conn = **it;
+		conn.settarget(target);
+		conn.setchannelname(_name);
+
+		if (conn.send((*numfn)(conn)) <= 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
 bool irc::channel::send(const std::string& nick, const std::string& msg) {
 
 	std::vector<irc::connection*>::iterator	it;

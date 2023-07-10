@@ -41,6 +41,9 @@ bool irc::join::execute(void)
             channel.setkey(_conn, _password);
         }
 
+        // replies
+        channel.broadcast(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
+
     } else { // ---------------------------------------------------- existing channel
 
         irc::channel& channel = irc::server::instance().getchannel(_channel);
@@ -119,15 +122,16 @@ bool irc::join::execute(void)
             }
         }
 
-    }
-    
-    irc::channel& channel = irc::server::instance().getchannel(_channel);
-    channel.broadcast(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
+        // replies
+        channel.broadcast(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
+        channel.broadcastNumeric("", irc::numerics::rpl_topic_332);
 
-    _conn.setchannelname(_channel);
-    _conn.send(irc::numerics::rpl_topic_332(_conn));
-    _conn.send(irc::numerics::rpl_namreply_353(_conn));
-    _conn.send(irc::numerics::rpl_endofnames_366(_conn));
+    }
+
+    // replies
+    irc::channel& channel = irc::server::instance().getchannel(_channel);
+    channel.broadcastNumeric("", irc::numerics::rpl_namreply_353);
+    channel.broadcastNumeric("", irc::numerics::rpl_endofnames_366);
 
     return true;
 }
