@@ -241,7 +241,11 @@ const std::string& irc::numerics::rpl_nowaway_306(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_whoreply_352(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+
+    irc::server&        serv = irc::server::instance();
+    irc::connection&    usr = serv.getconnection(conn.gettarget());
+
+    conn.setmsg("352 " + conn.getnick() + " " + conn.getchannelname() + " " + usr.getuser() + " " + usr.gethost() + " " + serv.getname() + " " + usr.getnick() + " H :0 " + usr.getrealname() + "\r\n");
     return conn.getmsg();
 }
 
