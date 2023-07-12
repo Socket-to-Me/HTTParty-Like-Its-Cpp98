@@ -1,6 +1,25 @@
 #include "server.hpp"
 #include "sstream"
 
+#include <fcntl.h>
+
+void set_non_blocking(int sock) {
+    int opts;
+
+    opts = fcntl(sock, F_GETFL);
+    if (opts < 0) {
+        perror("fcntl(F_GETFL)");
+        exit(EXIT_FAILURE);
+    }
+    opts = (opts | O_NONBLOCK);
+    if (fcntl(sock,F_SETFL,opts) < 0) {
+        perror("fcntl(F_SETFL)");
+        exit(EXIT_FAILURE);
+    }
+    return;
+}
+
+
 // -- private static members --------------------------------------------------
 
 /* singleton instance */
@@ -70,6 +89,8 @@ void irc::server::start(const std::string &ip, const uint16_t port, const char* 
 	// setup server socket
     if (setupSocket(ip, port) != 0) { return; }
 
+	// set socket to non-blocking
+	set_non_blocking(_socket);
 
 	// init logger
 	irc::log::init();
@@ -309,6 +330,10 @@ int irc::server::setup_client_socket(void) const {
 	for (pollfd_vector::const_iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
 		if (it->fd == socket) { return -1; }
 	}
+
+	// set socket to non-blocking
+	set_non_blocking(socket);
+
 	// return socket
 	return socket;
 }
