@@ -180,6 +180,9 @@ namespace irc {
 			/* password */
 			std::string _password;
 
+			/* tmp connection */
+			std::vector<irc::connection> _tmp_connections;
+
 
 			// -- private methods ---------------------------------------------
 
@@ -200,6 +203,9 @@ namespace irc {
 
 			/* handle active connections */
 			void handle_active_connections(void);
+
+			/* handle tmp connections */
+			void handle_tmp_connections(void);
 
 	};
 

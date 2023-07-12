@@ -19,7 +19,10 @@ irc::connection::connection(struct pollfd& pfd)
   _registered(false),
   _wait_pong(false),
   _last_ping(0),
-  _alive(true) {
+  _alive(true),
+  _have_user(false),
+  _have_nick(false),
+  _have_pass(false) {
 	return;
 }
 
@@ -37,7 +40,10 @@ irc::connection::connection(const irc::connection& other)
   _registered(other._registered),
   _wait_pong(other._wait_pong),
   _last_ping(other._last_ping),
-  _alive(other._alive) {
+  _alive(other._alive),
+  _have_user(other._have_user),
+  _have_nick(other._have_nick),
+  _have_pass(other._have_pass) {
 }
 
 /* destructor */
@@ -67,6 +73,9 @@ irc::connection& irc::connection::operator=(const irc::connection& other) {
 		  _wait_pong = other._wait_pong;
 		  _last_ping = other._last_ping;
 		      _alive = other._alive;
+		  _have_user = other._have_user;
+		  _have_nick = other._have_nick;
+		  _have_pass = other._have_pass;
 	} // return self-reference
 	return *this;
 }
@@ -90,35 +99,6 @@ bool irc::connection::operator==(const irc::connection& other) const {
 
 
 // -- public methods ----------------------------------------------------------
-
-
-
-/* dead routine */
-bool irc::connection::dead_routine(void) {
-
-	// check if waiting for pong
-	if (_wait_pong == true) {
-		// check if timeout
-		if ((std::time(0) - _last_ping) > 10) {
-			// set not alive
-			_alive = false;
-			//irc::log::add_line("Connection " + std::to_string(_pfd.fd) + " is dead. 💀");
-			return true;
-		}
-	}
-
-	// check if time to ping
-	else if ((std::time(0) - _last_ping) > 10) {
-		// send ping message
-		send("PING :httparty.like.its.98\r\n");
-		// update last ping time
-		_last_ping = std::time(0);
-		// update wait pong flag
-		_wait_pong = true;
-	}
-
-	return false;
-}
 
 /* reset counter */
 void irc::connection::pong(void) {
@@ -238,11 +218,6 @@ std::string irc::connection::extract_message(void) {
 	return "";
 }
 
-/* is alive */
-bool irc::connection::is_alive(void) const {
-	return _alive;
-}
-
 
 
 // -- public accessors --------------------------------------------------------
@@ -318,6 +293,20 @@ bool irc::connection::is_registered(void) const {
 	return _registered;
 }
 
+/* have pass */
+bool irc::connection::have_pass(void) const {
+	return _have_pass;
+}
+
+/* have nick */
+bool irc::connection::have_nick(void) const {
+	return _have_nick;
+}
+
+/* have user */
+bool irc::connection::have_user(void) const {
+	return _have_user;
+}
 
 
 // S E T T E R S ---------
@@ -327,53 +316,61 @@ void irc::connection::register_client(void) {
 	_registered = true;
 }
 
-void  irc::connection::setnick(const std::string& str)
-{
+void  irc::connection::setnick(const std::string& str) {
 	_nick = str;
 	return;
 }
 
-void  irc::connection::setuser(const std::string& str)
-{
+void  irc::connection::setuser(const std::string& str) {
 	_user = str;
 	return;
 }
 
-void  irc::connection::sethost(const std::string& str)
-{
+void  irc::connection::sethost(const std::string& str) {
 	_host = str;
 	return;
 }
 
-void  irc::connection::setrealname(const std::string& str)
-{
+void  irc::connection::setrealname(const std::string& str) {
 	_realname = str;
 	return;
 }
 
-void  irc::connection::setmsg(const std::string& str)
-{
+void  irc::connection::setmsg(const std::string& str) {
 	_msg = str;
 	return;
 }
 
-void  irc::connection::setpassword(const std::string& str)
-{
+void  irc::connection::setpassword(const std::string& str) {
 	_password = str;
 	return;
 }
 
-void  irc::connection::setchannelname(const std::string& str)
-{
+void  irc::connection::setchannelname(const std::string& str) {
 	_channelname = str;
 	return;
 }
 
-void  irc::connection::settarget(const std::string& str)
-{
+void  irc::connection::settarget(const std::string& str) {
 	_target = str;
 	return;
 }
+
+/* validate pass */
+void irc::connection::validate_pass(void) {
+	_have_pass = true;
+}
+
+/* validate nick */
+void irc::connection::validate_nick(void) {
+	_have_nick = true;
+}
+
+/* validate user */
+void irc::connection::validate_user(void) {
+	_have_user = true;
+}
+
 
 // -- private methods ---------------------------------------------------------
 

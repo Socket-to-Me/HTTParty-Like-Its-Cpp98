@@ -52,7 +52,9 @@ irc::server::server(void)
   _usermodes("o"),
   _channelmodes("itkol"),
   _channelmodeswithparams(""),
-  _creation(irc::now()) {
+  _creation(irc::now()),
+  _password(""),
+  _tmp_connections() {
 }
 
 /* destructor */
@@ -346,8 +348,6 @@ void irc::server::accept_new_connection(void) {
 
 	if (_pollfds[0].revents & POLLIN) {
 
-
-
 		int clientSocket = setup_client_socket();
 
 		// check for valid socket
@@ -356,46 +356,115 @@ void irc::server::accept_new_connection(void) {
 		irc::log::print("New client connected.");
 
 		add_pollfd(clientSocket);
+
 		irc::connection conn(_pollfds.back());
 
-		//conn.read();
-		std::string msg;
+		// add new connection to tmp vector
+		_tmp_connections.push_back(conn);
 
-		//do {
-		while (conn.read() == true) {
+	}
+}
+
+//		irc::connection conn(_pollfds.back());
+//
+//		conn.read();
+//		std::string msg;
+//
+//		do {
+//
+//			msg = conn.extract_message();
+//
+//			// check for empty msg
+//			if (msg.empty()) { break; }
+//
+//			irc::msg message = irc::parser::parse(msg);
+//
+//			if (message.have_command() == false) { continue; }
+//
+//			// search for command
+//			irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
+//
+//			// check for invalid command
+//			if (!maker) { irc::log::print("Command not found."); continue; }
+//
+//			// instantiate new command
+//			irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
+//
+//			// evaluate command
+//			if (cmd->evaluate() == true) {
+//
+//				// execute command
+//				cmd->execute();
+//
+//			} else {
+//
+//				irc::log::print("Command evaluation failed.");
+//			}
+//
+//		} while (msg.size() > 0);
+//
+//
+//		// ------------------------------------------- failure
+//
+//		if (conn.is_registered() == false) { // --- wrong password
+//			conn.send(irc::numerics::err_passwdmismatch_464(conn));
+//			close(clientSocket);
+//			_pollfds.pop_back();
+//
+//		// ---------------------------------------- duplicate nick
+//		} else if (conn.getnick().empty() || conn.getuser().empty()) {
+//			close(clientSocket);
+//			_pollfds.pop_back();
+//
+//		} else { // ---------------------------------- success
+//
+//			irc::log::print("New connection: " + conn.getnick());
+//
+//			// Add to connection map
+//			_connections.insert(std::make_pair(conn.getnick(), conn));
+//
+//			// Registration greeting
+//			conn.send(irc::numerics::rpl_welcome_001(conn));
+//			conn.send(irc::numerics::rpl_yourhost_002(conn));
+//			conn.send(irc::numerics::rpl_created_003(conn));
+//			conn.send(irc::numerics::rpl_myinfo_004(conn));
+//			conn.send(irc::numerics::rpl_isupport_005(conn));
+//
+//		}
+//	}
+//}
 
 
-			msg = conn.extract_message();
+void irc::server::handle_tmp_connections(void) {
 
-			// check for empty msg
-			if (msg.empty() == false) { 
+	typedef std::vector<irc::connection>::size_type size_type;
 
-			irc::msg message = irc::parser::parse(msg);
+	for (size_type x = 0; x < _tmp_connections.size(); ++x) {
 
-			if (message.have_command() == false) { continue; }
+		if (_tmp_connections[x].check_fails() == true) {
+			_tmp_connections.erase(_tmp_connections.begin() + x);
+			continue;
+		}
+		if (_tmp_connections[x].receive() == false) { continue; }
 
-			// search for command
+
+		std::string msg = _tmp_connections[x].extract_message();
+
+		irc::msg message = irc::parser::parse(msg);
+
+		if (message.have_command()) {
 			irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
-
-			// check for invalid command
-			if (!maker) { irc::log::print("Command not found."); continue; }
-
-			// instantiate new command
-			irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
-
-			// evaluate command
-			if (cmd->evaluate() == true) {
-
-				// execute command
-				cmd->execute();
-
-			} else {
-
-				irc::log::print("Command evaluation failed.");
+			if (maker) {
+				irc::auto_ptr<irc::cmd> cmd = maker(message, _tmp_connections[x]);
+				if (cmd->evaluate() == true) {
+					cmd->execute();
+				}
 			}
-			}
+		}
 
-		} //while (msg.size() > 0);
+	}
+}
+
 
 
 		// // ------------------------------------------- failure
@@ -425,8 +494,6 @@ void irc::server::accept_new_connection(void) {
 		// 	conn.send(irc::numerics::rpl_isupport_005(conn));
 
 		// }
-	}
-}
 
 void irc::server::move_tmp_to_connections(irc::connection& conn) {
 

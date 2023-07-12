@@ -114,6 +114,15 @@ namespace irc {
 			/* is registered */
 			bool is_registered(void) const;
 
+			/* have pass */
+			bool have_pass(void) const;
+
+			/* have nick */
+			bool have_nick(void) const;
+
+			/* have user */
+			bool have_user(void) const;
+
 
 
 			// -- public setters ----------------------------------------------
@@ -143,15 +152,17 @@ namespace irc {
 			/* register client */
 			void register_client(void);
 
-
-			/* dead routine */
-			bool dead_routine(void);
-
-			/* is alive */
-			bool is_alive(void) const;
-
 			/* pong */
 			void pong(void);
+
+			/* validate pass */
+			void validate_pass(void);
+
+			/* validate nick */
+			void validate_nick(void);
+
+			/* validate user */
+			void validate_user(void);
 
 
 
@@ -212,6 +223,16 @@ namespace irc {
 
 			/* alive */
 			bool _alive;
+
+
+			/* have user */
+			bool _have_user;
+
+			/* have nick */
+			bool _have_nick;
+
+			/* have pass */
+			bool _have_pass;
 
     };
 }
