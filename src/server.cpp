@@ -129,6 +129,7 @@ void irc::server::start(const std::string &ip, const uint16_t port, const char* 
 
 		// check server listening socket for recent events
 		accept_new_connection();
+		handle_tmp_connections();
 		// check client sockets for new events
 		handle_active_connections();
 
@@ -563,7 +564,6 @@ void irc::server::handle_active_connections(void) {
 
     // iterator typedef
     typedef std::map<std::string, irc::connection>::iterator map_iter;
-	irc::log::print("loop");
     /* loop over all connections */
     for (map_iter it = _connections.begin(); it != _connections.end(); ++it) {
 
@@ -576,7 +576,6 @@ void irc::server::handle_active_connections(void) {
 		// check if connection is active
 		if (it->second.receive() == false) { continue; }
 
-		irc::log::print("received");
 		std::string msg = it->second.extract_message();
 
 		irc::msg message = irc::parser::parse(msg);
