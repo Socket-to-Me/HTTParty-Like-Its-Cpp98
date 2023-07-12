@@ -47,7 +47,7 @@ irc::server::server(void)
   _connections(),
   _channels(),
   _remove_queue(),
-  _networkname("httparty.like.its.98"),
+  _networkname("httparty-like-its-98"),
   _version("1.1"),
   _usermodes("o"),
   _channelmodes("itkol"),
@@ -129,9 +129,10 @@ void irc::server::start(const std::string &ip, const uint16_t port, const char* 
 
 		// check server listening socket for recent events
 		accept_new_connection();
-		handle_tmp_connections();
 		// check client sockets for new events
 		handle_active_connections();
+		// check tmp sockets for new events
+		handle_tmp_connections();
 
 		usleep(100000);
     }
@@ -505,7 +506,11 @@ void irc::server::move_tmp_to_connections(irc::connection& conn) {
 		unsubscribe_tmp(conn);
 
     // ---------------------------------------- duplicate nick
-    } else if (conn.getnick().empty() || conn.getuser().empty()) {
+    } else if (conn.is_duplicated()) {
+
+		// std::string newnick = conn.getnick();
+		// do { newnick += "_"; } while (isNickInUse(newnick));
+        // conn.send(":" + getname() + " NICK " + newnick);
 		unsubscribe_tmp(conn);
 
     } else { // ---------------------------------- success

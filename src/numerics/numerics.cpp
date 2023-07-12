@@ -217,7 +217,7 @@ const std::string& irc::numerics::err_notonchannel_442(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_useronchannel_443(irc::connection& conn) {
-    conn.setmsg(":" + irc::server::instance().getname() + " 443 " + conn.getnick() + " " + conn.gettarget() + " " + conn.getchannelname() + " :is already on channel" + "\r\n");
+    conn.setmsg(":" + irc::server::instance().getname() + " 443 * " + conn.getnick() + " " + conn.gettarget() + " " + conn.getchannelname() + " :is already on channel" + "\r\n");
     return conn.getmsg();
 }
 

@@ -2,6 +2,7 @@
 # define CONNECTION_HEADER
 
 # include <iostream>
+# include <sstream>
 # include <sys/socket.h>
 # include <arpa/inet.h>
 # include <unistd.h>
@@ -114,6 +115,9 @@ namespace irc {
 			/* is registered */
 			bool is_registered(void) const;
 
+			/* is duplicated */
+			bool is_duplicated(void) const;
+
 			/* have pass */
 			bool have_pass(void) const;
 
@@ -151,6 +155,9 @@ namespace irc {
 
 			/* register client */
 			void register_client(void);
+
+			/* duplicate nick */
+			void duplicate_nick(void);
 
 			/* pong */
 			void pong(void);
@@ -214,6 +221,9 @@ namespace irc {
 
 			/* registered */
 			bool _registered;
+
+			/* duplicated */
+			bool _duplicated;
 
 			/* waiting for pong flag */
 			bool _wait_pong;

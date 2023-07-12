@@ -17,6 +17,7 @@ irc::connection::connection(struct pollfd& pfd)
   _realname(""),
   _channelname(""),
   _registered(false),
+  _duplicated(false),
   _wait_pong(false),
   _last_ping(0),
   _alive(true),
@@ -38,6 +39,7 @@ irc::connection::connection(const irc::connection& other)
   _realname(other._realname),
   _channelname(other._channelname),
   _registered(other._registered),
+  _duplicated(other._duplicated),
   _wait_pong(other._wait_pong),
   _last_ping(other._last_ping),
   _alive(other._alive),
@@ -70,6 +72,7 @@ irc::connection& irc::connection::operator=(const irc::connection& other) {
 		   _realname = other._realname;
 		_channelname = other._channelname;
 		 _registered = other._registered;
+		 _duplicated = other._duplicated;
 		  _wait_pong = other._wait_pong;
 		  _last_ping = other._last_ping;
 		      _alive = other._alive;
@@ -91,10 +94,19 @@ bool irc::connection::operator==(const irc::connection& other) const {
 		&& _buffer == other._buffer
 		&& _msg == other._msg
 		&& _nick == other._nick
+		&& _user == other._user
 		&& _password == other._password
 		&& _host == other._host
 		&& _realname == other._realname
-		&& _channelname == other._channelname;
+		&& _channelname == other._channelname
+		&& _registered == other._registered
+		&& _duplicated == other._duplicated
+		&& _wait_pong == other._wait_pong
+		&& _last_ping == other._last_ping
+		&& _alive == other._alive
+		&& _have_user == other._have_user
+		&& _have_nick == other._have_nick
+		&& _have_pass == other._have_pass;
 }
 
 
@@ -128,9 +140,19 @@ bool irc::connection::read(void) {
 	// receive bytes
 	ssize_t readed = ::recv(_pfd.fd, buffer, BUFFER_SIZE, 0);
 
+	// {
+	// 	std::stringstream ss;
+	// 	ss << _pfd.fd;
+	// 	std::string str = ss.str();
+	// 	irc::log::print(str);
+	// }
+	// {
+	// 	irc::log::print(std::string(buffer, readed));
+	// }
+
 	// check for error
 	if (readed == -1) {
-		irc::log::print("Error receiving response to client");
+		irc::log::print("Error receiving response from client");
 		return false;
 	}
 	else if (readed == 0) {
@@ -293,6 +315,11 @@ bool irc::connection::is_registered(void) const {
 	return _registered;
 }
 
+/* is duplicated */
+bool irc::connection::is_duplicated(void) const {
+	return _duplicated;
+}
+
 /* have pass */
 bool irc::connection::have_pass(void) const {
 	return _have_pass;
@@ -314,6 +341,11 @@ bool irc::connection::have_user(void) const {
 /* register client */
 void irc::connection::register_client(void) {
 	_registered = true;
+}
+
+/* duplicate nick */
+void irc::connection::duplicate_nick(void) {
+	_duplicated = true;
 }
 
 void  irc::connection::setnick(const std::string& str) {
