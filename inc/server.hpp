@@ -10,6 +10,7 @@
 # include <poll.h>
 # include <iostream>
 # include <ctime>
+# include <stdint.h>
 
 //#include "msg.hpp"
 # include "time.hpp"
@@ -40,7 +41,7 @@ namespace irc {
 			// -- public methods ----------------------------------------------
 
 			/* start server */
-			void start(const std::string&, int, const char*);
+			void start(const std::string&, const uint16_t, const char*);
 
 			/* stop server */
 			void stop(void);
@@ -138,6 +139,9 @@ namespace irc {
 
 			/* server socket */
 			int	_socket;
+
+			/* port */
+			uint16_t _port;
 
 			/* server running flag */
 			bool _is_running;

@@ -1,16 +1,6 @@
 #include "server.hpp"
 #include "signal.hpp"
-#include "terminal.hpp"
-#include <stdint.h>
 
-#if defined(__linux__)
-# define PORT 5000
-#else
-# define PORT 5052
-#endif
-
-#include "parser.hpp"
-#include "msg.hpp"
 
 
 bool is_only_digits(const char* arg) {
@@ -34,19 +24,28 @@ int check_arguments(const int ac, const char* const* av, uint16_t& port) {
 		return EXIT_FAILURE;
 	}
 
-	// TODO: check if port is a number
+	// declare a stringstream
 	std::stringstream ss(av[1]);
 
+	// check there is only digits
 	if (is_only_digits(av[1]) == false) {
 		std::cerr << "\x1b[32mirc error:\x1b[0m port is not a number" << std::endl;
 		return EXIT_FAILURE;
 	}
 
+	// check there is no overflow
 	if (!(ss >> port)) {
 		std::cerr << "\x1b[32mirc error:\x1b[0m overflow port" << std::endl;
 		return EXIT_FAILURE;
 	}
 
+	// check port is in range [1024, 65535]
+	if (port < 1024) {
+		std::cerr << "\x1b[32mirc error:\x1b[0m reserved port" << std::endl;
+		return EXIT_FAILURE;
+	}
+
+	// check password is printable
 	if (is_only_printable(av[2]) == false) {
 		std::cerr << "\x1b[32mirc error:\x1b[0m password is not printable" << std::endl;
 		return EXIT_FAILURE;

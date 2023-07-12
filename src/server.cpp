@@ -22,6 +22,7 @@ irc::server &irc::server::instance(void) {
 irc::server::server(void)
 :
   _socket(-1),
+  _port(0),
   _is_running(true),
   _pollfds(),
   _connections(),
@@ -61,9 +62,10 @@ irc::server::~server(void) {
 // -- public methods ----------------------------------------------------------
 
 /* start server */
-void irc::server::start(const std::string &ip, int port, const char* pass) {
+void irc::server::start(const std::string &ip, const uint16_t port, const char* pass) {
 
 	_password.assign(pass);
+	_port = port;
 
 	// setup server socket
     if (setupSocket(ip, port) != 0) { return; }
@@ -80,7 +82,7 @@ void irc::server::start(const std::string &ip, int port, const char* pass) {
 		irc::log::refresh(_networkname,
 						  _version,
 						  _creation,
-						  _pollfds.size() - 1,
+						  _port,
 						  _connections.size(),
 						  _channels.size());
 

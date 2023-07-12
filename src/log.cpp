@@ -61,7 +61,7 @@ void irc::log::print(const std::string& str) {
 void irc::log::refresh(const std::string& server_name,
 					   const std::string& server_version,
 					   const std::string& server_creation,
-					   const std::size_t num_pollfd,
+					   const uint16_t port,
 					   const std::size_t num_connections,
 					   const std::size_t num_channels) {
 
@@ -127,9 +127,9 @@ void irc::log::refresh(const std::string& server_name,
 	// print number of pollfds
 	buffer.append(
 			"\x1b[31m"
-			+ std::string("pollfds: ")
+			+ std::string("port: ")
 			+ "\x1b[33m"
-			+ to_string(num_pollfd)
+			+ to_string(port)
 			+ "\x1b[0m\n");
 
 	// print number of connections
