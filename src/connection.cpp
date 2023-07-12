@@ -131,7 +131,7 @@ bool irc::connection::receive(void) {
 	// check for complete message in buffer
 	if (check_crlf()) { return true; }
 	// check for POLLIN event
-	if (_pfd.revents & POLLIN) { return read(); }
+	if (_pfd.revents & POLLIN) { return read(); }	//TODO <<< nc infinite loop here most likely
 	// else return false
 	return false;
 }

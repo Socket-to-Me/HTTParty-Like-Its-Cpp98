@@ -31,7 +31,7 @@ irc::pass::~pass(void) {}
 /* execute command */
 bool irc::pass::execute(void) {
 	// set password
-	_conn.setpassword(_msg.get_params()[0]);
+	//_conn.setpassword(_msg.get_params()[0]);
 	// set registered
 	_conn.register_client();
     return true;
@@ -39,6 +39,7 @@ bool irc::pass::execute(void) {
 
 /* evaluate command */
 bool irc::pass::evaluate(void) {
+
 
 	// check client is already registered
      if (_conn.is_registered()) {
@@ -50,9 +51,20 @@ bool irc::pass::evaluate(void) {
 	// check for invalid number of parameters
 	if (_msg.get_params().size() != 1) {
 		// send error message
+		_conn.settarget(_msg.get_command());
 		_conn.send(irc::numerics::err_needmoreparams_461(_conn));
 		return false;
 	}
+
+	irc::server& serv = irc::server::instance();
+
+	const std::string& pass = serv.get_password();
+
+	if (pass != _msg.get_params()[0]) {
+		// reply invalide password
+		return false;
+	}
+
     return true;
 }
 

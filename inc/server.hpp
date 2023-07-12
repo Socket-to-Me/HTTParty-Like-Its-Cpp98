@@ -40,7 +40,7 @@ namespace irc {
 			// -- public methods ----------------------------------------------
 
 			/* start server */
-			void start(const std::string&, int);
+			void start(const std::string&, int, const char*);
 
 			/* stop server */
 			void stop(void);
@@ -90,6 +90,9 @@ namespace irc {
 
 			/* get server creation time */
 			const std::string& getcreation(void) const;
+
+			/* get password */
+			const std::string& get_password(void) const;
 
 
 
@@ -168,6 +171,9 @@ namespace irc {
 
 			/* creation time */
 			const std::string _creation;
+
+			/* password */
+			std::string _password;
 
 
 			// -- private methods ---------------------------------------------

@@ -61,7 +61,9 @@ irc::server::~server(void) {
 // -- public methods ----------------------------------------------------------
 
 /* start server */
-void irc::server::start(const std::string &ip, int port) {
+void irc::server::start(const std::string &ip, int port, const char* pass) {
+
+	_password.assign(pass);
 
 	// setup server socket
     if (setupSocket(ip, port) != 0) { return; }
@@ -85,7 +87,7 @@ void irc::server::start(const std::string &ip, int port) {
 
 
 		// get number of events
-        int pollCount = poll(_pollfds.data(), _pollfds.size(), 60 * 1000);
+        int pollCount = poll(_pollfds.data(), _pollfds.size(), 0);
 
 		// std::stringstream ss;
 		// ss << pollCount;
@@ -105,7 +107,7 @@ void irc::server::start(const std::string &ip, int port) {
 		// check client sockets for new events
 		handle_active_connections();
 
-		//usleep(100000);
+		usleep(100000);
     }
 
 	irc::log::exit();
@@ -214,6 +216,11 @@ const std::string& irc::server::getusermodes(void) const {
 /* get server channel modes */
 const std::string&	irc::server::getchannelmodes(void) const {
     return _channelmodes;
+}
+
+/* get password */
+const std::string& irc::server::get_password(void) const {
+	return _password;
 }
 
 // -- P R I V A T E  M E T H O D S ----------------------------------------------
@@ -325,7 +332,7 @@ void irc::server::accept_new_connection(void) {
 		// check for valid socket
 		if (clientSocket == -1) { return; };
 
-		irc::log::add_line("New client connected.");
+		irc::log::print("New client connected.");
 
 		add_pollfd(clientSocket);
 		irc::connection conn(_pollfds.back());
@@ -337,6 +344,9 @@ void irc::server::accept_new_connection(void) {
 
 			msg = conn.extract_message();
 
+			// check for empty msg
+			if (msg.empty()) { break; }
+
 			irc::msg message = irc::parser::parse(msg);
 
 			if (message.have_command() == false) { continue; }
@@ -345,7 +355,7 @@ void irc::server::accept_new_connection(void) {
 			irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
 
 			// check for invalid command
-			if (!maker) { irc::log::add_line("Command not found."); continue; }
+			if (!maker) { irc::log::print("Command not found."); continue; }
 
 			// instantiate new command
 			irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
@@ -358,15 +368,15 @@ void irc::server::accept_new_connection(void) {
 
 			} else {
 
-				irc::log::add_line("Command evaluation failed.");
+				irc::log::print("Command evaluation failed.");
 			}
 
 		} while (msg.size() > 0);
 
 
-		if (conn.getnick().empty() || conn.getuser().empty())
+		if (conn.getnick().empty() || conn.getuser().empty()
+		|| conn.is_registered() == false)
 		{ // Failure to set up new connection with unique nick
-
 			close(clientSocket);
 			_pollfds.pop_back();
 
