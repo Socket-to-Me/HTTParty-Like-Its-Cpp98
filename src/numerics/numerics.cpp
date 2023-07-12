@@ -557,7 +557,7 @@ const std::string& irc::numerics::err_erroneusnickname_432(irc::connection& conn
 }
 
 const std::string& irc::numerics::err_nicknameinuse_433(irc::connection& conn) {
-    conn.setmsg("433 " + conn.getnick() + " " + conn.gettarget() + " :Nickname is already in use" + "\r\n");
+    conn.setmsg("433 " + conn.gettarget() + " :Nickname is already in use" + "\r\n");
     return conn.getmsg();
 }
 
