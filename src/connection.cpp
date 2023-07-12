@@ -149,11 +149,11 @@ bool irc::connection::read(void) {
 
 	// check for error
 	if (readed == -1) {
-		irc::log::print("Error sending response to client");
+		irc::log::print("Error receiving response to client");
 		return false;
 	}
 	else if (readed == 0) {
-		irc::log::print("Empty response from client");
+		// irc::log::print("Empty response from client");
 		return false;
 	}
 

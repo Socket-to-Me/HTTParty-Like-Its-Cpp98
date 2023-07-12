@@ -543,6 +543,11 @@ bool irc::server::isChannelNameValid(const std::string& name) const {
         return false;
     }
 
+    // no comma (,)
+    if (name.find(",") != std::string::npos) {
+        return false;
+    }
+
     // is printable
     for (size_t i=0; i<name.length(); ++i) {
         if (!isprint(name[i]))

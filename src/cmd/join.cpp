@@ -117,7 +117,7 @@ bool irc::join::evaluate(void)
         return false;
     }
 
-    const std::vector<std::string> &params = _msg.get_params();
+    const std::vector<std::string>& params = _msg.get_params();
     std::string channel = params[0];
 
     if (irc::server::instance().isChannelNameValid(channel) == false) {

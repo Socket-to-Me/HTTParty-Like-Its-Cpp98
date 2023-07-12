@@ -162,7 +162,8 @@ void  irc::channel::settopic(const irc::connection& op, const std::string& str) 
 bool  irc::channel::setmode(const irc::connection& op, const std::vector<std::string>& params) {
 
 	std::string modestring = params[1];
-	const std::vector<std::string>& args = std::vector<std::string>(params.begin() + 2, params.end());
+	std::string modeargs;
+	bool		argused = false;
 
     if (isOperator(op)) {
 
@@ -195,31 +196,37 @@ bool  irc::channel::setmode(const irc::connection& op, const std::vector<std::st
 							_mode_channel_key = false;
 
 						} else {
-							std::string	key = args[0];
+
+							if ((params.size() != 3) || (argused == true)) { return false; }
+							else { modeargs = params[2]; }
+
+							std::string	key = modeargs;
 							_key = key;
 							_mode_channel_key = true;
-
+							argused = true;
 						}
 						break;
 
 					case 'o':
 
-						for (std::vector<std::string>::const_iterator it = args.begin(); it != args.end(); ++it) {
+						if ((params.size() != 3) || (argused == true)) { return false; }
+						else { modeargs = params[2]; }
+					
+						if (irc::server::instance().isNickInUse(modeargs)) {
 
-							if (irc::server::instance().isNickInUse(*it)) {
+							irc::connection& conn = irc::server::instance().getconnection(modeargs);
 
-								irc::connection& conn = irc::server::instance().getconnection(*it);
-
-								if (setting == true) {
-									addOperator(conn);
-
-								} else {
-									removeOperator(conn);
-								}
+							if (setting == true) {
+								addOperator(conn);
 
 							} else {
-								return false;
+								removeOperator(conn);
 							}
+
+							argused = true;
+
+						} else {
+							return false;
 						}
 						break;
 
@@ -230,10 +237,20 @@ bool  irc::channel::setmode(const irc::connection& op, const std::vector<std::st
 							_mode_user_limit = false;
 
 						} else {
-							std::string	limit = args[0];
-							std::istringstream iss(limit);
+
+							if ((params.size() != 3) || (argused == true)) { return false; }
+							else { modeargs = params[2]; }
+
+							for (size_t i=0; i<modeargs.size(); ++i) {
+								if (std::isdigit(modeargs[i]) == false) {
+									return false;
+								}
+							}
+
+							std::istringstream iss(modeargs);
 							iss >> _limit;
 							_mode_user_limit = true;
+							argused = true;
 						}
 						break;
 
