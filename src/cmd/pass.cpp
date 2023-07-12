@@ -34,6 +34,7 @@ bool irc::pass::execute(void) {
 	//_conn.setpassword(_msg.get_params()[0]);
 	// set registered
 	_conn.register_client();
+	_conn.validate_pass();
     return true;
 }
 

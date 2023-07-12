@@ -29,10 +29,7 @@ bool irc::user::execute(void) {
     _conn.setuser(_user);
     _conn.sethost(_host);
     _conn.setrealname(_realname);
-
-    irc::server&    serv = irc::server::instance();
-    serv.move_tmp_to_connections(_conn);
-
+	_conn.validate_user();
     return true;
 }
 

@@ -159,6 +159,9 @@ namespace irc {
 			/* duplicate nick */
 			void duplicate_nick(void);
 
+			/* not duplicate nick */
+			void not_duplicate_nick(void);
+
 			/* pong */
 			void pong(void);
 

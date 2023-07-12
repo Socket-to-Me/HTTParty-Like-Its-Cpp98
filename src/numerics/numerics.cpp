@@ -128,12 +128,14 @@ const std::string& irc::numerics::rpl_umodeis_221(irc::connection& conn) {
 const std::string& irc::numerics::rpl_whoreply_352(irc::connection& conn) {
 
     irc::server&        serv = irc::server::instance();
-    irc::channel&       channel = serv.getchannel(conn.getchannelname());
     irc::connection&    usr = serv.getconnection(conn.gettarget());
     std::string         opflag;
 
-    if (channel.isOperator(usr)) {
-        opflag = "*";
+    if (conn.getchannelname() != "*") {
+        irc::channel&   channel = serv.getchannel(conn.getchannelname());
+        if (channel.isOperator(usr)) {
+            opflag = "*";
+        }
     }
 
     conn.setmsg(":" + irc::server::instance().getname() + " 352 " + conn.getnick() + " " + conn.getchannelname() + " " + usr.getuser() + " " + usr.gethost() + " " + serv.getname() + " " + usr.getnick() + " H" + opflag + " :0 " + usr.getrealname() + "\r\n");
@@ -202,7 +204,7 @@ const std::string& irc::numerics::err_erroneusnickname_432(irc::connection& conn
 }
 
 const std::string& irc::numerics::err_nicknameinuse_433(irc::connection& conn) {
-    conn.setmsg(":" + irc::server::instance().getname() + " 433 * " + conn.gettarget() + " :Nickname is already in use" + "\r\n");
+    conn.setmsg(":" + irc::server::instance().getname() + " 433 * " + conn.gettarget() + " :Nickname is already in use." + "\r\n");
     return conn.getmsg();
 }
 

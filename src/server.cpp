@@ -443,59 +443,41 @@ void irc::server::handle_tmp_connections(void) {
 
 	for (size_type x = 0; x < _tmp_connections.size(); ++x) {
 
-		if (_tmp_connections[x].check_fails() == true) {
+		irc::connection& conn = _tmp_connections[x];
+
+		// manage socket read errors
+		if (conn.check_fails() == true) {
 			_tmp_connections.erase(_tmp_connections.begin() + x);
 			continue;
 		}
-		if (_tmp_connections[x].receive() == false) { continue; }
+		if (conn.receive() == false) { continue; }
 
-
-		std::string msg = _tmp_connections[x].extract_message();
-
+		// parse read buffer
+		std::string msg = conn.extract_message();
 		irc::msg message = irc::parser::parse(msg);
 
+		// execute commands
 		if (message.have_command()) {
 			irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
 			if (maker) {
-				irc::auto_ptr<irc::cmd> cmd = maker(message, _tmp_connections[x]);
+				irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
 				if (cmd->evaluate() == true) {
 					cmd->execute();
 				}
 			}
 		}
 
+		// move from temp connections to active
+		if (conn.have_pass() && conn.have_nick() && conn.have_user()) { 
+
+			// manage duplicates
+			if (conn.is_duplicated()) { conn.not_duplicate_nick(); }
+
+			move_tmp_to_connections(conn);
+		}
 	}
 }
 
-
-
-		// // ------------------------------------------- failure
-
-		// if (conn.is_registered() == false) { // --- wrong password
-		// 	conn.send(irc::numerics::err_passwdmismatch_464(conn));
-		// 	close(clientSocket);
-		// 	_pollfds.pop_back();
-
-		// // ---------------------------------------- duplicate nick
-		// } else if (conn.getnick().empty() || conn.getuser().empty()) {
-		// 	close(clientSocket);
-		// 	_pollfds.pop_back();
-
-		// } else { // ---------------------------------- success
-
-		// 	irc::log::print("New connection: " + conn.getnick());
-
-		// 	// Add to connection map
-		// 	_connections.insert(std::make_pair(conn.getnick(), conn));
-
-		// 	// Registration greeting
-		// 	conn.send(irc::numerics::rpl_welcome_001(conn));
-		// 	conn.send(irc::numerics::rpl_yourhost_002(conn));
-		// 	conn.send(irc::numerics::rpl_created_003(conn));
-		// 	conn.send(irc::numerics::rpl_myinfo_004(conn));
-		// 	conn.send(irc::numerics::rpl_isupport_005(conn));
-
-		// }
 
 void irc::server::move_tmp_to_connections(irc::connection& conn) {
 
@@ -508,10 +490,7 @@ void irc::server::move_tmp_to_connections(irc::connection& conn) {
     // ---------------------------------------- duplicate nick
     } else if (conn.is_duplicated()) {
 
-		// std::string newnick = conn.getnick();
-		// do { newnick += "_"; } while (isNickInUse(newnick));
-        // conn.send(":" + getname() + " NICK " + newnick);
-		unsubscribe_tmp(conn);
+		// unsubscribe_tmp(conn); //don't close as receive new NICK postfix _
 
     } else { // ---------------------------------- success
 

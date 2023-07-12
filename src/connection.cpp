@@ -348,6 +348,11 @@ void irc::connection::duplicate_nick(void) {
 	_duplicated = true;
 }
 
+/* duplicate nick */
+void irc::connection::not_duplicate_nick(void) {
+	_duplicated = false;
+}
+
 void  irc::connection::setnick(const std::string& str) {
 	_nick = str;
 	return;

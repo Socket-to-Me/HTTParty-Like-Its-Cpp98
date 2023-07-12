@@ -29,6 +29,7 @@ bool irc::nick::execute(void) {
 
     _conn.setnick(_nick);
     serv.broadcast(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " NICK " + _nick + "\r\n");
+	_conn.validate_nick();
     return true;
 }
 
