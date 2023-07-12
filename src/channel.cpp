@@ -106,12 +106,17 @@ std::string  irc::channel::getconnectionsasstr(void) const {
 	std::string result;
 
 	for (it = _connections.begin(); it != _connections.end(); ++it) {
-		if (isOperator(**it)) {
-			result += "@";
-		}
-		result += (*it)->getnick();
-		if (it != _connections.end() - 1) {
-			result += " ";
+
+		if (*it) {
+
+			if (isOperator(**it)) {
+				result += "@";
+			}
+			result += (*it)->getnick();
+			if (it != _connections.end() - 1) {
+				result += " ";
+			}
+
 		}
 	}
 
@@ -365,18 +370,44 @@ bool irc::channel::broadcast(const std::string& msg) {
 	return true;
 }
 
+bool irc::channel::broadcastExcept(const std::string& msg, irc::connection& conn) {
+
+	std::vector<irc::connection*>::iterator	it;
+
+	for (it=_connections.begin(); it!=_connections.end(); ++it) {
+		
+		if (*it) {
+			
+			if (**it == conn) { // --- skip connection to avoid
+				continue;
+			}
+			
+			if ((*it)->send(msg) <= 0) {
+				return false;
+			}
+		
+		}
+	}
+	return true;
+}
+
+
 bool irc::channel::broadcastNumeric(const std::string& target, const std::string& (*numfn)(irc::connection&)) {
 
 	std::vector<irc::connection*>::iterator	it;
 
 	for (it=_connections.begin(); it!=_connections.end(); ++it) {
 
-		irc::connection&	conn = **it;
-		conn.settarget(target);
-		conn.setchannelname(_name);
+		if (*it) {
 
-		if (conn.send((*numfn)(conn)) <= 0) {
-			return false;
+			irc::connection&	conn = **it;
+			conn.settarget(target);
+			conn.setchannelname(_name);
+
+			if (conn.send((*numfn)(conn)) <= 0) {
+				return false;
+			}
+
 		}
 	}
 	return true;
@@ -459,7 +490,7 @@ bool irc::channel::isConnection(const irc::connection& conn) const {
 	std::vector<irc::connection*>::const_iterator	it;
 
     for (it=_connections.begin(); it!=_connections.end(); it++) {
-        if (**it == conn) {
+        if (*it && **it == conn) {
             return true;
         }
     }
@@ -471,7 +502,7 @@ bool irc::channel::isOperator(const irc::connection& op) const {
 	std::vector<irc::connection*>::const_iterator	it;
 
     for (it=_operators.begin(); it!=_operators.end(); it++) {
-        if (**it == op) {
+        if (*it && **it == op) {
             return true;
         }
     }
@@ -483,7 +514,7 @@ bool irc::channel::isInvited(const irc::connection& conn) const {
 	std::vector<irc::connection*>::const_iterator	it;
 
     for (it=_invitations.begin(); it!=_invitations.end(); it++) {
-        if (**it == conn) {
+        if (*it && **it == conn) {
             return true;
         }
     }

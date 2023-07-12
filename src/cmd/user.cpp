@@ -30,10 +30,6 @@ bool irc::user::execute(void) {
     _conn.sethost(_host);
     _conn.setrealname(_realname);
 
-    irc::log::print(_conn.getuser());
-    irc::log::print(_conn.gethost());
-    irc::log::print(_conn.getrealname());
-
     return true;
 }
 
@@ -52,10 +48,6 @@ bool irc::user::evaluate(void) {
     std::string user = params.front();
     std::string host = params.back();
     std::string realname = _msg.get_trailing();
-
-    irc::log::print(user);
-    irc::log::print(host);
-    irc::log::print(realname);
 
     if (_conn.getuser().empty() == false) {
         _conn.send(irc::numerics::err_alreadyregistered_462(_conn));

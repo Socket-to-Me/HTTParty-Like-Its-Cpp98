@@ -27,7 +27,7 @@ bool irc::join::execute(void)
 
     // Join a channel
     if (irc::server::instance().isChannelExist(_channel) == false)
-    { // --------------------------------------------------------------- new channel
+    { // ---------------------------------------------------------------- new channel
 
         irc::server::instance().newChannel(_channel);
         irc::channel& channel = irc::server::instance().getchannel(_channel);
@@ -57,81 +57,53 @@ bool irc::join::execute(void)
         }
 
         if (channel.is_mode_channel_key()) { // --------------------- private channel
-            if (channel.checkPassword(_password)) {
+            if (channel.checkPassword(_password) == false) {
 
-                if (channel.is_mode_invite_only()) { // --------- invite-only channel
-                    if (channel.isInvited(_conn)) { 
-
-                        if (channel.is_mode_user_limit()) { // --- user limit channel
-                            if (channel.getconnections().size() <= channel.getlimit()) {
-                                channel.addUser(_conn);
-
-                            } else { // -------------- channel full
-                                _conn.settarget(_channel);
-                                _conn.send(irc::numerics::err_channelisfull_471(_conn));
-                                return false;
-                            }
-
-                        } else {
-                            channel.addUser(_conn);
-                        }
-
-                    } else { // ---------------------- not invited
-                        _conn.settarget(_channel);
-                        _conn.send(irc::numerics::err_inviteonlychan_473(_conn));
-                        return false;
-                    }
-
-                } else { // --------------------- correct password
-                    channel.addUser(_conn);
-                }
-
-            } else { // ----------------------- incorrect password
+                // ------------------ incorrect password
                 _conn.settarget(_channel);
                 _conn.send(irc::numerics::err_badchannelkey_475(_conn));
                 return false;
             }
+        }
 
-        } else { // -------------------------------------------------- public channel
+        if (channel.is_mode_invite_only()) { // ----------------- invite-only channel
+            if (channel.isInvited(_conn) == false) { 
 
-            if (channel.is_mode_invite_only()) { // ------------- invite-only channel
-                if (channel.isInvited(_conn)) { 
-
-                    if (channel.is_mode_user_limit()) { // ------- user limit channel
-                        if (channel.getconnections().size() <= channel.getlimit()) {
-                            channel.addUser(_conn);
-
-                        } else { // ---------------- channel full
-                                _conn.settarget(_channel);
-                                _conn.send(irc::numerics::err_channelisfull_471(_conn));
-                                return false;
-                        }
-
-                    } else {
-                        channel.addUser(_conn);
-                    }
-                    
-                } else { // ------------------------- not invited
-                    _conn.settarget(_channel);
-                    _conn.send(irc::numerics::err_inviteonlychan_473(_conn));
-                    return false;
-                }
-
-            } else {
-                channel.addUser(_conn);
+            // ---------------------- not invited
+                _conn.settarget(_channel);
+                _conn.send(irc::numerics::err_inviteonlychan_473(_conn));
+                return false;
             }
         }
 
+        if (channel.is_mode_user_limit()) { // ------------------- user limit channel
+            if (channel.getconnections().size() >= channel.getlimit()) {
+
+                // ------------------ channel full
+                _conn.settarget(_channel);
+                _conn.send(irc::numerics::err_channelisfull_471(_conn));
+                return false;
+            }
+        }
+
+        // success
+        channel.addUser(_conn);
+
         // replies
         channel.broadcast(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
-        channel.broadcastNumeric("", irc::numerics::rpl_topic_332);
-
+        _conn.setchannelname(_channel);
+        if (channel.gettopic().empty()) {
+            _conn.send(irc::numerics::rpl_notopic_331(_conn));
+        } else {
+            _conn.send(irc::numerics::rpl_topic_332(_conn));
+        }
     }
 
     // replies
     irc::channel& channel = irc::server::instance().getchannel(_channel);
-    channel.broadcastNumeric("", irc::numerics::rpl_namreply_353);
-    channel.broadcastNumeric("", irc::numerics::rpl_endofnames_366);
+    _conn.setchannelname(_channel);
+    _conn.send(irc::numerics::rpl_namreply_353(_conn));
+    _conn.send(irc::numerics::rpl_endofnames_366(_conn));
 
     return true;
 }

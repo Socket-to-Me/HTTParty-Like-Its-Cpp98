@@ -26,13 +26,14 @@ bool irc::mode::execute(void) {
 
     const std::vector<std::string>& params = _msg.get_params();
 
-    if (_ischannel) { // ---------------------- channel mode
+    if (_ischannel) { // ------------------------------------- channel mode
 
-        if (params.size() == 1) { // --- current modes
+        if (params.size() == 1) { // ---------- current modes
             _conn.setchannelname(_target);
             _conn.send(irc::numerics::rpl_channelmodeis_324(_conn));
 
-        } else { // -------------------- change modes
+        } else if (_modestring != "b") { // --- change modes
+
             irc::channel&   channel = irc::server::instance().getchannel(_target);
             
             if (channel.setmode(_conn, params) == false) {
@@ -40,10 +41,10 @@ bool irc::mode::execute(void) {
                 return false;
             }
 
-            channel.broadcast(":" + _conn.getnick() + " MODE " + _target + " " + _modestring + "\r\n");
+            channel.broadcast(":" + _conn.getnick() + " MODE " + _target + " " + _modestring + " " +_modeargs + "\r\n");
         }
-    }
-    else { // --------------------------------- user mode
+    
+    } else { // ------------------------------------------------ user mode
 
         if (params.size() == 1) { // --- current modes
             _conn.send(irc::numerics::rpl_umodeis_221(_conn));
@@ -71,6 +72,7 @@ bool irc::mode::evaluate(void) {
 
     std::string target = params[0];
     std::string modestring;
+    std::string modeargs;
 
     if (target[0] == '#') { //----------------- channel mode
 
@@ -80,24 +82,30 @@ bool irc::mode::evaluate(void) {
             return false;
         }
 
-        irc::channel&   channel = irc::server::instance().getchannel(target);
-
-        if (channel.isOperator(_conn) == false) {
-            _conn.settarget(target);
-            _conn.send(irc::numerics::err_chanoprivsneeded_482(_conn));
-            return false;
-        }
-
         if (params.size() > 1) {
             
             modestring = params[1];
 
-            if (channel.check_modestring(modestring) == false) {
-                _conn.settarget(modestring);
-                _conn.send(irc::numerics::err_unknownmode_472(_conn));
-                return false;
+            if (modestring != "b") { // ------- ignore request for ban list
+
+                irc::channel&   channel = irc::server::instance().getchannel(target);
+
+                if (channel.isOperator(_conn) == false) {
+                    _conn.settarget(target);
+                    _conn.send(irc::numerics::err_chanoprivsneeded_482(_conn));
+                    return false;
+                }
+
+                if (channel.check_modestring(modestring) == false) {
+                    _conn.settarget(modestring);
+                    _conn.send(irc::numerics::err_unknownmode_472(_conn));
+                    return false;
+                }
+
+                if (params.size() > 2) {
+                    modeargs = params[2];
+                }
             }
-            
         }
 
         _ischannel = true;
@@ -120,6 +128,7 @@ bool irc::mode::evaluate(void) {
 
     _target = target;
     _modestring = modestring;
+    _modeargs = modeargs;
 
     return true;
 }

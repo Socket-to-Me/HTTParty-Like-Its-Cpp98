@@ -13,6 +13,8 @@ irc::connection::connection(struct pollfd& pfd)
   _nick(""),
   _user(""),
   _password(""),
+  _host(""),
+  _realname(""),
   _channelname(""),
   _registered(false),
   _wait_pong(false),
@@ -29,6 +31,8 @@ irc::connection::connection(const irc::connection& other)
   _nick(other._nick),
   _user(other._user),
   _password(other._password),
+  _host(other._host),
+  _realname(other._realname),
   _channelname(other._channelname),
   _registered(other._registered),
   _wait_pong(other._wait_pong),
@@ -56,6 +60,8 @@ irc::connection& irc::connection::operator=(const irc::connection& other) {
 		       _nick = other._nick;
 		       _user = other._user;
 		   _password = other._password;
+			   _host = other._host;
+		   _realname = other._realname;
 		_channelname = other._channelname;
 		 _registered = other._registered;
 		  _wait_pong = other._wait_pong;
@@ -77,6 +83,8 @@ bool irc::connection::operator==(const irc::connection& other) const {
 		&& _msg == other._msg
 		&& _nick == other._nick
 		&& _password == other._password
+		&& _host == other._host
+		&& _realname == other._realname
 		&& _channelname == other._channelname;
 }
 

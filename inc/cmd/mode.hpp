@@ -55,6 +55,7 @@ namespace irc {
 			irc::connection& _conn;
 			std::string	_target;
 			std::string	_modestring;
+			std::string	_modeargs;
 			bool		_ischannel;
 
 	};

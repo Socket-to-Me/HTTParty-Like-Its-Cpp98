@@ -343,8 +343,6 @@ void irc::server::accept_new_connection(void) {
 
 			if (message.have_command() == false) { continue; }
 
-			irc::log::add_line("msg: " + msg);
-
 			// search for command
 			irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
 
@@ -411,8 +409,6 @@ void irc::server::handle_active_connections(void) {
 
 
 		std::string msg = it->second.extract_message();
-
-		irc::log::add_line("msg: " + msg);
 
 		irc::msg message = irc::parser::parse(msg);
 

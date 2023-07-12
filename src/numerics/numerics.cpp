@@ -243,9 +243,15 @@ const std::string& irc::numerics::rpl_nowaway_306(irc::connection& conn) {
 const std::string& irc::numerics::rpl_whoreply_352(irc::connection& conn) {
 
     irc::server&        serv = irc::server::instance();
+    irc::channel&       channel = serv.getchannel(conn.getchannelname());
     irc::connection&    usr = serv.getconnection(conn.gettarget());
+    std::string         opflag;
 
-    conn.setmsg("352 " + conn.getnick() + " " + conn.getchannelname() + " " + usr.getuser() + " " + usr.gethost() + " " + serv.getname() + " " + usr.getnick() + " H :0 " + usr.getrealname() + "\r\n");
+    if (channel.isOperator(usr)) {
+        opflag = "*";
+    }
+
+    conn.setmsg("352 " + conn.getnick() + " " + conn.getchannelname() + " " + usr.getuser() + " " + usr.gethost() + " " + serv.getname() + " " + usr.getnick() + " H" + opflag + " :0 " + usr.getrealname() + "\r\n");
     return conn.getmsg();
 }
 
@@ -390,7 +396,8 @@ const std::string& irc::numerics::rpl_version_351(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::rpl_namreply_353(irc::connection& conn) {
-    conn.setmsg("353 " + conn.getnick() + " " + irc::server::instance().getchannel(conn.getchannelname()).getsymbol() + " " + conn.getchannelname() + " :" + irc::server::instance().getchannel(conn.getchannelname()).getconnectionsasstr() + "\r\n");
+    irc::channel&   channel = irc::server::instance().getchannel(conn.getchannelname());
+    conn.setmsg("353 " + conn.getnick() + " " + channel.getsymbol() + " " + conn.getchannelname() + " :" + channel.getconnectionsasstr() + "\r\n");
     return conn.getmsg();
 }
 
@@ -610,7 +617,7 @@ const std::string& irc::numerics::err_unknownmode_472(irc::connection& conn) {
 }
 
 const std::string& irc::numerics::err_inviteonlychan_473(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("473 " + conn.getnick() + " " + conn.gettarget() + " :Cannot join channel (+i)" + "\r\n");
     return conn.getmsg();
 }
 
