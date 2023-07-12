@@ -327,7 +327,7 @@ void irc::server::accept_new_connection(void) {
 		// check for valid socket
 		if (clientSocket == -1) { return; };
 
-		irc::log::add_line("New client connected.");
+		irc::log::print("New client connected.");
 
 		add_pollfd(clientSocket);
 		irc::connection conn(_pollfds.back());
@@ -339,6 +339,9 @@ void irc::server::accept_new_connection(void) {
 
 			msg = conn.extract_message();
 
+			// check for empty msg
+			if (msg.empty()) { break; }
+
 			irc::msg message = irc::parser::parse(msg);
 
 			if (message.have_command() == false) { continue; }
@@ -347,7 +350,7 @@ void irc::server::accept_new_connection(void) {
 			irc::cmd_factory::cmd_maker maker = irc::cmd_factory::search(message.get_command());
 
 			// check for invalid command
-			if (!maker) { irc::log::add_line("Command not found."); continue; }
+			if (!maker) { irc::log::print("Command not found."); continue; }
 
 			// instantiate new command
 			irc::auto_ptr<irc::cmd> cmd = maker(message, conn);
@@ -360,7 +363,7 @@ void irc::server::accept_new_connection(void) {
 
 			} else {
 
-				irc::log::add_line("Command evaluation failed.");
+				irc::log::print("Command evaluation failed.");
 			}
 
 		} while (msg.size() > 0);
