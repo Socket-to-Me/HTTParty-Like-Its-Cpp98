@@ -116,6 +116,7 @@ bool irc::connection::dead_routine(void) {
 		// update wait pong flag
 		_wait_pong = true;
 	}
+
 	return false;
 }
 
