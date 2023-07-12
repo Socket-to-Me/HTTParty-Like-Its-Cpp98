@@ -25,3 +25,7 @@ webserv.dSYM/
 **/.DS_Store
 
 ircserv
+
+.vscode/
+
+bircd/
