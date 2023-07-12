@@ -27,10 +27,10 @@ bool irc::part::execute(void) {
 	irc::channel&	channel = irc::server::instance().getchannel(_channel);
 
 	if (_reason.empty()) {
-		channel.broadcast(":" + _conn.getnick() + " PART " + _channel + "\r\n");
+		channel.broadcast(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " PART " + _channel + "\r\n");
 	
 	} else {
-		channel.broadcast(":" + _conn.getnick() + " PART " + _channel + " :" + _reason + "\r\n");
+		channel.broadcast(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " PART " + _channel + " :" + _reason + "\r\n");
 	}
 
 	channel.removeUser(_conn);

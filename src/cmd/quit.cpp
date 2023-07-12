@@ -49,10 +49,10 @@ bool irc::quit::execute(void) {
 	serv.add_to_remove_queue(_conn);
 
 	if (_msg.have_trailing()) {
-		serv.broadcast(":" + _conn.getnick() + " QUIT :" + _msg.get_trailing() + "\r\n");
+		serv.broadcast(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " QUIT :" + _msg.get_trailing() + "\r\n");
 	
 	} else {
-		serv.broadcast(":" + _conn.getnick() + " QUIT" + "\r\n");
+		serv.broadcast(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " QUIT" + "\r\n");
 	}
 
     return true;

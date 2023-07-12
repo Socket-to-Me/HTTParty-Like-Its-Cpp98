@@ -41,7 +41,7 @@ bool irc::mode::execute(void) {
                 return false;
             }
 
-            channel.broadcast(":" + _conn.getnick() + " MODE " + _target + " " + _modestring + " " +_modeargs + "\r\n");
+            channel.broadcast(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " MODE " + _target + " " + _modestring + " " +_modeargs + "\r\n");
         }
     
     } else { // ------------------------------------------------ user mode

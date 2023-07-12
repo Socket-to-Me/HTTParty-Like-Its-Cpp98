@@ -29,10 +29,10 @@ bool irc::kick::execute(void) {
     irc::connection&    usr = irc::server::instance().getconnection(_user);
     
     if (_comment.empty()) { // --- kick without comment
-        chan.broadcast(":" + _conn.getnick() + " KICK " + _channel + " " + _user + "\r\n");
+        chan.broadcast(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " KICK " + _channel + " " + _user + "\r\n");
 
     } else { // ------------------ kick with comment
-        chan.broadcast(":" + _conn.getnick() + " KICK " + _channel + " " + _user + " " + _comment + "\r\n");
+        chan.broadcast(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " KICK " + _channel + " " + _user + " " + _comment + "\r\n");
     }
 
     chan.kick(_conn, usr);

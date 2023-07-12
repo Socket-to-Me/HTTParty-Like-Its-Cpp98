@@ -28,7 +28,7 @@ bool irc::privmsg::execute(void) {
     if (_ischannel) {
 
         irc::channel&   channel = irc::server::instance().getchannel(_target);
-        if (channel.broadcastExcept(":" + _conn.getnick() + " PRIVMSG " + _target + " " + _str + "\r\n", _conn) == false) {
+        if (channel.broadcastExcept(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " PRIVMSG " + _target + " " + _str + "\r\n", _conn) == false) {
             _conn.settarget(_target);
             _conn.send(irc::numerics::err_cannotsendtochan_404(_conn));
             return false;
@@ -37,7 +37,7 @@ bool irc::privmsg::execute(void) {
     else {
 
         irc::connection&    user = irc::server::instance().getconnection(_target);
-        user.send(":" + _conn.getnick() + " PRIVMSG " + _target + " " + _str + "\r\n");
+        user.send(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " PRIVMSG " + _target + " " + _str + "\r\n");
     }
 
     return true;

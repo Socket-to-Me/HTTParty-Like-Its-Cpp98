@@ -20,7 +20,7 @@ irc::join::~join(void)
 bool irc::join::execute(void)
 {
     // Leave all channels
-    if (_channel == "#0") {
+    if (_channel == "0") {
         irc::server::instance().leave_all_channels(_conn);
         return true;
     }
@@ -42,7 +42,7 @@ bool irc::join::execute(void)
         }
 
         // replies
-        channel.broadcast(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
+        channel.broadcast(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " JOIN :" + _channel + "\r\n");
 
     } else { // ---------------------------------------------------- existing channel
 
@@ -90,7 +90,7 @@ bool irc::join::execute(void)
         channel.addUser(_conn);
 
         // replies
-        channel.broadcast(":" + _conn.getnick() + " JOIN :" + _channel + "\r\n");
+        channel.broadcast(":" + _conn.getnick() + "!" + _conn.getuser() + "@" + _conn.gethost() + " JOIN :" + _channel + "\r\n");
         _conn.setchannelname(_channel);
         if (channel.gettopic().empty()) {
             _conn.send(irc::numerics::rpl_notopic_331(_conn));

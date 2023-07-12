@@ -144,9 +144,6 @@ bool irc::server::broadcast(const std::string& msg) {
 
 bool	irc::server::isNickInUse(const std::string& nick) const {
 
-    // iterator typedef
-    typedef std::map<std::string, irc::connection>::const_iterator const_map_iter;
-
     if (!_connections.empty()) {
 
         if (_connections.find(nick) != _connections.end()) {
@@ -157,9 +154,6 @@ bool	irc::server::isNickInUse(const std::string& nick) const {
 }
 
 bool	irc::server::isChannelExist(const std::string& channel) const {
-
-    // iterator typedef
-    typedef std::map<std::string, irc::channel>::const_iterator const_map_iter;
 
     if (!_channels.empty()) {
 
