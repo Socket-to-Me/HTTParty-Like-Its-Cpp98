@@ -398,8 +398,6 @@ void irc::server::accept_new_connection(void) {
 		} //while (msg.size() > 0);
 
 
-		
-
 		// // ------------------------------------------- failure
 
 		// if (conn.is_registered() == false) { // --- wrong password
@@ -428,6 +426,62 @@ void irc::server::accept_new_connection(void) {
 
 		// }
 	}
+}
+
+void irc::server::move_tmp_to_connections(irc::connection& conn) {
+
+    // ------------------------------------------- failure
+
+    if (conn.is_registered() == false) { // --- wrong password
+        conn.send(irc::numerics::err_passwdmismatch_464(conn));
+		unsubscribe_tmp(conn);
+
+    // ---------------------------------------- duplicate nick
+    } else if (conn.getnick().empty() || conn.getuser().empty()) {
+		unsubscribe_tmp(conn);
+
+    } else { // ---------------------------------- success
+
+        irc::log::print("New connection: " + conn.getnick());
+
+        // Add to connection map
+        _connections.insert(std::make_pair(conn.getnick(), conn));
+
+        // Registration greeting
+        conn.send(irc::numerics::rpl_welcome_001(conn));
+        conn.send(irc::numerics::rpl_yourhost_002(conn));
+        conn.send(irc::numerics::rpl_created_003(conn));
+        conn.send(irc::numerics::rpl_myinfo_004(conn));
+        conn.send(irc::numerics::rpl_isupport_005(conn));
+
+    }
+
+	return;
+}
+
+/* unsubscribe tmp connection */
+void irc::server::unsubscribe_tmp(irc::connection& tmp) {
+
+	int fd = tmp.getfd();
+
+	if (fd != -1) {
+		// close socket
+		close(fd);
+	}
+
+	// search for connection in vector
+	typedef std::vector<irc::connection>::size_type size_type;
+	for (size_type x = 0; x < _tmp_connections.size(); ++x) {
+		if (_tmp_connections[x] == tmp) {
+			_tmp_connections.erase(_tmp_connections.begin() + x);
+			break;
+		}
+	}
+
+	// remove pollfd
+	remove_pollfd(fd);
+
+	return;
 }
 
 void irc::server::handle_active_connections(void) {
@@ -484,9 +538,6 @@ void irc::server::handle_active_connections(void) {
 
 /* unsubscribe client connection */
 void irc::server::unsubscribe(irc::connection& conn) {
-
-
-
 
 	// remove user from channels
 	leave_all_channels(conn);

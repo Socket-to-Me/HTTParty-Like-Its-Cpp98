@@ -59,6 +59,7 @@ namespace irc {
 
 			/* unsubscribe client connection */
 			void unsubscribe(irc::connection&);
+			void unsubscribe_tmp(irc::connection&);
 
 			/* add to remove queue */
 			void add_to_remove_queue(irc::connection&);
@@ -95,7 +96,7 @@ namespace irc {
 			/* get password */
 			const std::string& get_password(void) const;
 
-
+			void move_tmp_to_connections(irc::connection&);
 
 			// -- public static methods ---------------------------------------
 
