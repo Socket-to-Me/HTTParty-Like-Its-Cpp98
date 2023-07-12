@@ -358,15 +358,17 @@ void irc::server::accept_new_connection(void) {
 		add_pollfd(clientSocket);
 		irc::connection conn(_pollfds.back());
 
-		conn.read();
+		//conn.read();
 		std::string msg;
 
-		do {
+		//do {
+		while (conn.read() == true) {
+
 
 			msg = conn.extract_message();
 
 			// check for empty msg
-			if (msg.empty()) { break; }
+			if (msg.empty() == false) { 
 
 			irc::msg message = irc::parser::parse(msg);
 
@@ -391,37 +393,40 @@ void irc::server::accept_new_connection(void) {
 
 				irc::log::print("Command evaluation failed.");
 			}
+			}
 
-		} while (msg.size() > 0);
+		} //while (msg.size() > 0);
 
 
-		// ------------------------------------------- failure
+		
 
-		if (conn.is_registered() == false) { // --- wrong password
-			conn.send(irc::numerics::err_passwdmismatch_464(conn));
-			close(clientSocket);
-			_pollfds.pop_back();
+		// // ------------------------------------------- failure
 
-		// ---------------------------------------- duplicate nick
-		} else if (conn.getnick().empty() || conn.getuser().empty()) {
-			close(clientSocket);
-			_pollfds.pop_back();
+		// if (conn.is_registered() == false) { // --- wrong password
+		// 	conn.send(irc::numerics::err_passwdmismatch_464(conn));
+		// 	close(clientSocket);
+		// 	_pollfds.pop_back();
 
-		} else { // ---------------------------------- success
+		// // ---------------------------------------- duplicate nick
+		// } else if (conn.getnick().empty() || conn.getuser().empty()) {
+		// 	close(clientSocket);
+		// 	_pollfds.pop_back();
 
-			irc::log::print("New connection: " + conn.getnick());
+		// } else { // ---------------------------------- success
 
-			// Add to connection map
-			_connections.insert(std::make_pair(conn.getnick(), conn));
+		// 	irc::log::print("New connection: " + conn.getnick());
 
-			// Registration greeting
-			conn.send(irc::numerics::rpl_welcome_001(conn));
-			conn.send(irc::numerics::rpl_yourhost_002(conn));
-			conn.send(irc::numerics::rpl_created_003(conn));
-			conn.send(irc::numerics::rpl_myinfo_004(conn));
-			conn.send(irc::numerics::rpl_isupport_005(conn));
+		// 	// Add to connection map
+		// 	_connections.insert(std::make_pair(conn.getnick(), conn));
 
-		}
+		// 	// Registration greeting
+		// 	conn.send(irc::numerics::rpl_welcome_001(conn));
+		// 	conn.send(irc::numerics::rpl_yourhost_002(conn));
+		// 	conn.send(irc::numerics::rpl_created_003(conn));
+		// 	conn.send(irc::numerics::rpl_myinfo_004(conn));
+		// 	conn.send(irc::numerics::rpl_isupport_005(conn));
+
+		// }
 	}
 }
 
@@ -429,7 +434,7 @@ void irc::server::handle_active_connections(void) {
 
     // iterator typedef
     typedef std::map<std::string, irc::connection>::iterator map_iter;
-
+	irc::log::print("loop");
     /* loop over all connections */
     for (map_iter it = _connections.begin(); it != _connections.end(); ++it) {
 
@@ -442,7 +447,7 @@ void irc::server::handle_active_connections(void) {
 		// check if connection is active
 		if (it->second.receive() == false) { continue; }
 
-
+		irc::log::print("received");
 		std::string msg = it->second.extract_message();
 
 		irc::msg message = irc::parser::parse(msg);

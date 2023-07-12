@@ -26,6 +26,36 @@ irc::user::~user(void) {
 /* execute command */
 bool irc::user::execute(void) {
 
+    // irc::server&    serv = irc::server.instance();
+
+    // // ------------------------------------------- failure
+
+    // if (conn.is_registered() == false) { // --- wrong password
+    //     conn.send(irc::numerics::err_passwdmismatch_464(conn));
+    //     close(clientSocket);
+    //     _pollfds.pop_back();
+
+    // // ---------------------------------------- duplicate nick
+    // } else if (conn.getnick().empty() || conn.getuser().empty()) {
+    //     close(clientSocket);
+    //     _pollfds.pop_back();
+
+    // } else { // ---------------------------------- success
+
+    //     irc::log::print("New connection: " + conn.getnick());
+
+    //     // Add to connection map
+    //     _connections.insert(std::make_pair(conn.getnick(), conn));
+
+    //     // Registration greeting
+    //     conn.send(irc::numerics::rpl_welcome_001(conn));
+    //     conn.send(irc::numerics::rpl_yourhost_002(conn));
+    //     conn.send(irc::numerics::rpl_created_003(conn));
+    //     conn.send(irc::numerics::rpl_myinfo_004(conn));
+    //     conn.send(irc::numerics::rpl_isupport_005(conn));
+
+    // }
+
     _conn.setuser(_user);
     _conn.sethost(_host);
     _conn.setrealname(_realname);
