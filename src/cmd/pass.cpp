@@ -49,7 +49,7 @@ bool irc::pass::evaluate(void) {
      }
 
 	// check for invalid number of parameters
-	if (_msg.get_params().size() != 1) {
+	if (_msg.have_params() == false) {
 		// send error message
 		_conn.settarget(_msg.get_command());
 		_conn.send(irc::numerics::err_needmoreparams_461(_conn));
@@ -60,8 +60,8 @@ bool irc::pass::evaluate(void) {
 
 	const std::string& pass = serv.get_password();
 
+	// check wrong password
 	if (pass != _msg.get_params()[0]) {
-		// reply invalide password
 		return false;
 	}
 

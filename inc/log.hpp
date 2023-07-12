@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <stdint.h>
 
 #include "terminal.hpp"
 #include "logo.hpp"

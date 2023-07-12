@@ -4,6 +4,7 @@
 # include <ctime>
 # include <string>
 # include <sys/socket.h>
+# include <stdint.h>
 # include "log.hpp"
 
 

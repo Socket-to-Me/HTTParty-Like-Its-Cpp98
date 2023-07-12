@@ -395,9 +395,15 @@ void irc::server::accept_new_connection(void) {
 		} while (msg.size() > 0);
 
 
-		if (conn.getnick().empty() || conn.getuser().empty()
-		|| conn.is_registered() == false)
-		{ // Failure to set up new connection with unique nick
+		// ------------------------------------------- failure
+
+		if (conn.is_registered() == false) { // --- wrong password
+			conn.send(irc::numerics::err_passwdmismatch_464(conn));
+			close(clientSocket);
+			_pollfds.pop_back();
+
+		// ---------------------------------------- duplicate nick
+		} else if (conn.getnick().empty() || conn.getuser().empty()) {
 			close(clientSocket);
 			_pollfds.pop_back();
 

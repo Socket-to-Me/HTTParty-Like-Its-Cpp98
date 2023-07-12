@@ -597,7 +597,7 @@ const std::string& irc::numerics::err_alreadyregistered_462(irc::connection& con
 }
 
 const std::string& irc::numerics::err_passwdmismatch_464(irc::connection& conn) {
-    conn.setmsg("N/A \r\n");
+    conn.setmsg("464 " + conn.getnick() + " :Password incorrect" + "\r\n");
     return conn.getmsg();
 }
 
