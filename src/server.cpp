@@ -129,6 +129,7 @@ void irc::server::start(const std::string &ip, const uint16_t port, const char* 
 
 		// check server listening socket for recent events
 		accept_new_connection();
+		handle_tmp_connections();
 		// check client sockets for new events
 		handle_active_connections();
 
