@@ -521,6 +521,14 @@ void irc::server::move_tmp_to_connections(irc::connection& conn) {
         conn.send(irc::numerics::rpl_myinfo_004(conn));
         conn.send(irc::numerics::rpl_isupport_005(conn));
 
+		// remove from tmp connections
+		for (size_t x = 0; x < _tmp_connections.size(); ++x) {
+			if (_tmp_connections[x] == conn) {
+				_tmp_connections.erase(_tmp_connections.begin() + x);
+				break;
+			}
+		}
+
     }
 
 	return;
