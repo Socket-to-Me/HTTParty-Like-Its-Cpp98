@@ -136,8 +136,6 @@ bool irc::server::broadcast(const std::string& msg) {
     return true;
 }
 
-
-
 // -- C O M M A N D  U T I L S ---------------------
 
 bool	irc::server::isNickInUse(const std::string& nick) const {
